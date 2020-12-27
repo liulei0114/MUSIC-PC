@@ -14,7 +14,11 @@
   "dependencies": {
     "axios": "^0.21.0",
     "core-js": "^3.6.5",
-    "vue": "^2.6.11"
+    "vue": "^2.6.11",
+    "element-ui": "^2.14.1",
+    "vue-router": "^3.4.9",
+    "normalize.css": "^8.0.1",
+    "vuex": "^3.6.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
