@@ -1,1 +1,13 @@
 @import './base.css';
+
+h1 {
+  margin: 0;
+}
+
+/* 全局变量 */
+:root {
+  --headBgColor: #ec4141;
+  --footerBgColor: #f6f6f8;
+  --mainBgColor: #ffffff;
+  --asideBgColor: #ffffff;
+}

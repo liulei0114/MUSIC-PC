@@ -1,6 +1,6 @@
 <template>
   <div>
-    <h1>我是home组件</h1>
+    <h1>fdfsdf</h1>
   </div>
 </template>
 

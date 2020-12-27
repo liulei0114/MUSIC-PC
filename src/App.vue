@@ -13,6 +13,8 @@ export default {
 
 <style>
 #app {
- 
+  width: 1022px;
+  height: 670px;
+  margin: 0 auto;
 }
 </style>

@@ -6,15 +6,15 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '',
-    redirect: '/home',
-  
+    redirect: '/text',
+    component: () => import('@/components/layout/LayOut'),
     children: [
       {
-        path: '/home',
-        name: 'home',
-        component: () => import('@/views/home'),
-        meta: { title: '首页', icon: 'home' },
-      },
+        path: 'text',
+        name: 'text',
+        component: () => import('@/views/home/main/childComponents/text'),
+      }
+
     ]
 
   }
