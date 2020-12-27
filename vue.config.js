@@ -1,3 +1,4 @@
+const { resolve } = require('path')
 const path = require('path')
 
 module.exports = {
@@ -26,7 +27,7 @@ module.exports = {
     config.resolve.alias
       .set('vue$', 'vue/dist/vue.esm.js')
       .set('@', path.resolve(__dirname, './src'))
-      .set('assets', path.resolve(__dirname, './public/assets'))
+      .set('assets', resolve('src/assets'))
 
     const svgRule = config.module.rule('svg')
     // 清除已有的所有 loader,如果你不这样做，接下来的 loader 会附加在该规则现有的 loader 之后。
