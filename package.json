@@ -28,6 +28,7 @@
     "less": "3.12.2",
     "less-loader": "^4.1.0",
     "vue-cli-plugin-electron-builder": "~2.0.0-rc.5",
-    "vue-template-compiler": "^2.6.11"
+    "vue-template-compiler": "^2.6.11",
+    "svg-sprite-loader": "^5.1.1"
   }
 }

@@ -10,6 +10,9 @@ import store from '@/store'
 import 'normalize.css/normalize.css'
 import '@/style/index.css'
 
+// 引入
+import '@/icons/index'
+
 
 Vue.config.productionTip = false
 Vue.prototype.$bus = new Vue()
