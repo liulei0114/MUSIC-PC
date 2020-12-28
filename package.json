@@ -1,10 +1,10 @@
 {
-  "name": "MUSIC-PC",
+  "name": "music-pc",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "serve": "vue-cli-service serve --mode dev",
-    "build": "vue-cli-service build --mode prod",
+    "build": "vue-cli-service build --mode production",
     "electron:build": "vue-cli-service electron:build",
     "electron:serve": "vue-cli-service electron:serve",
     "postinstall": "electron-builder install-app-deps",
@@ -14,21 +14,21 @@
   "dependencies": {
     "axios": "^0.21.0",
     "core-js": "^3.6.5",
-    "vue": "^2.6.11",
     "element-ui": "^2.14.1",
-    "vue-router": "^3.4.9",
     "normalize.css": "^8.0.1",
+    "vue": "^2.6.11",
+    "vue-flag-icon": "^1.0.0",
+    "vue-router": "^3.4.9",
     "vuex": "^3.6.0"
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "electron": "^9.0.0",
-    "electron-devtools-installer": "^3.1.0",
     "less": "3.12.2",
     "less-loader": "^4.1.0",
+    "svg-sprite-loader": "^5.1.1",
     "vue-cli-plugin-electron-builder": "~2.0.0-rc.5",
-    "vue-template-compiler": "^2.6.11",
-    "svg-sprite-loader": "^5.1.1"
+    "vue-template-compiler": "^2.6.11"
   }
 }

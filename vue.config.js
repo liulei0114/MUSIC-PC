@@ -39,7 +39,7 @@ module.exports = {
       })
   },
   configureWebpack: (config) => {
-    if (process.env.NODE_ENV === 'prod') {
+    if (process.env.NODE_ENV === 'production') {
       // 生产环境
       config.mode = 'production'
     } else {
@@ -86,6 +86,8 @@ module.exports = {
 
   // 第三方插件配置
   pluginOptions: {
-
+    electronBuilder: {
+      nodeIntegration: true
+    }
   }
 }

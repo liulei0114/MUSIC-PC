@@ -1,9 +1,12 @@
 'use strict'
 
-import { app, protocol, BrowserWindow,Menu } from 'electron'
+import { app, protocol, BrowserWindow, Menu, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
-import installExtension, { VUEJS_DEVTOOLS } from 'electron-devtools-installer'
+const electron = require('electron')
 const isDevelopment = process.env.NODE_ENV !== 'production'
+
+let ipc = ipcMain
+
 
 // Scheme must be registered before the app is ready
 protocol.registerSchemesAsPrivileged([
@@ -12,15 +15,18 @@ protocol.registerSchemesAsPrivileged([
 
 async function createWindow() {
   // Create the browser window.
-  const win = new BrowserWindow({
+  let win = new BrowserWindow({
     width: 1022,
     height: 670,
+    frame: false,
+    maximizable: false,
+    resizable: false,//可否缩放
+    useContentSize: true,
     webPreferences: {
       // Use pluginOptions.nodeIntegration, leave this alone
       // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION
+      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
     },
-    // eslint-disable-next-line no-undef
     icon: `${__static}/format.ico`
   })
 
@@ -34,30 +40,58 @@ async function createWindow() {
     win.loadURL('app://./index.html')
   }
 
-  win.on('closed', () => {
-    win = null
+  win.on('close', e => {
+    e.preventDefault(); //先阻止一下默认行为，不然直接关了，提示框只会闪一下
+    electron.dialog.showMessageBox({
+      
+      type: 'info',
+      title: '提示',
+      message: '确认退出？',
+      buttons: ['确认', '取消'],   //选择按钮，点击确认则下面的idx为0，取消为1
+      cancelId: 1, //这个的值是如果直接把提示框×掉返回的值，这里设置成和“取消”按钮一样的值，下面的idx也会是1
+    }).then(idx => {
+      //注意上面↑是用的then，网上好多是直接把方法做为showMessageBox的第二个参数，我的测试下不成功
+      console.log(idx)
+      if (idx.response == 1) {
+        console.log('index==1，取消关闭')
+        e.preventDefault();
+      } else {
+        console.log('index==0，关闭')
+        win = null
+        app.exit()
+      }
+    })
+  });
+  ipc.on('window-close',function(){
+    win.close();
   })
-  
+  win.on('closed', () => {
+    win = null;
+  })
+
   createMenu()
-  function createMenu() {
-    // darwin表示macOS，针对macOS的设置
-    if (process.platform === 'darwin') {
-      const template = [{
-        label: 'App Demo',
-        submenu: [
-          {role: 'about'},
-          {
-            role: 'quit'
-          }]
-      }]
-      const menu = Menu.buildFromTemplate(template)
-      Menu.setApplicationMenu(menu)
-    } else {
-      // windows及linux系统
-      Menu.setApplicationMenu(null)
-    }
+
+}
+function createMenu() {
+  // darwin表示macOS，针对macOS的设置
+  if (process.platform === 'darwin') {
+    const template = [{
+      label: 'App Demo',
+      // submenu: [
+      //   {role: 'about'},
+      //   {
+      //     role: 'quit'
+      //   }]
+    }]
+    const menu = Menu.buildFromTemplate(template)
+    Menu.setApplicationMenu(menu)
+  } else {
+    // windows及linux系统
+    Menu.setApplicationMenu(null)
   }
 }
+
+
 
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
@@ -88,6 +122,8 @@ app.on('ready', async () => {
   // }
   createWindow()
 })
+
+
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {

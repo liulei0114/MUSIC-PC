@@ -6,14 +6,10 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '',
-    redirect: '/text',
+    // redirect: '/text',
     component: () => import('@/components/layout/LayOut'),
     children: [
-      {
-        path: 'text',
-        name: 'text',
-        component: () => import('@/views/home/main/childComponents/text'),
-      }
+
 
     ]
 

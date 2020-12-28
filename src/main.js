@@ -4,12 +4,9 @@ import ElementUI from 'element-ui';
 import 'element-ui/lib/theme-chalk/index.css';
 import router from '@/router'
 import store from '@/store'
-
-
 // 通用css normal.css
 import 'normalize.css/normalize.css'
 import '@/style/index.css'
-
 // 引入
 import '@/icons/index'
 
@@ -19,7 +16,6 @@ Vue.prototype.$bus = new Vue()
 
 
 Vue.use(ElementUI);
-
 
 new Vue({
   router,
