@@ -5,7 +5,6 @@
 </template>
 
 <script>
-
 export default {
   name: "App",
 };
@@ -16,5 +15,6 @@ export default {
   width: 1022px;
   height: 670px;
   margin: 0 auto;
+  position: relative;
 }
 </style>

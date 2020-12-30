@@ -42,9 +42,11 @@ module.exports = {
     if (process.env.NODE_ENV === 'production') {
       // 生产环境
       config.mode = 'production'
-    } else {
+    } else if (process.env.NODE_ENV === 'development') {
       // 开发环境
       config.mode = 'development'
+    } else {
+      config.mode = 'test'
     }
   },
   // css相关配置

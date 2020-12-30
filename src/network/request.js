@@ -2,9 +2,11 @@ import axios from 'axios'
 import store from '@/store'
 import { Message, MessageBox } from 'element-ui';
 
+
 // 创建axios实例
 const service = axios.create({
   baseURL: process.env.VUE_APP_API_URL, // api的base_url
+  // baseURL: "http://localhost:3000",
   timeout: 15000 // 请求超时时间
 })
 
@@ -19,10 +21,10 @@ service.interceptors.request.use(config => {
 // respone拦截器
 service.interceptors.response.use(
   response => {
-     // code为非200是抛错 可结合自己业务进行修改
+    // code为非200是抛错 可结合自己业务进行修改
     const res = response.data
     if (res.code !== 200) {  // 返回错误
-      if (res.code === 500 || res.code === 404) {   
+      if (res.code === 500 || res.code === 404) {
         Message({
           message: res.message,
           type: 'error',

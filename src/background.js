@@ -2,9 +2,8 @@
 
 import { app, protocol, BrowserWindow, Menu, ipcMain } from 'electron'
 import { createProtocol } from 'vue-cli-plugin-electron-builder/lib'
-const electron = require('electron')
 const isDevelopment = process.env.NODE_ENV !== 'production'
-
+const electron = require('electron');
 let ipc = ipcMain
 
 
@@ -23,9 +22,9 @@ async function createWindow() {
     resizable: false,//可否缩放
     useContentSize: true,
     webPreferences: {
-      // Use pluginOptions.nodeIntegration, leave this alone
-      // See nklayman.github.io/vue-cli-plugin-electron-builder/guide/security.html#node-integration for more info
-      nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
+      // nodeIntegration: process.env.ELECTRON_NODE_INTEGRATION,
+      nodeIntegration: true,
+      // webSecurity: false
     },
     icon: `${__static}/format.ico`
   })
@@ -43,7 +42,7 @@ async function createWindow() {
   win.on('close', e => {
     e.preventDefault(); //先阻止一下默认行为，不然直接关了，提示框只会闪一下
     electron.dialog.showMessageBox({
-      
+
       type: 'info',
       title: '提示',
       message: '确认退出？',
@@ -62,7 +61,7 @@ async function createWindow() {
       }
     })
   });
-  ipc.on('window-close',function(){
+  ipc.on('window-close', function () {
     win.close();
   })
   win.on('closed', () => {

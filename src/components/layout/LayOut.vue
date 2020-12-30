@@ -17,9 +17,12 @@
           <music-main></music-main>
         </el-main>
         <!-- 登录窗口 -->
-        <div class="login_wrap">
-          <login-wrap></login-wrap>
-        </div>
+        <transition name="el-fade-in-linear">
+          <div class="login_wrap" v-show="this.$store.getters.loginDialogStatus">
+            <!-- <div class="login_wrap" v-show="true"> -->
+            <login-wrap></login-wrap>
+          </div>
+        </transition>
       </el-container>
       <!-- 内容区  END -->
 
@@ -68,7 +71,6 @@ export default {
     .el-header {
       height: 60px;
       padding: 0;
-      
     }
     .home_wrap {
       width: 100%;
