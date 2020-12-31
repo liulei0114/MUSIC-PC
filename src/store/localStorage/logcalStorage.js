@@ -1,10 +1,16 @@
+
+export function getItem(name) {
+  let a = localStorage.getItem(name)
+  return a ? JSON.parse(a) : null;
+}
+
 export function getLocalProfile() {
   let profile = localStorage.getItem('profile')
   return profile ? JSON.parse(profile) : null;
 }
 
 //存入localstore
-export function setLocalStorage(loginPhoneResult) {
+export function setLocalProfile(loginPhoneResult) {
   let {
     city,
     province,
@@ -39,9 +45,9 @@ export function setLocalStorage(loginPhoneResult) {
     gender,
     playlistBeSubscribedCount,
     playlistCount,
-    followeds, 
-    follows, 
-    eventCount, 
+    followeds,
+    follows,
+    eventCount,
   };
   localStorage.setItem("profile", JSON.stringify(profile));
   return profile
@@ -50,3 +56,9 @@ export function setLocalStorage(loginPhoneResult) {
 export function removeLocalProfile() {
   localStorage.removeItem('profile')
 }
+
+export function setLocalAsideMenu(playListResult) {
+  localStorage.setItem('asideMenu', JSON.stringify(playListResult))
+}
+
+

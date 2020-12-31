@@ -3,15 +3,15 @@
     <div class="head_wrap">
       <div class="type_count">
         <div>
-          <p>{{$store.getters.userProfile.eventCount}}</p>
+          <p>{{eventCount}}</p>
           <p>动态</p>
         </div>
         <div>
-          <p>{{$store.getters.userProfile.follows}}</p>
+          <p>{{follows}}</p>
           <p>关注</p>
         </div>
         <div>
-          <p>{{$store.getters.userProfile.followeds}}</p>
+          <p>{{followeds}}</p>
           <p>粉丝</p>
         </div>
       </div>
@@ -24,19 +24,19 @@
     </div>
     <div class="vip_wrap">
       <div class="item_wrap_normal">
-        <p @click="handelLogOut" class="item_normal">
+        <p  class="item_normal">
           <i>
             <svg-icon icon-class="huiyuan"></svg-icon>
           </i>
           <span>会员中心</span>
         </p>
-        <p @click="handelLogOut" class="item_normal">
+        <p  class="item_normal">
           <i>
             <svg-icon icon-class="dengji"></svg-icon>
           </i>
           <span>等级</span>
         </p>
-        <p @click="handelLogOut" class="item_normal">
+        <p  class="item_normal">
           <i>
             <svg-icon icon-class="shopping"></svg-icon>
           </i>
@@ -46,13 +46,13 @@
     </div>
     <div class="social_wrap">
       <div class="item_wrap_normal">
-        <p @click="handelLogOut" class="item_normal">
+        <p class="item_normal">
           <i>
             <svg-icon icon-class="gereninfo"></svg-icon>
           </i>
           <span>个人信息设置</span>
         </p>
-        <p @click="handelLogOut" class="item_normal">
+        <p class="item_normal">
           <i>
             <svg-icon icon-class="shejiao"></svg-icon>
           </i>
@@ -90,6 +90,29 @@ export default {
   props: {
     value: Boolean,
   },
+  computed: {
+    eventCount() {
+      return this.$store.getters.userProfile
+        ? this.$store.getters.userProfile.eventCount
+        : 0;
+    },
+    follows() {
+      return this.$store.getters.userProfile
+        ? this.$store.getters.userProfile.follows
+        : 0;
+    },
+    followeds() {
+      return this.$store.getters.userProfile
+        ? this.$store.getters.userProfile.followeds
+        : 0;
+    },
+  },
+  mounted() {
+    this.addAppClickEventListener();
+  },
+  destroyed() {
+    this.removeAppClickEventListener();
+  },
   methods: {
     handelLogOut() {
       this.loadingInstance = Loading.service(this.loadingOptions);
@@ -104,6 +127,26 @@ export default {
       this.$nextTick(() => {
         this.loadingInstance.close();
       });
+    },
+    // ? 添加监听
+    addAppClickEventListener() {
+      // 组件初始化添加事件监听
+      document
+        .getElementById("app")
+        .addEventListener("click", this.handleClickEvent);
+    },
+    // ? 移除监听
+    removeAppClickEventListener() {
+      document
+        .getElementById("app")
+        .removeEventListener("click", this.handleClickEvent);
+    },
+    // ? 监听处理函数
+    handleClickEvent(e) {
+      let refClick = document.getElementById("Mine").contains(e.target); // 包含自身
+      if (!refClick) {
+        this.$emit("input", !this.value);
+      }
     },
   },
 };

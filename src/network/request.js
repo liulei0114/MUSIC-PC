@@ -21,26 +21,17 @@ service.interceptors.request.use(config => {
 // respone拦截器
 service.interceptors.response.use(
   response => {
-    // code为非200是抛错 可结合自己业务进行修改
     const res = response.data
     if (res.code !== 200) {  // 返回错误
-      if (res.code === 500 || res.code === 404) {
-        Message({
-          message: res.message,
-          type: 'error',
-        })
-      }
       return Promise.reject(res)
     } else { // 成功
       return Promise.resolve(res)
     }
   },
-  error => {
-    Message({
-      message: error,
-      type: 'error',
-    })
-    return Promise.reject(error)
+  error => { //非2XX
+    if (error && error.response && error.response.status) {
+      return Promise.reject(error.response.data)
+    }
   }
 )
 

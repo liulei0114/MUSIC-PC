@@ -33,3 +33,12 @@ export function logoutApi() {
     method: 'get'
   })
 }
+
+// ! 获取创建的歌单
+export function fetchUserPlayListAPi(params) {
+  return request({
+    url: '/user/playlist',
+    method: 'get',
+    params:params
+  })
+}

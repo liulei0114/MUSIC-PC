@@ -33,7 +33,7 @@
             <svg-icon icon-class="arrow-down-filling"></svg-icon>
           </i>
           <transition name="el-zoom-in-top">
-            <mine ref="mineWrap" class="mine" v-show="mineShow" v-model="mineShow"></mine>
+            <mine ref="mineWrap" class="mine" v-if="mineShow" v-model="mineShow"></mine>
           </transition>
         </div>
         <span class="login_status open_vip">开通VIP</span>
@@ -100,33 +100,12 @@ export default {
     mineDown() {
       if (this.nickName !== "" && !this.mineShow) {
         this.mineShow = true;
-        this.addAppClickEventListener();
       } else {
         this.mineShow = false;
-        this.removeAppClickEventListener();
       }
     },
 
-    // ? 添加监听
-    addAppClickEventListener() {
-      // 组件初始化添加事件监听
-      document.getElementById("app").addEventListener("click", (e) => {
-        this.handleClickEvent(e);
-      });
-    },
-    // ? 移除监听
-    removeAppClickEventListener() {
-      document.getElementById("app").removeEventListener("click", (e) => {
-        this.handleClickEvent(e);
-      });
-    },
-    // ? 监听处理函数
-    handleClickEvent(e) {
-      let refClick = document.getElementById("Mine").contains(e.target); // 包含自身
-      if (!refClick) {
-        this.mineShow = false;
-      }
-    },
+    
   },
   components: {
     DirectionNav,

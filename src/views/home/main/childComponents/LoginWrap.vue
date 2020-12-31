@@ -137,17 +137,18 @@ export default {
       }
       // * 手机登录
       params.append("md5_password", this.$md5(this.password));
+      params.append("timestamp", new Date().getTime());
       try {
-        let userProfile = await this.$store.dispatch(
-          "loginModule/LoginByPhone",
-          params
-        );
+        await this.$store.dispatch("loginModule/LoginByPhone", params);
         this.handleCloseLoginWrap();
       } catch (error) {
+        console.log(error.msg);
         if (error.code === 502) {
           this.errMsg = `手机号码或${error.message}`;
+        } else if (error.code === 509) {
+          this.errMsg = "密码错误超过限制";
         } else {
-          this.errMsg = error.message;
+          this.$gMessage.show(error.message);
         }
       }
       this.endLoading();
