@@ -227,6 +227,10 @@ const loginModule = {
             }
           }
         })
+        // 把我的音乐中后三个改为true
+        _asideMenu.myMusic[0].childrens.forEach((e, i) => {
+          e.show = true
+        })
         commit('SET_ASIDE_MENU', _asideMenu);
         setLocalAsideMenu(_asideMenu)
       } else {

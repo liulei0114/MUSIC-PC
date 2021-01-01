@@ -37,24 +37,18 @@ export default {
     this.addMouseEnterBarShowEventListener();
     this.addMouseLeaveBarShowEventListener();
   },
-  watch: {
-    "$store.getters.asideMenu": {
-      immediate: true,
-      deep: true,
-      handler() {
-        this.$nextTick(() => {
-          this.conScrollHeight = document
-            .getElementById("MusicAside")
-            .querySelector(".con").scrollHeight;
-          this.conHeight = document
-            .getElementById("MusicAside")
-            .querySelector(".con").clientHeight;
-        });
-      },
-    },
-  },
+  watch: {},
   computed: {
     showAsideMenu() {
+      this.$nextTick(() => {
+        this.conScrollHeight = document
+          .getElementById("MusicAside")
+          .querySelector(".con").scrollHeight;
+        this.conHeight = document
+          .getElementById("MusicAside")
+          .querySelector(".con").clientHeight;
+      });
+
       let storeAsideMenu = this.$store.getters.asideMenu;
       let _asideMenu = [
         ...storeAsideMenu.base,
@@ -74,6 +68,7 @@ export default {
           });
         }
       });
+
       return showmenu;
     },
   },
@@ -114,7 +109,7 @@ export default {
   .con {
     width: 100%;
     height: 100%;
-    .aside_item:first-child{
+    .aside_item:first-child {
       margin-top: 0;
     }
   }
