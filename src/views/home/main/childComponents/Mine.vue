@@ -24,19 +24,19 @@
     </div>
     <div class="vip_wrap">
       <div class="item_wrap_normal">
-        <p  class="item_normal">
+        <p class="item_normal">
           <i>
             <svg-icon icon-class="huiyuan"></svg-icon>
           </i>
           <span>会员中心</span>
         </p>
-        <p  class="item_normal">
+        <p class="item_normal">
           <i>
             <svg-icon icon-class="dengji"></svg-icon>
           </i>
           <span>等级</span>
         </p>
-        <p  class="item_normal">
+        <p class="item_normal">
           <i>
             <svg-icon icon-class="shopping"></svg-icon>
           </i>
@@ -75,7 +75,9 @@
 
 <script>
 import { Loading } from "element-ui";
+import { loadingMixin } from "@/mixin/loadingMixin";
 export default {
+  mixins: [loadingMixin],
   data() {
     return {
       loadingInstance: null,
@@ -114,19 +116,14 @@ export default {
     this.removeAppClickEventListener();
   },
   methods: {
+    // ? 处理退出登录
     handelLogOut() {
-      this.loadingInstance = Loading.service(this.loadingOptions);
-      this.$store
-        .dispatch("loginModule/LoginOut")
-        .then((result) => {
-          this.$emit("input", !this.value);
-        })
-        .catch((err) => {
-          console.log(err);
-        });
-      this.$nextTick(() => {
-        this.loadingInstance.close();
+      this.initLoading();
+      this.$store.dispatch("loginModule/LoginOut").then((result) => {
+        this.$emit("input", !this.value);
       });
+
+      this.endLoading();
     },
     // ? 添加监听
     addAppClickEventListener() {

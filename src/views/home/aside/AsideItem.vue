@@ -19,7 +19,7 @@
 export default {
   data() {
     return {
-      clickIndex: null,
+      clickIndex: 0,
     };
   },
   props: {
@@ -69,6 +69,7 @@ export default {
     font-size: 15px;
     color: #333;
     padding-left: 5px;
+
     &:hover {
       cursor: pointer;
       background-color: #f6f6f7;
@@ -80,6 +81,9 @@ export default {
     }
     .text {
       margin-right: 5px;
+      white-space: nowrap;
+      text-overflow: ellipsis;
+      overflow: hidden;
     }
     .textIcon {
       font-size: 10px;
@@ -91,8 +95,8 @@ export default {
   }
   .check {
     background-color: #f6f6f7;
-    font-size: 17px;
-    font-weight: 700;
+    font-size: 16px;
+    font-weight: 600;
     .optionIcon {
       font-size: 15px;
     }

@@ -2,7 +2,12 @@
   <div>
     <transition name="el-fade-in">
       <div id="GlobalMessage" :style="{width:width}" v-show="isShow">
-        <div>{{message}}</div>
+        <div class="message">
+          <i v-if="iconName" style="margin-right:10px">
+            <svg-icon :icon-class="iconName"></svg-icon>
+          </i>
+          <span v-html="message"></span>
+        </div>
       </div>
     </transition>
   </div>
@@ -16,29 +21,28 @@ export default {
       message: "",
       timeout: null,
       _debouncedCancelShow: null,
+      iconName: "",
     };
   },
   props: {
     // 宽
     width: {
       type: String,
-      default: "267px",
+      default: "",
     },
   },
   methods: {
-    show(message) {
+    show(message, iconName) {
       this.isShow = true;
       this.message = message;
+      this.iconName = iconName;
       if (!this._debouncedCancelShow) {
-        this._debouncedCancelShow = this._.debounce(this.cancelShow, 500);
+        this._debouncedCancelShow = this._.debounce(this.cancelShow, 1500);
       }
       this._debouncedCancelShow();
     },
     cancelShow() {
-      setTimeout(() => {
-        this.isShow = false;
-        this.message = "";
-      }, 1500);
+      this.isShow = false;
     },
   },
 };
@@ -51,12 +55,15 @@ export default {
   border-radius: 5px;
   color: #fff;
   background-color: rgba(0, 0, 0, 0.7);
-  font-size: 14px;
   position: absolute;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   z-index: 3000;
   font-weight: 600;
+  font-size: 16px;
+  .message {
+    text-align: center;
+  }
 }
 </style>

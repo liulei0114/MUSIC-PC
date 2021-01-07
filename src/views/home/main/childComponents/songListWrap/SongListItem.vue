@@ -1,0 +1,204 @@
+<template>
+  <div class="SongListItem" :class="{isOdd:index%2!=0}">
+    <div class="index">{{index | filterIndex}}</div>
+    <div class="like">
+      <i>
+        <svg-icon icon-class="redhead" class="svgnoraml" style="color:#ec4141"></svg-icon>
+      </i>
+    </div>
+    <div class="down">
+      <i>
+        <svg-icon icon-class="xiazai2" class="svgnoraml" style="color:#a8a9aa"></svg-icon>
+      </i>
+    </div>
+    <div class="name textOverflow flexLeft">
+      <span>{{songItem.name}}</span>
+      <span class="other" :class="getTextOverFlow(index)">{{_alias}}</span>
+      <div class="icon_con flexLeft">
+        <i v-if="songItem.fee === 1" class="redColor" style="color:#fe672e">
+          <svg-icon icon-class="song_vip"></svg-icon>
+        </i>
+        <i v-if="songItem.fee === 1" class="redColor">
+          <svg-icon icon-class="song_shiting"></svg-icon>
+        </i>
+        <i v-if="songItem.isSq" class="redColor">
+          <svg-icon icon-class="song_sq"></svg-icon>
+        </i>
+        <i v-if="songItem.mv !== 0" class="redColor" style="font-size:35px">
+          <svg-icon icon-class="song_mv"></svg-icon>
+        </i>
+      </div>
+    </div>
+    <div class="ar textOverflow">
+      <span>{{_ar}}</span>
+    </div>
+    <div class="al textOverflow">
+      <span>{{songItem.al.name}}</span>
+      <span class="other">{{_al}}</span>
+    </div>
+    <div class="dt">
+      <span>{{songItem.formatDt}}</span>
+    </div>
+  </div>
+</template>
+
+<script>
+export default {
+  props: {
+    index: {
+      type: Number,
+      default: 0,
+    },
+    songItem: {
+      type: Object,
+      default() {
+        return {};
+      },
+    },
+  },
+  computed: {
+    _alias() {
+      let songItem = this.songItem;
+      if (songItem.tns) {
+        return `(${songItem.tns[0]})`;
+      } else if (songItem.alia && songItem.alia.length >= 1) {
+        return `(${songItem.alia[0]})`;
+      }
+      return "";
+    },
+    _ar() {
+      let songItem = this.songItem;
+      let nameStr = "";
+      songItem.ar.forEach((e, i) => {
+        nameStr += e.name + " / ";
+      });
+      return nameStr != "" ? nameStr.substring(0, nameStr.length - 2) : nameStr;
+    },
+    _al() {
+      let songItem = this.songItem;
+      return songItem.al.tns.length !== 0 ? `(${songItem.al.tns[0]})` : "";
+    },
+  },
+  filters: {
+    filterIndex(value) {
+      value = value + "";
+      if (value.length === 1) {
+        return "0" + value;
+      }
+      return value;
+    },
+  },
+  methods: {
+    getTextOverFlow(index) {
+      this.$nextTick(() => {
+        let itemName = document
+          .getElementsByClassName("SongListItem")
+          [index - 1].querySelector(".name");
+        let songName = itemName.children[0];
+        let aliasName = itemName.children[1];
+        let iconCon = itemName.children[2];
+
+        let itemNameWidth =
+          itemName.clientWidth -
+          ~~getComputedStyle(itemName, false)["paddingRight"].replace(
+            /\s+|px/gi,
+            ""
+          );
+
+        let songNameWidth = songName.clientWidth;
+        let aliasNameWidth = aliasName.clientWidth;
+        let iconWidth = iconCon.clientWidth;
+        if (itemNameWidth - songNameWidth <= iconWidth) {
+          // songanme添加textOverflow
+          songName.classList.add("textOverflow");
+        }
+        if (itemNameWidth - songNameWidth - iconWidth <= aliasNameWidth) {
+          // alias添加textOverflow
+          aliasName.classList.add("textOverflow");
+        }
+      });
+    },
+  },
+};
+</script>
+
+<style lang="less" scoped>
+.SongListItem {
+  width: 100%;
+  height: 30px;
+  display: flex;
+  justify-content: left;
+  align-items: center;
+  padding-left: 20px;
+  font-size: 14px;
+  .flexLeft {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+  }
+  &:hover {
+    cursor: pointer;
+    background-color: #f0f1f2;
+  }
+  .svgnoraml {
+    font-size: 16px;
+  }
+  .textOverflow {
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .redColor {
+    color: #ec4141;
+    font-size: 26px;
+    margin-left: 3px;
+  }
+  .icon_con {
+    margin-left: left;
+  }
+  .other {
+    font-size: 12px;
+    color: #969697;
+    margin-left: 5px;
+  }
+  .index {
+    width: 35px;
+    color: #cfcfcf;
+  }
+  .like {
+    width: 25px;
+    i {
+      vertical-align: middle;
+    }
+  }
+  .down {
+    width: 30px;
+  }
+  .name {
+    width: 300px;
+    color: #333;
+    font-size: 14px;
+    padding-right: 10px;
+  }
+  .ar {
+    width: 140px;
+    color: #807e7e;
+    padding-right: 10px;
+    font-size: 13px;
+  }
+  .al {
+    width: 190px;
+    color: #807e7e;
+    font-size: 13px;
+  }
+  .dt {
+    flex: 1;
+    color: #9f9f9f;
+    margin-left: 10px;
+    font-size: 13px;
+  }
+}
+.isOdd {
+  background-color: #f9f9f9;
+}
+</style>

@@ -1,0 +1,381 @@
+<template>
+  <div id="SongListWrap">
+    <happy-scroll
+      color="#e0e0e0"
+      size="8"
+      :resize="true"
+      :hide-horizontal="true"
+      ref="MyHappyScroll"
+    >
+      <div class="con" id="AnchorPoint">
+        <div class="head_wrap">
+          <div class="cover_img">
+            <img :src="songListDetail.coverImgUrl+'?param=185y185'" alt />
+          </div>
+          <div class="song_detail">
+            <div class="title flexLeft">
+              <span>歌单</span>
+              <h3>{{_songlistName}}</h3>
+            </div>
+            <div class="create_time flex">
+              <img :src="_songCreatorUrl" alt width="25px" height="25px" />
+              <span>{{_songCreatorNickname}}</span>
+              <span>{{songListDetail.createTime | filterCreateTIme}}</span>
+            </div>
+            <div class="share">
+              <div>
+                <play-all-btn></play-all-btn>
+              </div>
+              <div>
+                <share-btn :groupBy="groupBy" icon="shoucangjia" :textCon="_subscribedCount"></share-btn>
+              </div>
+              <div>
+                <share-btn icon="fenxiang" :textCon="_shareCount"></share-btn>
+              </div>
+              <div>
+                <share-btn icon="xiazai" textCon="下载全部"></share-btn>
+              </div>
+            </div>
+            <div class="play_statistic">
+              <p v-if="isShow">
+                <span v-html="tagCon"></span>
+              </p>
+              <p>
+                <span>歌曲：{{_songListLength}}</span>
+                <span style="margin-left:10px">播放：{{songListDetail.playCount | filterCount}}</span>
+              </p>
+              <p v-if="isShow">
+                <span v-html="descCon"></span>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class="song_list_wrap">
+          <div class="head">
+            <div class="left">
+              <span @click="toggleType(1)">
+                歌曲列表
+                <i :class="{bottomRed:typeIndex === 1}"></i>
+              </span>
+              <span @click="toggleType(2)">
+                评论({{commentCount}})
+                <i :class="{bottomRed:typeIndex === 2}"></i>
+              </span>
+              <span @click="toggleType(3)">
+                收藏者
+                <i :class="{bottomRed:typeIndex === 3}"></i>
+              </span>
+            </div>
+            <div class="right">
+              <input type="text" placeholder="搜索歌单音乐" />
+              <i>
+                <svg-icon class="blackColor" icon-class="search"></svg-icon>
+              </i>
+            </div>
+          </div>
+          <div class="song_list_detail" v-if="typeIndex === 1">
+            <song-list-detail
+              :subscribedCount="songListDetail.subscribedCount"
+              :songList="songListDetail.tracks"
+              :vipCount="songListDetail.vipCount"
+            ></song-list-detail>
+          </div>
+
+          <div class="commend_list_wrap" v-else-if="typeIndex === 2">
+            <comment-list-detail @updateCommentCount="updateCommentCount"></comment-list-detail>
+          </div>
+        </div>
+      </div>
+    </happy-scroll>
+  </div>
+</template>
+
+<script>
+import { mapGetters } from "vuex";
+import PlayAllBtn from "./PlayAllBtn.vue";
+import ShareBtn from "./ShareBtn.vue";
+import SongListDetail from "./SongListDetail.vue";
+import { loadingMixin } from "@/mixin/loadingMixin";
+import { number2wan } from "@/util/NumberTransfrom";
+import CommentListDetail from "../commentListWrap/CommentListDetail";
+export default {
+  mixins: [loadingMixin],
+  components: { PlayAllBtn, ShareBtn, SongListDetail, CommentListDetail },
+  data() {
+    return {
+      songId: "",
+      songListDetail: {},
+      groupBy: "",
+      typeIndex: 1,
+      commentCount: 0,
+    };
+  },
+  computed: {
+    ...mapGetters({ userProfile: "userProfile" }),
+    _songlistName() {
+      if (Object.keys(this.songListDetail).length === 0) return;
+      if (this.songListDetail.name.indexOf(this.userProfile.nickname) !== -1) {
+        return "我喜欢的音乐";
+      }
+      return this.songListDetail.name;
+    },
+    _songListLength() {
+      if (Object.keys(this.songListDetail).length === 0) return;
+      return this.songListDetail.tracks.length;
+    },
+    _subscribedCount() {
+      if (Object.keys(this.songListDetail).length === 0) return;
+      return `收藏(${number2wan(this.songListDetail.subscribedCount)})`;
+    },
+    _shareCount() {
+      if (Object.keys(this.songListDetail).length === 0) return;
+      return `分享(${number2wan(this.songListDetail.shareCount)})`;
+    },
+    _songCreatorUrl() {
+      if (Object.keys(this.songListDetail).length === 0) return;
+      return this.songListDetail.creator.avatarUrl + "?param=25y25";
+    },
+    _songCreatorNickname() {
+      if (Object.keys(this.songListDetail).length === 0) return;
+      return this.songListDetail.creator.nickname;
+    },
+    isShow() {
+      if (Object.keys(this.songListDetail).length === 0) return;
+      if (!~this.songListDetail.name.indexOf(this.userProfile.nickname)) {
+        return true;
+      }
+      return false;
+    },
+    tagCon() {
+      if (Object.keys(this.songListDetail).length === 0) return;
+
+      if (this.groupBy === "2" && this.songListDetail.tags.length === 0) {
+        return "<span class='tag'>添加标签</span>";
+      } else if (
+        this.groupBy === "3" &&
+        this.songListDetail.tags.length === 0
+      ) {
+        return "";
+      }
+      let str = "标签：";
+      this.songListDetail.tags.forEach((e, i) => {
+        str += `<span class='tag'>${e}</span> / `;
+      });
+      return str.substring(0, str.length - 2);
+    },
+    descCon() {
+      if (Object.keys(this.songListDetail).length === 0) return;
+      if (this.groupBy === "2" && !this.songListDetail.description) {
+        return "简介：<span class='tag'>添加简介</span>";
+      } else if (this.groupBy === "3" && !this.songListDetail.description) {
+        return "";
+      }
+      return `简介：${this.songListDetail.description}`;
+    },
+  },
+  watch: {
+    "$route.params.id": {
+      handler(newId) {
+        this.songId = newId;
+        this._initSongListDetail(newId);
+      },
+    },
+    "$route.query.groupBy": {
+      handler(value) {
+        this.groupBy = value + "";
+      },
+    },
+  },
+  created() {
+    this.groupBy = this.$route.query.groupBy;
+    this._initSongListDetail(this.$route.params.id);
+  },
+  mounted() {},
+  methods: {
+    async _initSongListDetail(id) {
+      this.$nextTick(() => {
+        this.initLoading();
+      });
+      this.songListDetail = await this.$store.dispatch(
+        "songModule/SaveSongListDetail",
+        {
+          id,
+        }
+      );
+      this.commentCount = this.songListDetail.commentCount;
+      this.endLoading();
+    },
+    toggleType(type) {
+      this.typeIndex = type;
+    },
+    updateCommentCount(newCommentCount) {
+      this.commentCount = newCommentCount;
+    },
+  },
+  filters: {
+    filterCreateTIme(value) {
+      if (!value) return;
+      if (value.length >= 10) {
+        return value.substring(0, 10) + " 创建";
+      }
+      return value + " 创建";
+    },
+    filterCount(value) {
+      if (typeof value === "undefined") return;
+      return number2wan(value);
+    },
+  },
+};
+</script>
+
+<style lang="less" scoped>
+#SongListWrap {
+  width: 100%;
+  height: 100%;
+  .flexLeft {
+    display: flex;
+    justify-content: left;
+    align-items: center;
+  }
+  .happy-scroll {
+    /deep/ .happy-scroll-container {
+      width: 100% !important;
+      height: 100% !important;
+      .happy-scroll-content {
+        width: 100%;
+      }
+    }
+  }
+  .con {
+    width: 100%;
+    height: 100%;
+    .head_wrap {
+      padding: 30px;
+      height: 250px;
+      width: 100%;
+      display: flex;
+      justify-content: left;
+      align-content: center;
+      .cover_img {
+        width: 185px;
+        height: 185px;
+        img {
+          width: 100%;
+          height: 100%;
+        }
+      }
+      .song_detail {
+        flex: 1;
+        padding-left: 20px;
+        // height: 185px;
+        .title {
+          span {
+            color: #ec4141;
+            border: 1px solid #ec4141;
+            border-radius: 3px;
+            margin-right: 10px;
+            font-size: 15px;
+            padding: 0 5px;
+          }
+          h3 {
+            color: #333;
+            font-size: 23px;
+          }
+        }
+        .create_time {
+          margin-top: 5px;
+          font-size: 12px;
+          img {
+            border-radius: 50%;
+          }
+          span:nth-child(2) {
+            color: #507daf;
+            margin: 0 10px;
+          }
+        }
+        .share {
+          display: flex;
+          justify-content: left;
+          align-items: center;
+          margin: 15px 0;
+        }
+        .play_statistic {
+          font-size: 14px;
+          p {
+            margin-bottom: 5px;
+            /deep/ .tag {
+              color: #0b58b0;
+              &:hover {
+                cursor: pointer;
+              }
+            }
+          }
+        }
+      }
+    }
+    .song_list_wrap {
+      .head {
+        width: 100%;
+        height: 25px;
+        margin-bottom: 15px;
+        padding: 0 20px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        .left {
+          display: flex;
+          justify-content: left;
+          align-items: center;
+          span {
+            margin-right: 20px;
+            font-size: 14px;
+            color: #000000;
+            text-align: center;
+            position: relative;
+
+            &:hover {
+              cursor: pointer;
+            }
+
+            .bottomRed {
+              position: absolute;
+              bottom: -5px;
+              left: 50%;
+              transform: translateX(-50%);
+              width: 80%;
+              height: 3px;
+              background-color: #ec4141;
+            }
+          }
+        }
+        .right {
+          width: 240px;
+          height: 100%;
+          background-color: #f7f7f7;
+          border-radius: 15px;
+          display: flex;
+          justify-content: left;
+          align-items: center;
+          input {
+            width: 200px;
+            border: none;
+            background-color: #f7f7f7;
+            margin-left: 10px;
+            font-size: 14px;
+          }
+          i {
+            width: 20px;
+            margin-left: auto;
+            margin-right: 3px;
+            .blackColor {
+              color: #000000;
+              font-size: 16px;
+            }
+          }
+        }
+      }
+    }
+  }
+}
+</style>

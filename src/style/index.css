@@ -4,6 +4,11 @@ h1 {
   margin: 0;
 }
 
+.flexL{
+  display: flex;
+  justify-content: left;
+  align-items: center;
+}
 /* 全局变量 */
 :root {
   --headBgColor: #ec4141;

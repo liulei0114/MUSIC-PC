@@ -11,7 +11,7 @@
       </div>
       <div class="search_wrap">
         <span>
-          <svg-icon icon-class="search"></svg-icon>
+          <svg-icon icon-class="search" style="color:#fff"></svg-icon>
         </span>
         <input type="text" placeholder="搜索" v-model="keyword" />
       </div>
@@ -61,6 +61,7 @@ import Mine from "../home/main/childComponents/Mine.vue";
 import DirectionNav from "./childComponents/DirectionNav.vue";
 const modifHeadUrl =
   "https://p3.music.126.net/VnZiScyynLG7atLIZ2YPkw==/18686200114669622.jpg";
+
 export default {
   data() {
     return {
@@ -83,12 +84,13 @@ export default {
   },
 
   methods: {
-    // 打开登录窗口dialog
+    // ? 打开登录窗口dialog
     openLoginDialog() {
       if (!this.$store.getters.loginDialogStatus) {
         this.$store.commit("loginModule/SET_LOGIN_DIALOG_STATUS", true);
       }
     },
+    // ? 关闭登录窗口dialog
     closeWindow() {
       window.electron.ipcRenderer.send("window-close");
     },
@@ -104,8 +106,6 @@ export default {
         this.mineShow = false;
       }
     },
-
-    
   },
   components: {
     DirectionNav,

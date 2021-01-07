@@ -1,12 +1,16 @@
 <template>
   <div id="MusicMain">
-    <router-view></router-view>
+    <router-view :key="getTime()"></router-view>
   </div>
 </template>
 
 <script>
 export default {
- 
+  methods: {
+    getTime(){
+      return (new Date()).valueOf()
+    }
+  },
 };
 </script>
 

@@ -22,7 +22,7 @@ export default {
   data() {
     return {
       countryList: [],
-      checkIndex:0
+      checkIndex: 0,
     };
   },
   props: {
@@ -35,7 +35,9 @@ export default {
       default: "220px",
     },
   },
-  computed: {},
+  computed: {
+    mySex() {},
+  },
   created() {
     fetchCountryListApi()
       .then((result) => {
@@ -56,11 +58,11 @@ export default {
       locale = locale.toLowerCase();
       return `flag-icon-${locale}`;
     },
-    handleCountryCheck(code,index) {
+    handleCountryCheck(code, index) {
       this.$emit("handleCountryCheck", code);
       // 添加选项背景色
-      this.checkIndex = index
-    },
+      this.checkIndex = index;
+    }
   },
 };
 </script>
@@ -94,7 +96,8 @@ export default {
     align-items: center;
     font-size: 16px;
     cursor: pointer;
-    &:hover,&.isCheck {
+    &:hover,
+    &.isCheck {
       background-color: #e4e5e7;
     }
     span:first-child {

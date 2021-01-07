@@ -17,6 +17,7 @@
     "element-ui": "^2.14.1",
     "js-md5": "^0.7.3",
     "lodash": "^4.17.20",
+    "moment": "^2.29.1",
     "normalize.css": "^8.0.1",
     "vue": "^2.6.11",
     "vue-flag-icon": "^1.0.0",

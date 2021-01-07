@@ -7,6 +7,8 @@ import store from '@/store'
 import _ from 'lodash'
 import md5 from 'js-md5';
 import HappyScroll from 'vue-happy-scroll'
+//1.导入 monment 文件
+import moment from 'moment' 
 
 
 // * 注册自定义全局组件
@@ -25,11 +27,13 @@ Vue.prototype._ = _
 Vue.config.productionTip = false
 Vue.prototype.$bus = new Vue()
 Vue.prototype.$md5 = md5;
-
+Vue.prototype.$moment = moment;
 
 Vue.use(gMessage)
 Vue.use(ElementUI)
 Vue.use(HappyScroll)
+//3.调用API进行汉化
+moment.locale('zh-cn');
 
 
 new Vue({

@@ -13,6 +13,7 @@ const orignMenu = {
       icon: "",
       textIcon: "",
       optionIcon: "",
+      groupBy: '0',  // 0：大标题 1；我的音乐 2：我创建的 3：收藏的歌单
       childrens: [],
     },
     {
@@ -23,6 +24,7 @@ const orignMenu = {
       icon: "",
       textIcon: "",
       optionIcon: "",
+      groupBy: '0',
       childrens: [],
     },
     {
@@ -33,6 +35,7 @@ const orignMenu = {
       icon: "",
       textIcon: "",
       optionIcon: "",
+      groupBy: '0',
       childrens: [],
     },
     {
@@ -43,6 +46,7 @@ const orignMenu = {
       icon: "",
       textIcon: "",
       optionIcon: "",
+      groupBy: '0',
       childrens: [],
     },
     {
@@ -53,6 +57,7 @@ const orignMenu = {
       icon: "",
       textIcon: "",
       optionIcon: "",
+      groupBy: '0',
       childrens: [],
     }
   ],
@@ -74,6 +79,7 @@ const orignMenu = {
           icon: "bendimusic",
           textIcon: "",
           optionIcon: "",
+          groupBy: '1',
         },
         {
           type: "classify",
@@ -83,6 +89,7 @@ const orignMenu = {
           icon: "download",
           textIcon: "",
           optionIcon: "",
+          groupBy: '1',
         },
         {
           type: "classify",
@@ -92,6 +99,7 @@ const orignMenu = {
           icon: "yunpan",
           textIcon: "",
           optionIcon: "",
+          groupBy: '1',
         },
         {
           type: "classify",
@@ -101,6 +109,7 @@ const orignMenu = {
           icon: "diantai",
           textIcon: "",
           optionIcon: "",
+          groupBy: '1',
         },
         {
           type: "classify",
@@ -110,6 +119,7 @@ const orignMenu = {
           icon: "shoucang",
           textIcon: "",
           optionIcon: "",
+          groupBy: '1',
         },
       ],
     }
@@ -131,6 +141,7 @@ const orignMenu = {
         icon: "like",
         textIcon: "",
         optionIcon: "xindong",
+        groupBy: '2'
       }]
     }
   ],
@@ -208,22 +219,25 @@ const loginModule = {
             let mylike = _asideMenu.myPlayList[0].childrens[0];
             mylike.id = e.id;
             mylike.coverImgUrl = e.coverImgUrl;
+            mylike.path = 'song/list/' + e.id;
           } else {
             let temp = {};
             temp.type = 'classify'
             temp.text = e.name
             temp.show = true
-            temp.path = ''
+            temp.path = 'song/list/' + e.id;
             temp.icon = 'qu'
             temp.textIcon = ''
             temp.optionIcon = ''
             temp.id = e.id
             temp.coverImgUrl = e.coverImgUrl
-            if (!e.ordered) {
-              _asideMenu.myPlayList[0].childrens.push(temp)
-            } else {
+            if (e.ordered) {
+              temp.groupBy = '3'
               _asideMenu.myOrderList[0].show = true;
               _asideMenu.myOrderList[0].childrens.push(temp)
+            } else {
+              temp.groupBy = '2';
+              _asideMenu.myPlayList[0].childrens.push(temp)
             }
           }
         })

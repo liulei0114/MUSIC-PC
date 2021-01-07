@@ -9,7 +9,7 @@
           :key="index"
           :itemMenu="item"
           :index="index"
-          @click.native="handelAsideItemClick(index)"
+          @click.native="handelAsideItemClick(item,index)"
         ></aside-item>
       </div>
     </happy-scroll>
@@ -17,7 +17,7 @@
 </template>
 
 <script>
-import AsideItem from "../main/childComponents/AsideItem.vue";
+import AsideItem from "./AsideItem.vue";
 
 export default {
   data() {
@@ -35,9 +35,15 @@ export default {
     // 隐藏掉滚动条
     this.hiddenScrollBar();
     this.addMouseEnterBarShowEventListener();
-    this.addMouseLeaveBarShowEventListener();
+    this.addMouseLeaveBarHiddenEventListener();
   },
-  watch: {},
+  watch: {
+    "$store.getters.userProfile": {
+      handler(newValue, oldValue) {
+        if (!newValue) this.handelAsideItemClick(null, 0);
+      },
+    },
+  },
   computed: {
     showAsideMenu() {
       this.$nextTick(() => {
@@ -73,8 +79,15 @@ export default {
     },
   },
   methods: {
-    handelAsideItemClick(index) {
+    handelAsideItemClick(item, index) {
       this.$bus.$emit("asideMenuClick", index);
+      if (item) {
+        this.$router.push({
+          name: "songListWrap",
+          params: { id: item.id },
+          query: { groupBy: item.groupBy },
+        });
+      }
     },
     addMouseEnterBarShowEventListener() {
       this.asideDom.onmouseenter = () => {
@@ -87,7 +100,7 @@ export default {
         }
       };
     },
-    addMouseLeaveBarShowEventListener() {
+    addMouseLeaveBarHiddenEventListener() {
       this.asideDom.onmouseleave = (e) => {
         this.hiddenScrollBar();
       };
