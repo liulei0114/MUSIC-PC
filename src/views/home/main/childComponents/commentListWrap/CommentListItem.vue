@@ -49,6 +49,7 @@ export default {
   data() {
     return {
       isDelete: false,
+      songListId:this.$route.meta.songListId
     };
   },
   props: {
@@ -86,8 +87,7 @@ export default {
     },
     doZan(commentId, liked, commentItem) {
       let params = new URLSearchParams();
-      console.log(this.$route);
-      params.append("id", this.$route.params.id);
+      params.append("id", this.songListId);
       params.append("cid", commentId);
       params.append("type", 2);
       params.append("t", ~~!liked);

@@ -454,7 +454,7 @@ export default {
         params.append("t", 1);
         params.append("content", this.ruleForm.textarea);
       }
-      params.append("id", this.$route.params.id);
+      params.append("id", this.songListId);
       params.append("type", 2);
       let result = await doCommentAPI(params);
       this._initSongComment();
@@ -468,7 +468,7 @@ export default {
       let params = new URLSearchParams();
       params.append("t", 0);
       params.append("type", 2);
-      params.append("id", this.$route.params.id);
+      params.append("id", this.songListId);
       params.append("commentId", this.deleteCommentId);
       this.dialogTableVisible = false;
       let result = await doCommentAPI(params); // ! 有个bug，这个借口返回慢的话，页面没有遮罩层
