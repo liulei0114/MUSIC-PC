@@ -8,7 +8,6 @@
           v-for="(item,index) in showAsideMenu"
           :key="index"
           :itemMenu="item"
-          :index="index"
           @click.native="handelAsideItemClick(item,index)"
         ></aside-item>
       </div>
@@ -27,6 +26,7 @@ export default {
       asideDom: null,
       scrollBarDom: null,
       checkMenuIndex: 0,
+      activedMenuId: "",
     };
   },
   mounted() {
@@ -37,13 +37,7 @@ export default {
     this.addMouseEnterBarShowEventListener();
     this.addMouseLeaveBarHiddenEventListener();
   },
-  watch: {
-    "$store.getters.userProfile": {
-      handler(newValue, oldValue) {
-        if (!newValue) this.handelAsideItemClick(null, 0);
-      },
-    },
-  },
+  watch: {},
   computed: {
     showAsideMenu() {
       this.$nextTick(() => {
@@ -80,14 +74,7 @@ export default {
   },
   methods: {
     handelAsideItemClick(item, index) {
-      this.$bus.$emit("asideMenuClick", index);
-      if (item) {
-        this.$router.push({
-          name: "songListWrap",
-          params: { id: item.id },
-          query: { groupBy: item.groupBy },
-        });
-      }
+      this.$router.push(item.path);
     },
     addMouseEnterBarShowEventListener() {
       this.asideDom.onmouseenter = () => {

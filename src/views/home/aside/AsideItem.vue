@@ -1,6 +1,6 @@
 <template>
   <div class="aside_item">
-    <div class="item_wrap" :class="getItemWrapClass">
+    <div class="item_wrap" :class="checkClass">
       <div class="icon" v-if="itemMenu.icon !== ''">
         <svg-icon :icon-class="itemMenu.icon"></svg-icon>
       </div>
@@ -18,36 +18,26 @@
 <script>
 export default {
   data() {
-    return {
-      clickIndex: 0,
-    };
+    return {};
   },
   props: {
     itemMenu: {
       type: Object,
       default: {},
     },
-    index: {
-      type: Number,
-    },
   },
   computed: {
-    getItemWrapClass() {
+    checkClass() {
       let temp = {};
-      if (this.itemMenu.type !== "head" && this.index === this.clickIndex) {
-        temp.check = true;
-      }
-      if (this.itemMenu.type === "head") {
+      let flag =
+        this.$route.path.indexOf(this.itemMenu.path) !== -1 ? true : false;
+      if (this.itemMenu.type !== "head") {
+        flag ? (temp.check = true) : (temp.check = false);
+      } else {
         temp.head = true;
       }
-
       return temp;
     },
-  },
-  created() {
-    this.$bus.$on("asideMenuClick", (index) => {
-      this.clickIndex = index;
-    });
   },
 };
 </script>

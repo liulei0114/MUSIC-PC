@@ -10,7 +10,7 @@
       <div class="con" id="AnchorPoint">
         <div class="head_wrap">
           <div class="cover_img">
-            <img :src="songListDetail.coverImgUrl+'?param=185y185'" alt />
+            <img v-lazy="songListDetail.coverImgUrl+'?param=185y185'" alt />
           </div>
           <div class="song_detail">
             <div class="title flexLeft">
@@ -27,7 +27,11 @@
                 <play-all-btn></play-all-btn>
               </div>
               <div>
-                <share-btn :groupBy="groupBy" icon="shoucangjia" :textCon="_subscribedCount"></share-btn>
+                <share-btn
+                  :isSubscribed="isSubscribed"
+                  icon="shoucangjia"
+                  :textCon="_subscribedCount"
+                ></share-btn>
               </div>
               <div>
                 <share-btn icon="fenxiang" :textCon="_shareCount"></share-btn>
@@ -67,7 +71,7 @@
                 <i :class="{bottomRed:typeIndex === 3}"></i>
               </span>
             </div>
-            <div class="right">
+            <div class="right" v-show="typeIndex === 1">
               <input type="text" placeholder="搜索歌单音乐" />
               <i>
                 <svg-icon class="blackColor" icon-class="search"></svg-icon>
@@ -81,9 +85,11 @@
               :vipCount="songListDetail.vipCount"
             ></song-list-detail>
           </div>
-
-          <div class="commend_list_wrap" v-else-if="typeIndex === 2">
+          <div class="commend_list_detail" v-else-if="typeIndex === 2">
             <comment-list-detail @updateCommentCount="updateCommentCount"></comment-list-detail>
+          </div>
+          <div class="subscribers_detail" v-else-if="typeIndex === 3">
+            <subscribers-detail></subscribers-detail>
           </div>
         </div>
       </div>
@@ -99,14 +105,21 @@ import SongListDetail from "./SongListDetail.vue";
 import { loadingMixin } from "@/mixin/loadingMixin";
 import { number2wan } from "@/util/NumberTransfrom";
 import CommentListDetail from "../commentListWrap/CommentListDetail";
+import SubscribersDetail from "../subscribersWrap/SubscribersDetail.vue";
 export default {
   mixins: [loadingMixin],
-  components: { PlayAllBtn, ShareBtn, SongListDetail, CommentListDetail },
+  components: {
+    PlayAllBtn,
+    ShareBtn,
+    SongListDetail,
+    CommentListDetail,
+    SubscribersDetail,
+  },
   data() {
     return {
       songId: "",
       songListDetail: {},
-      groupBy: "",
+      isSubscribed: false,
       typeIndex: 1,
       commentCount: 0,
     };
@@ -150,12 +163,9 @@ export default {
     tagCon() {
       if (Object.keys(this.songListDetail).length === 0) return;
 
-      if (this.groupBy === "2" && this.songListDetail.tags.length === 0) {
+      if (!this.isSubscribed && this.songListDetail.tags.length === 0) {
         return "<span class='tag'>添加标签</span>";
-      } else if (
-        this.groupBy === "3" &&
-        this.songListDetail.tags.length === 0
-      ) {
+      } else if (this.isSubscribed && this.songListDetail.tags.length === 0) {
         return "";
       }
       let str = "标签：";
@@ -166,30 +176,20 @@ export default {
     },
     descCon() {
       if (Object.keys(this.songListDetail).length === 0) return;
-      if (this.groupBy === "2" && !this.songListDetail.description) {
+      if (!this.isSubscribed && !this.songListDetail.description) {
         return "简介：<span class='tag'>添加简介</span>";
-      } else if (this.groupBy === "3" && !this.songListDetail.description) {
+      } else if (this.isSubscribed && !this.songListDetail.description) {
         return "";
       }
       return `简介：${this.songListDetail.description}`;
     },
   },
-  watch: {
-    "$route.params.id": {
-      handler(newId) {
-        this.songId = newId;
-        this._initSongListDetail(newId);
-      },
-    },
-    "$route.query.groupBy": {
-      handler(value) {
-        this.groupBy = value + "";
-      },
-    },
-  },
+  watch: {},
   created() {
-    this.groupBy = this.$route.query.groupBy;
-    this._initSongListDetail(this.$route.params.id);
+    // 从router获取songid和meta中的isSubscribe
+    this.songId = this.$route.meta.songListId;
+    this.isSubscribed = this.$route.meta.isSubscribed;
+    this._initSongListDetail(this.songId);
   },
   mounted() {},
   methods: {

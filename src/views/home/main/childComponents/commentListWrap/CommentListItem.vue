@@ -1,7 +1,7 @@
 <template>
   <div class="CommentListItem" @mouseenter="commentMouseEnter" @mouseleave="commentMouseLeave">
     <div class="left">
-      <img :src="getUserUrl" alt />
+      <img v-lazy="getUserUrl" alt />
     </div>
     <div class="right">
       <div>
@@ -92,11 +92,9 @@ export default {
       params.append("type", 2);
       params.append("t", ~~!liked);
       doCommentLikedAPI(params).then((result) => {
-        if (result.code === 200) {
-          // 点赞成功
-          commentItem.liked = !liked;
-          liked ? commentItem.likedCount-- : commentItem.likedCount++;
-        }
+        // 点赞成功
+        commentItem.liked = !liked;
+        liked ? commentItem.likedCount-- : commentItem.likedCount++;
       });
     },
     doReply() {
@@ -120,9 +118,9 @@ export default {
     commentMouseLeave() {
       this.isDelete = false;
     },
-    deleteComment(){
-      this.$emit('openDeleteCommentDialog',this.commentItem.commentId)
-    }
+    deleteComment() {
+      this.$emit("openDeleteCommentDialog", this.commentItem.commentId);
+    },
   },
 };
 </script>
@@ -140,6 +138,8 @@ export default {
   .left {
     width: 40px;
     img {
+      width: 35px;
+      height: 35px;
       border-radius: 50%;
     }
   }

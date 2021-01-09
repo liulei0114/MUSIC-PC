@@ -83,7 +83,7 @@
       center
       width="470px"
       :modal-append-to-body="false"
-      :modal='false'
+      :modal="false"
     >
       <div style="text-align: center;">确定删除该条评论</div>
       <div slot="footer" class="dialog-footer">
@@ -117,7 +117,7 @@ export default {
         offset: 0,
         currentPage: 1,
       },
-      songListId: this.$route.params.id,
+      songListId: this.$route.meta.songListId,
       emojiJson: [
         {
           codes: "1F600",
@@ -379,18 +379,15 @@ export default {
   },
   methods: {
     // ? 初始化评论数据
-    _initSongComment() {
-      this.$nextTick(() => {
-        this.initLoading();
-      });
+    async _initSongComment() {
+      this.initLoading();
       let params = Object.assign({ id: this.songListId }, this.pageInfo);
       params.timestamp = new Date().valueOf();
-      fetchSongCommentAPI(params).then((result) => {
-        this.commentListDetail = new CommentDetail(result);
-        this.$emit("updateCommentCount", this.commentListDetail.total);
-        this.endLoading();
-        this.scrollParentStart("#AnchorPoint");
-      });
+      let result = await fetchSongCommentAPI(params);
+      this.commentListDetail = new CommentDetail(result);
+      this.scrollParentStart("#AnchorPoint");
+      this.endLoading();
+      this.$emit("updateCommentCount", this.commentListDetail.total);
     },
     onInput(event) {
       console.log(event);
@@ -423,7 +420,7 @@ export default {
     scrollParentStart(name) {
       document.querySelector(name).scrollIntoView({
         block: "start",
-        behavior: "smooth",
+        behavior: "auto", // ! 奇怪，翻页不能使用smooth ，不能滚动。收藏者却可以
       });
     },
     handelChangeCurrentPage(curPage) {
@@ -460,10 +457,8 @@ export default {
       params.append("id", this.$route.params.id);
       params.append("type", 2);
       let result = await doCommentAPI(params);
-      if (result.code === 200) {
-        this._initSongComment();
-        this.ruleForm.textarea = "";
-      }
+      this._initSongComment();
+      this.ruleForm.textarea = "";
     },
     openDeleteCommentDialog(commentId) {
       this.dialogTableVisible = true;
@@ -476,10 +471,8 @@ export default {
       params.append("id", this.$route.params.id);
       params.append("commentId", this.deleteCommentId);
       this.dialogTableVisible = false;
-      let result = await doCommentAPI(params);
-      if (result.code === 200) {
-        this._initSongComment();
-      }
+      let result = await doCommentAPI(params); // ! 有个bug，这个借口返回慢的话，页面没有遮罩层
+      this._initSongComment();
     },
   },
   components: { CommentListItem },
@@ -499,7 +492,7 @@ export default {
     background-color: #ec4141;
     color: #fff;
   }
-  /deep/ .el-button--danger.is-plain:hover{
+  /deep/ .el-button--danger.is-plain:hover {
     background-color: #d73535;
   }
   .do_comment {

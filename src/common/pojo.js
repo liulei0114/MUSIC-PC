@@ -188,7 +188,7 @@ class Comment {
 
 // 被评论信息
 class BeReplied {
-  constructor({ user, beRepliedCommentId, content,status }) {
+  constructor({ user, beRepliedCommentId, content, status }) {
     this.user = new Creator(user);
     this.beRepliedCommentId = beRepliedCommentId;
     this.content = content;
@@ -197,6 +197,18 @@ class BeReplied {
 }
 
 
+
+// 收藏者信息
+export class Subscribers {
+  constructor({ defaultAvatar, avatarUrl, gender, userId, nickname, signature }) {
+    this.defaultAvatar = defaultAvatar; //true: 公开 false:不公开
+    this.avatarUrl = avatarUrl;
+    this.gender = gender; // 0保密 1：男 2：女
+    this.userId = userId;
+    this.nickname = nickname;
+    this.signature = signature; // 签名
+  }
+}
 
 
 

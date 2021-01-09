@@ -13,9 +13,9 @@
 import { number2wan } from "@/util/NumberTransfrom";
 export default {
   props: {
-    groupBy: {
-      type: String,
-      default: "",
+    isSubscribed: {
+      type: Boolean,
+      default: true,
     },
     icon: {
       type: String,
@@ -28,9 +28,8 @@ export default {
   },
   computed: {
     isForBid() {
-      if (this.groupBy === "") return;
       let temp = {};
-      if (this.groupBy === "2") {
+      if (!this.isSubscribed) {
         // 收藏禁用
         temp.background = "#fff";
         temp.cursor = "default";

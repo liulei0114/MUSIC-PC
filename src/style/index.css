@@ -4,11 +4,24 @@ h1 {
   margin: 0;
 }
 
-.flexL{
+.flexL {
   display: flex;
   justify-content: left;
   align-items: center;
 }
+
+.textOverflow {
+  white-space: nowrap;
+  overflow: hidden;
+  /* text-overflow: hidden; */
+}
+
+.textOverflowElli {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
 /* 全局变量 */
 :root {
   --headBgColor: #ec4141;

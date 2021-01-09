@@ -8,7 +8,8 @@ import _ from 'lodash'
 import md5 from 'js-md5';
 import HappyScroll from 'vue-happy-scroll'
 //1.导入 monment 文件
-import moment from 'moment' 
+import moment from 'moment'
+import VueLazyLoad from 'vue-lazyload'
 
 
 // * 注册自定义全局组件
@@ -35,6 +36,10 @@ Vue.use(HappyScroll)
 //3.调用API进行汉化
 moment.locale('zh-cn');
 
+
+Vue.use(VueLazyLoad, {
+  loading: require('@/assets/default.jpg')
+})
 
 new Vue({
   router,

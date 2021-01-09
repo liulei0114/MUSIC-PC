@@ -9,7 +9,7 @@ const orignMenu = {
       type: "classify",
       text: "发现音乐",
       show: true,
-      path: "",
+      path: "/find/music",
       icon: "",
       textIcon: "",
       optionIcon: "",
@@ -20,7 +20,7 @@ const orignMenu = {
       type: "classify",
       text: "视频",
       show: true,
-      path: "",
+      path: "/video",
       icon: "",
       textIcon: "",
       optionIcon: "",
@@ -31,7 +31,7 @@ const orignMenu = {
       type: "classify",
       text: "朋友",
       show: true,
-      path: "",
+      path: "/friends",
       icon: "",
       textIcon: "",
       optionIcon: "",
@@ -42,7 +42,7 @@ const orignMenu = {
       type: "classify",
       text: "直播",
       show: true,
-      path: "",
+      path: "/live",
       icon: "",
       textIcon: "",
       optionIcon: "",
@@ -53,7 +53,7 @@ const orignMenu = {
       type: "classify",
       text: "私人FM",
       show: true,
-      path: "",
+      path: "/fm",
       icon: "",
       textIcon: "",
       optionIcon: "",
@@ -75,7 +75,7 @@ const orignMenu = {
           type: "classify",
           text: "本地音乐",
           show: true,
-          path: "",
+          path: "/mine/local",
           icon: "bendimusic",
           textIcon: "",
           optionIcon: "",
@@ -85,7 +85,7 @@ const orignMenu = {
           type: "classify",
           text: "下载管理",
           show: true,
-          path: "",
+          path: "/mine/download",
           icon: "download",
           textIcon: "",
           optionIcon: "",
@@ -95,7 +95,7 @@ const orignMenu = {
           type: "classify",
           text: "我的音乐盘",
           show: false,
-          path: "",
+          path: "/mine/music/disc",
           icon: "yunpan",
           textIcon: "",
           optionIcon: "",
@@ -105,7 +105,7 @@ const orignMenu = {
           type: "classify",
           text: "我的电台",
           show: false,
-          path: "",
+          path: "/mine/radio",
           icon: "diantai",
           textIcon: "",
           optionIcon: "",
@@ -115,7 +115,7 @@ const orignMenu = {
           type: "classify",
           text: "我的收藏",
           show: false,
-          path: "",
+          path: "/mine/collect",
           icon: "shoucang",
           textIcon: "",
           optionIcon: "",
@@ -133,16 +133,18 @@ const orignMenu = {
       icon: "",
       textIcon: "arrow-down-filling-999",
       optionIcon: "add",
-      childrens: [{
-        type: "classify",
-        text: "我喜欢的音乐",
-        show: true,
-        path: "",
-        icon: "like",
-        textIcon: "",
-        optionIcon: "xindong",
-        groupBy: '2'
-      }]
+      childrens: [
+        {
+          type: "classify",
+          text: "我喜欢的音乐",
+          show: true,
+          path: "/like",
+          icon: "like",
+          textIcon: "",
+          optionIcon: "xindong",
+          groupBy: '3',
+        },
+      ]
     }
   ],
   myOrderList: [
@@ -164,7 +166,8 @@ const loginModule = {
   state: {
     loginDialogStatus: false,  // 登录窗口状态
     userProfile: getLocalProfile(), // 用户信息
-    asideMenu: getItem('asideMenu') ? getItem('asideMenu') : _.cloneDeep(orignMenu) // 菜单列表
+    asideMenu: getItem('asideMenu') ? getItem('asideMenu') : _.cloneDeep(orignMenu), // 菜单列表
+    menu: null
   },
   mutations: {
     SET_LOGIN_DIALOG_STATUS(state, status) {
@@ -175,6 +178,9 @@ const loginModule = {
     },
     SET_ASIDE_MENU(state, status) {
       state.asideMenu = status
+    },
+    SET_MENU(state, status) {
+      state.menu = status
     }
   },
   actions: {
@@ -198,7 +204,7 @@ const loginModule = {
       return new Promise((resolve, reject) => {
         logoutApi().then((result) => {
           removeLocalProfile(result);
-          commit('SET_USER_PROFILE', null)
+          commit('SET_USER_PROFILE', {})
           setLocalAsideMenu(orignMenu)
           commit('SET_ASIDE_MENU', orignMenu)
           resolve()
@@ -211,52 +217,89 @@ const loginModule = {
     async FetchUserPlayListAPi({ state, commit }) {
       let uid = state.userProfile.userId;
       let playListRes = await fetchUserPlayListAPi({ uid })
-
       let _asideMenu = _.cloneDeep(orignMenu)
-      if (playListRes.code === 200) {
-        playListRes.playlist.forEach((e, i) => {
-          if (i == 0) {  //我喜欢的
-            let mylike = _asideMenu.myPlayList[0].childrens[0];
-            mylike.id = e.id;
-            mylike.coverImgUrl = e.coverImgUrl;
-            mylike.path = 'song/list/' + e.id;
-          } else {
-            let temp = {};
-            temp.type = 'classify'
-            temp.text = e.name
-            temp.show = true
-            temp.path = 'song/list/' + e.id;
-            temp.icon = 'qu'
-            temp.textIcon = ''
-            temp.optionIcon = ''
-            temp.id = e.id
-            temp.coverImgUrl = e.coverImgUrl
-            if (e.ordered) {
-              temp.groupBy = '3'
-              _asideMenu.myOrderList[0].show = true;
-              _asideMenu.myOrderList[0].childrens.push(temp)
-            } else {
-              temp.groupBy = '2';
-              _asideMenu.myPlayList[0].childrens.push(temp)
-            }
-          }
-        })
-        // 把我的音乐中后三个改为true
-        _asideMenu.myMusic[0].childrens.forEach((e, i) => {
-          e.show = true
-        })
-        commit('SET_ASIDE_MENU', _asideMenu);
-        setLocalAsideMenu(_asideMenu)
-      } else {
-        throw new Error(playListRes.message)
-      }
+      _asideMenu.myPlayList[0].childrens.shift()
+      playListRes.playlist.forEach((e, i) => {
+        let menumItem = {};
+        menumItem.type = 'classify'
+        menumItem.text = e.name
+        menumItem.show = true
+        menumItem.icon = 'qu'
+        menumItem.textIcon = ''
+        menumItem.optionIcon = ''
+        menumItem.id = e.id
+        menumItem.coverImgUrl = e.coverImgUrl
+        menumItem.subscribed = e.subscribed
+        if (i == 0) {  //我喜欢的
 
+          menumItem.text = '我喜欢的音乐'
+          menumItem.icon = 'like'
+          menumItem.optionIcon = 'xindong'
+        }
 
+        if (e.subscribed) {  // * false 自己创建的 true 收藏的
+          menumItem.path = `/subscribe/mine/${e.id}`
+          _asideMenu.myOrderList[0].show = true;
+          _asideMenu.myOrderList[0].childrens.push(menumItem)
+        } else {
+          menumItem.path = `/creation/mine/${e.id}`
+          _asideMenu.myPlayList[0].childrens.push(menumItem)
+        }
+
+      })
+      // 把我的音乐中后三个改为true
+      _asideMenu.myMusic[0].childrens.forEach((e, i) => {
+        e.show = true
+      })
+      commit('SET_ASIDE_MENU', _asideMenu);
+      setLocalAsideMenu(_asideMenu)
+      // 添加路由中
+    },
+
+    async AddMenuRouter({ state, commit }) {
+      let uid = state.userProfile.userId;
+      let playListRes = await fetchUserPlayListAPi({ uid })
+      // 添加路由中
+      let routerlist = addRouter(playListRes.playlist)
+      commit('SET_MENU', routerlist)
+      return routerlist
     }
 
   }
+}
 
 
+
+
+function addRouter(menuList) {
+  let createRouter = {
+    path: '/creation',
+    component: () => import('@/components/layout/LayOut.vue'),
+    children: []
+  }
+  let subscribeRouter = {
+    path: '/subscribe',
+    component: () => import('@/components/layout/LayOut.vue'),
+    children: []
+  }
+  menuList.forEach((e, i) => {
+    let temp = {
+      path: 'mine/' + e.id,
+      // name: e.name,
+      component: () => import('@/views/home/main/childComponents/songListWrap/SongListWrap.vue'),
+      meta: {
+        songListId: e.id
+      }
+    }
+    if (e.subscribed) {
+      temp.meta.isSubscribed = true,
+        subscribeRouter.children.push(temp)
+    } else {
+      temp.meta.isSubscribed = false
+      createRouter.children.push(temp)
+    }
+  })
+  return [createRouter, subscribeRouter];
 }
 
 export default loginModule

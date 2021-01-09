@@ -1,32 +1,51 @@
 import Vue from 'vue'
 import VueRouter from "vue-router"
+import store from '@/store'
 
 Vue.use(VueRouter)
 
 const routes = [
   {
     path: '',
-    // redirect: '/text',
+    redirect: '/find/music',
     component: () => import('@/components/layout/LayOut'),
     children: [
       {
-        path: 'song/list/:id',
-        name: 'songListWrap',
-        component: () => import('@/views/home/main/childComponents/songListWrap/SongListWrap')
-      }
+        path: 'find/music',
+        component: () => import('@/views/home/main/childComponents/findMusicWrap/FindMusicWrap'),
+      },
     ]
 
   }
 ]
-// 解决ElementUI导航栏中的vue-router在3.0版本以上重复点菜单报错问题
 const originalPush = VueRouter.prototype.push
-VueRouter.prototype.push = function push(location) {
-  return originalPush.call(this, location).catch(err => err)
+VueRouter.prototype.push = function push(location, onResolve, onReject) {
+  if (onResolve || onReject)
+    return originalPush.call(this, location, onResolve, onReject)
+  return originalPush.call(this, location).catch((err) => err)
 }
+
 const router = new VueRouter({
   scrollBehavior: () => ({ y: 0 }),
   routes
 })
 
+router.beforeEach((to, from, next) => {
+
+  if (store.getters.userProfile) {
+    if (store.getters.menu) {
+      next()
+    } else {
+      store.dispatch('loginModule/AddMenuRouter').then((result) => {
+        router.addRoutes(result)
+        next({ ...to, replace: true })
+      })
+    }
+  } else {
+    next()
+  }
+
+
+})
 
 export default router

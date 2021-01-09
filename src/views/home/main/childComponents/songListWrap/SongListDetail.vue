@@ -1,6 +1,5 @@
 <template>
   <div class="SongListDetail">
-    
     <div class="body">
       <div class="title flexTable">
         <span>音乐标题</span>
@@ -9,7 +8,7 @@
         <span>时长</span>
       </div>
       <!-- 不是会员 -->
-      <div v-if="userProfile.vipType ===0" class="vip_buy_info">
+      <div v-if="userProfile.vipType === 0" class="vip_buy_info">
         <i></i>
         <span>含{{vipCount}}首vip专享歌曲</span>
         <span>首开VIP仅5元</span>
@@ -55,9 +54,7 @@ export default {
   computed: {
     ...mapGetters({ userProfile: "userProfile" }),
   },
-  methods: {
-   
-  },
+  methods: {},
 };
 </script>
 
@@ -65,7 +62,7 @@ export default {
 .SongListDetail {
   width: 100%;
   height: 100%;
- 
+
   .body {
     .title {
       font-size: 13px;

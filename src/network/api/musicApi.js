@@ -80,3 +80,12 @@ export function doCommentAPI(params){
     params: params
   })
 }
+
+// ! 歌单收藏者信息
+export function playListSubscribersInfoAPI(params){
+  return request({
+    url: '/playlist/subscribers',
+    method: 'get',
+    params: params
+  })
+}

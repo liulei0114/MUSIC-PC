@@ -118,12 +118,10 @@ export default {
   methods: {
     // ? 处理退出登录
     handelLogOut() {
-      this.initLoading();
       this.$store.dispatch("loginModule/LoginOut").then((result) => {
         this.$emit("input", !this.value);
+        this.$router.push("/");
       });
-
-      this.endLoading();
     },
     // ? 添加监听
     addAppClickEventListener() {

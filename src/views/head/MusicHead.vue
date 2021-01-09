@@ -72,14 +72,14 @@ export default {
   },
   computed: {
     headUrl() {
-      return this.$store.getters.userProfile
-        ? this.$store.getters.userProfile.avatarUrl
-        : modifHeadUrl;
+      return this._.isEmpty(this.$store.getters.userProfile)
+        ? modifHeadUrl
+        : this.$store.getters.userProfile.avatarUrl;
     },
     nickName() {
-      return this.$store.getters.userProfile
-        ? this.$store.getters.userProfile.nickname
-        : "";
+      return this._.isEmpty(this.$store.getters.userProfile)
+        ? ""
+        : this.$store.getters.userProfile.nickname;
     },
   },
 
