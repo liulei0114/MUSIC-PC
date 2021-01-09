@@ -72,16 +72,19 @@
               </span>
             </div>
             <div class="right" v-show="typeIndex === 1">
-              <input type="text" placeholder="搜索歌单音乐" />
-              <i>
-                <svg-icon class="blackColor" icon-class="search"></svg-icon>
+              <input type="text" placeholder="搜索歌单音乐" v-model="keywords" @input="_debounceKeywords" />
+              <i @click="clearKeywords">
+                <svg-icon
+                  class="blackColor"
+                  :icon-class="keywords.trim().length === 0?'search':'close'"
+                ></svg-icon>
               </i>
             </div>
           </div>
           <div class="song_list_detail" v-if="typeIndex === 1">
             <song-list-detail
               :subscribedCount="songListDetail.subscribedCount"
-              :songList="songListDetail.tracks"
+              :songList="songListTracks"
               :vipCount="songListDetail.vipCount"
             ></song-list-detail>
           </div>
@@ -106,6 +109,7 @@ import { loadingMixin } from "@/mixin/loadingMixin";
 import { number2wan } from "@/util/NumberTransfrom";
 import CommentListDetail from "../commentListWrap/CommentListDetail";
 import SubscribersDetail from "../subscribersWrap/SubscribersDetail.vue";
+import { seachMusicAPI } from "@/network/api/musicApi";
 export default {
   mixins: [loadingMixin],
   components: {
@@ -122,6 +126,9 @@ export default {
       isSubscribed: false,
       typeIndex: 1,
       commentCount: 0,
+      keywords: "",
+      songListTracks: [],
+      _debounceKeywords: null,
     };
   },
   computed: {
@@ -139,7 +146,8 @@ export default {
     },
     _subscribedCount() {
       if (Object.keys(this.songListDetail).length === 0) return;
-      return `收藏(${number2wan(this.songListDetail.subscribedCount)})`;
+      let prefix = this.isSubscribed ? (prefix = "已收藏") : "收藏";
+      return `${prefix}(${number2wan(this.songListDetail.subscribedCount)})`;
     },
     _shareCount() {
       if (Object.keys(this.songListDetail).length === 0) return;
@@ -190,6 +198,8 @@ export default {
     this.songId = this.$route.meta.songListId;
     this.isSubscribed = this.$route.meta.isSubscribed;
     this._initSongListDetail(this.songId);
+    // 创建关键词防抖函数
+    this._debounceKeywords = this._.debounce(this.seachMusicInSongList, 1000);
   },
   mounted() {},
   methods: {
@@ -204,6 +214,7 @@ export default {
         }
       );
       this.commentCount = this.songListDetail.commentCount;
+      this.songListTracks = this.songListDetail.tracks;
       this.endLoading();
     },
     toggleType(type) {
@@ -211,6 +222,40 @@ export default {
     },
     updateCommentCount(newCommentCount) {
       this.commentCount = newCommentCount;
+    },
+    // ? 歌单内搜索
+    seachMusicInSongList() {
+      let regExp = new RegExp(`${this.keywords.trim()}`, "i");
+      if (this.keywords.trim() !== "") {
+        let temp = this.songListDetail.tracks.filter((e) => {
+          if (regExp.test(e.name) || regExp.test(e.alia.join(""))) {
+            return true;
+          }
+          if (e.tns && regExp.test(e.tns.join(""))) {
+            return true;
+          }
+          // 在歌手里面查找
+          let ar = "";
+          e.ar.forEach((e, i) => {
+            ar += e.name;
+          });
+          if (regExp.test(ar)) {
+            return true;
+          }
+          // 专辑里面查找
+          if (regExp.test(e.al.name) || regExp.test(e.al.tns.join(""))) {
+            return true;
+          }
+         
+        });
+        this.songListTracks = temp;
+      } else {
+        this.songListTracks = this.songListDetail.tracks;
+      }
+    },
+    clearKeywords() {
+      this.keywords = "";
+      this.songListTracks = this.songListDetail.tracks;
     },
   },
   filters: {

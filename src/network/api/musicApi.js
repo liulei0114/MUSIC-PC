@@ -89,3 +89,13 @@ export function playListSubscribersInfoAPI(params){
     params: params
   })
 }
+
+
+// ! 搜索
+export function seachMusicAPI(params){
+  return request({
+    url: '/cloudsearch',
+    method: 'get',
+    params: params
+  })
+}
