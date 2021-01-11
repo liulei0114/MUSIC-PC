@@ -172,6 +172,8 @@ export default {
   transform: translate(-50%, -50%);
   border-radius: 2px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  z-index: 100 !important;
+  background-color: #fff;
   .head_img {
     width: 100%;
     height: 170px;
@@ -200,6 +202,7 @@ export default {
       border-bottom: 1px solid #d8d8d8;
       display: flex;
       justify-content: left;
+
       .left {
         float: left;
         width: 90px;
@@ -209,6 +212,7 @@ export default {
         justify-content: left;
         align-items: center;
         color: #999;
+
         i {
           flex: 1;
           height: 100%;

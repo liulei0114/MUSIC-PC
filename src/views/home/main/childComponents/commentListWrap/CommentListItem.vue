@@ -49,7 +49,7 @@ export default {
   data() {
     return {
       isDelete: false,
-      songListId:this.$route.meta.songListId
+      songListId: "",
     };
   },
   props: {
@@ -64,7 +64,11 @@ export default {
     },
     ...mapGetters({ userProfile: "userProfile" }),
   },
-  created() {},
+  created() {
+    this.songListId = this.$route.path.slice(
+      this.$route.path.lastIndexOf("/") + 1
+    );
+  },
   methods: {
     handleTime(time) {
       let today = this.$moment().startOf("day");

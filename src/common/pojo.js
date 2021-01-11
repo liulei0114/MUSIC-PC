@@ -1,5 +1,5 @@
 import { formatDate, millisecondToDate } from '@/util/DateUtil.js'
-
+import { number2wan } from '@/util/NumberTransfrom.js'
 export class SongListDeatil {
   constructor(privileges, { playCount, subscribedCount, id, name, shareCount, commentCount, coverImgUrl, privacy, createTime, trackUpdateTime, tracks, tags, description, creator }) {
     this.playCount = playCount;  // * 播放数量
@@ -209,6 +209,123 @@ export class Subscribers {
     this.signature = signature; // 签名
   }
 }
+
+
+
+// banner信息
+export class Banner {
+  constructor({ imageUrl, targetId, targetType, titleColor, typeTitle }) {
+    this.imageUrl = imageUrl;
+    this.targetId = targetId;
+    this.targetType = targetType;
+    this.titleColor = titleColor;
+    this.typeTitle = typeTitle
+  }
+}
+
+// 个性化推荐歌单信息
+export class Personalized {
+  constructor({ id, type, name, copywriter, picUrl, playCount, trackCount, sPicUrl }) {
+    this.id = id;
+    this.type = type // 歌单所属类型
+    this.name = name
+    this.copywriter = copywriter
+    this.picUrl = picUrl
+    this.playCount = number2wan(playCount)
+    this.trackCount = trackCount
+    this.sPicUrl = sPicUrl
+  }
+}
+
+// 个性化推荐 独家放送
+export class Privatecontent {
+  constructor({ id, type, name, copywriter, playCount, trackCount, sPicUrl }) {
+    this.id = id;
+    this.type = type // 歌单所属类型
+    this.name = name
+    this.copywriter = copywriter
+    this.picUrl = sPicUrl   // 显示小图片
+    this.playCount = number2wan(playCount)
+    this.trackCount = trackCount
+  }
+}
+
+// 个性化推荐 最新音乐
+export class PrivateNewSong {
+  constructor({ id, name, picUrl, song }) {
+    this.id = id;
+    this.name = name;
+    this.alias = this.getAlias(song);
+    this.picUrl = picUrl;
+    this.fee = song.fee;
+    this.ar = this.getArtist(song);
+    this.mv = song.mvid;
+    this.isSq = this.isSq(song.privilege.playMaxbr) // * sq标志
+  }
+
+  getAlias(song) {
+    return song.alias.join(' / ')
+  }
+  getArtist(song) {
+    let nameStr = ''
+    song.artists.forEach((e, i) => {
+      nameStr += e.name + ' /'
+    })
+    return nameStr.substring(0, nameStr.length - 2)
+  }
+  isSq(playMaxbr) {
+    if (playMaxbr && playMaxbr === 999000) {
+      return true;
+    }
+    return false;
+  }
+}
+
+
+// 个性化推荐 推荐MV
+export class PrivateMV {
+  constructor({ id, type, name, copywriter, picUrl, playCount, artistName }) {
+    this.id = id;
+    this.type = type // 歌单所属类型
+    this.name = name
+    this.copywriter = copywriter
+    this.picUrl = picUrl   // 显示小图片
+    this.playCount = number2wan(playCount)
+    this.artistName = artistName
+  }
+}
+
+// 个性化推荐 推荐DJ
+export class PrivateDJ {
+  constructor({ id, name, picUrl, rcmdText }) {
+    this.id = id;
+    this.name = name;
+    this.picUrl = picUrl
+    this.copywriter = rcmdText
+  }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

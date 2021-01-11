@@ -8,7 +8,7 @@
         <span>时长</span>
       </div>
       <!-- 不是会员 -->
-      <div v-if="userProfile.vipType === 0" class="vip_buy_info">
+      <div v-if="!userProfile || userProfile.vipType === 0" class="vip_buy_info">
         <i></i>
         <span>含{{vipCount}}首vip专享歌曲</span>
         <span>首开VIP仅5元</span>

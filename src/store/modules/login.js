@@ -288,7 +288,6 @@ function addRouter(menuList) {
       // name: e.name,
       component: () => import('@/views/home/main/childComponents/songListWrap/SongListWrap.vue'),
       meta: {
-        songListId: e.id
       }
     }
     if (e.subscribed) {

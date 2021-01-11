@@ -129,15 +129,21 @@ export default {
       keywords: "",
       songListTracks: [],
       _debounceKeywords: null,
+      loading: true,
     };
   },
   computed: {
     ...mapGetters({ userProfile: "userProfile" }),
     _songlistName() {
       if (Object.keys(this.songListDetail).length === 0) return;
-      if (this.songListDetail.name.indexOf(this.userProfile.nickname) !== -1) {
-        return "我喜欢的音乐";
+      if (this.userProfile) {
+        if (
+          this.songListDetail.name.indexOf(this.userProfile.nickname) !== -1
+        ) {
+          return "我喜欢的音乐";
+        }
       }
+
       return this.songListDetail.name;
     },
     _songListLength() {
@@ -163,10 +169,14 @@ export default {
     },
     isShow() {
       if (Object.keys(this.songListDetail).length === 0) return;
-      if (!~this.songListDetail.name.indexOf(this.userProfile.nickname)) {
-        return true;
+      if (this.userProfile) {
+        if (!~this.songListDetail.name.indexOf(this.userProfile.nickname)) {
+          return true;
+        } else {
+          return false;
+        }
       }
-      return false;
+      return true;
     },
     tagCon() {
       if (Object.keys(this.songListDetail).length === 0) return;
@@ -195,7 +205,7 @@ export default {
   watch: {},
   created() {
     // 从router获取songid和meta中的isSubscribe
-    this.songId = this.$route.meta.songListId;
+    this.songId = this.$route.path.slice(this.$route.path.lastIndexOf("/") + 1);
     this.isSubscribed = this.$route.meta.isSubscribed;
     this._initSongListDetail(this.songId);
     // 创建关键词防抖函数
@@ -204,9 +214,9 @@ export default {
   mounted() {},
   methods: {
     async _initSongListDetail(id) {
-      this.$nextTick(() => {
-        this.initLoading();
-      });
+      // this.$nextTick(() => {
+      //   this.initLoading();
+      // });
       this.songListDetail = await this.$store.dispatch(
         "songModule/SaveSongListDetail",
         {
@@ -215,7 +225,7 @@ export default {
       );
       this.commentCount = this.songListDetail.commentCount;
       this.songListTracks = this.songListDetail.tracks;
-      this.endLoading();
+      // this.endLoading();
     },
     toggleType(type) {
       this.typeIndex = type;
@@ -246,7 +256,6 @@ export default {
           if (regExp.test(e.al.name) || regExp.test(e.al.tns.join(""))) {
             return true;
           }
-         
         });
         this.songListTracks = temp;
       } else {
@@ -297,7 +306,7 @@ export default {
     height: 100%;
     .head_wrap {
       padding: 30px;
-      height: 250px;
+      // height: 250px;
       width: 100%;
       display: flex;
       justify-content: left;

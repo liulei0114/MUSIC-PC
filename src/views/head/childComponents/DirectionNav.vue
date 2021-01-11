@@ -1,10 +1,10 @@
 <template>
   <div id="HeadDirectNav">
     <div v-if="isLeft" class="nav_contain">
-      <svg-icon icon-class="arrow-left"></svg-icon>
+      <svg-icon icon-class="arrow-left" style="color:#fff"></svg-icon>
     </div>
     <div v-else class="nav_contain">
-      <svg-icon icon-class="arrow-right"></svg-icon>
+      <svg-icon icon-class="arrow-right" style="color:#fff"></svg-icon>
     </div>
   </div>
 </template>

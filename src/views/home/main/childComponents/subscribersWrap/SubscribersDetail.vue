@@ -41,10 +41,13 @@ export default {
       },
       subscribersList: [],
       subscribersListTotal: 0,
-      songListId:this.$route.meta.songListId
+      songListId: "",
     };
   },
   created() {
+    this.songListId = this.$route.path.slice(
+      this.$route.path.lastIndexOf("/") + 1
+    );
     this._initSubscribersInfo();
   },
   methods: {

@@ -8,7 +8,7 @@
           v-for="(item,index) in showAsideMenu"
           :key="index"
           :itemMenu="item"
-          @click.native="handelAsideItemClick(item,index)"
+          @click.native="handelAsideItemClick(item)"
         ></aside-item>
       </div>
     </happy-scroll>
@@ -73,7 +73,7 @@ export default {
     },
   },
   methods: {
-    handelAsideItemClick(item, index) {
+    handelAsideItemClick(item) {
       this.$router.push(item.path);
     },
     addMouseEnterBarShowEventListener() {

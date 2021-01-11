@@ -16,6 +16,20 @@ const routes = [
       },
     ]
 
+  },
+  {
+    path: '/personalized',
+    component: () => import('@/components/layout/LayOut'),
+    children: [
+      {
+        path: 'song/list/:id',
+        name: 'PersonalizedSongList',
+        meta: {
+          isSubscribed: false
+        },
+        component: () => import('@/views/home/main/childComponents/songListWrap/SongListWrap.vue'),
+      }
+    ]
   }
 ]
 const originalPush = VueRouter.prototype.push

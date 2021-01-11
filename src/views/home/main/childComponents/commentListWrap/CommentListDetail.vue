@@ -117,7 +117,7 @@ export default {
         offset: 0,
         currentPage: 1,
       },
-      songListId: this.$route.meta.songListId,
+      songListId: "",
       emojiJson: [
         {
           codes: "1F600",
@@ -375,6 +375,9 @@ export default {
     },
   },
   created() {
+    this.songListId = this.$route.path.slice(
+      this.$route.path.lastIndexOf("/") + 1
+    );
     this._initSongComment();
   },
   methods: {

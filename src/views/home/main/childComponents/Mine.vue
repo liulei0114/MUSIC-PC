@@ -154,7 +154,7 @@ export default {
   border-radius: 2px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   background-color: #fff;
-  z-index: 10;
+  z-index: 40;
   display: flex;
   flex-direction: column;
   color: #333;
