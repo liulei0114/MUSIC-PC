@@ -2,3 +2,4 @@ node_modules
 
 #Electron-builder output
 /dist_electron
+.VSCodeCounter
