@@ -8,7 +8,7 @@ export class SongListDeatil {
     this.name = name;// * 歌单名称
     this.shareCount = shareCount; // * 分享数量
     this.commentCount = commentCount; // * 评论数量
-    this.coverImgUrl = coverImgUrl; // * 歌单封面图片
+    this.coverImgUrl = this.tansIdentityIconUrl(coverImgUrl); // * 歌单封面图片
     this.createTime = formatDate(new Date(createTime), 'yyyy-MM-dd hh:mm:ss'); // * 歌单创建时间
     this.privacy = privacy // * 是否私有 0非私有
     this.trackUpdateTime = formatDate(new Date(trackUpdateTime), 'yyyy-MM-dd hh:mm:ss') // * 歌单最后更新时间
@@ -32,7 +32,11 @@ export class SongListDeatil {
     this.tracks = trackList;  // * 歌曲列表 arr[Track]
     this.vipCount = vipCount;  // * vip歌曲数量
   }
-
+  tansIdentityIconUrl(imageUrl) {
+    imageUrl = imageUrl.replace(new RegExp('p[1-5]{1}'), 'p3');
+    // console.log(imageUrl.substring(0, 10));
+    return imageUrl
+  }
 }
 
 
@@ -121,11 +125,15 @@ class Rate {
 
 class Creator {
   constructor({ avatarUrl, userId, nickname, signature, vipType }) {
-    this.avatarUrl = avatarUrl;
+    this.avatarUrl = this.tansIdentityIconUrl(avatarUrl);
     this.userId = userId;
     this.nickname = nickname;
     this.signature = signature;
     this.vipType = vipType;
+  }
+  tansIdentityIconUrl(avatarUrl) {
+    avatarUrl = avatarUrl.replace(new RegExp('p[1-5]{1}'), 'p3');
+    return avatarUrl
   }
 }
 
@@ -215,11 +223,15 @@ export class Subscribers {
 // banner信息
 export class Banner {
   constructor({ imageUrl, targetId, targetType, titleColor, typeTitle }) {
-    this.imageUrl = imageUrl;
+    this.imageUrl = this.tansIdentityIconUrl(imageUrl);
     this.targetId = targetId;
     this.targetType = targetType;
     this.titleColor = titleColor;
     this.typeTitle = typeTitle
+  }
+  tansIdentityIconUrl(imageUrl) {
+    imageUrl = imageUrl.replace(new RegExp('p[1-5]{1}'), 'p3');
+    return imageUrl
   }
 }
 
@@ -230,10 +242,14 @@ export class Personalized {
     this.type = type // 歌单所属类型
     this.name = name
     this.copywriter = copywriter
-    this.picUrl = picUrl
+    this.picUrl = this.tansIdentityIconUrl(picUrl);
     this.playCount = number2wan(playCount)
     this.trackCount = trackCount
     this.sPicUrl = sPicUrl
+  }
+  tansIdentityIconUrl(picUrl) {
+    picUrl = picUrl.replace(new RegExp('p[1-5]{1}'), 'p3');
+    return picUrl
   }
 }
 
@@ -256,13 +272,16 @@ export class PrivateNewSong {
     this.id = id;
     this.name = name;
     this.alias = this.getAlias(song);
-    this.picUrl = picUrl;
+    this.picUrl = this.tansIdentityIconUrl(picUrl);
     this.fee = song.fee;
     this.ar = this.getArtist(song);
     this.mv = song.mvid;
     this.isSq = this.isSq(song.privilege.playMaxbr) // * sq标志
   }
-
+  tansIdentityIconUrl(picUrl) {
+    picUrl = picUrl.replace(new RegExp('p[1-5]{1}'), 'p3');
+    return picUrl
+  }
   getAlias(song) {
     return song.alias.join(' / ')
   }
@@ -289,9 +308,13 @@ export class PrivateMV {
     this.type = type // 歌单所属类型
     this.name = name
     this.copywriter = copywriter
-    this.picUrl = picUrl   // 显示小图片
+    this.picUrl = this.tansIdentityIconUrl(picUrl)   // 显示小图片
     this.playCount = number2wan(playCount)
     this.artistName = artistName
+  }
+  tansIdentityIconUrl(picUrl) {
+    picUrl = picUrl.replace(new RegExp('p[1-5]{1}'), 'p3');
+    return picUrl
   }
 }
 
@@ -299,12 +322,76 @@ export class PrivateMV {
 export class PrivateDJ {
   constructor({ id, name, picUrl, rcmdText }) {
     this.id = id;
-    this.name = name;
+    this.name = rcmdText;
     this.picUrl = picUrl
-    this.copywriter = rcmdText
+    this.copywriter = name
   }
 }
 
+
+// 发现音乐-歌单-歌单分类
+export class SonglistCategory {
+  constructor(categoryType, categoryName) {
+    this.categoryType = categoryType;
+    this.categoryName = categoryName;
+    this.subs = [];
+  }
+}
+
+
+export class SonglistSub {
+  constructor({ name, resourceCount, type, category, hot }) {
+    // category:0语种 1风格 2场景 3情感 4主题
+    this.name = name;
+    this.resourceCount = resourceCount;
+    this.type = type
+    this.category = category
+    this.hot = hot
+  }
+}
+
+// 发现音乐-歌单-热门歌单分类
+export class HotSonglistSub {
+  constructor({ id, name, playlistTag }) {
+    this.id = id;
+    this.name = name;
+    this.highQuality = playlistTag.highQuality  // 0 没有精品 1：有精品
+  }
+}
+
+// 发现音乐-歌单-精品歌单标签列表
+export class HqSonglistSub {
+  constructor({ id, name, category, hot, type }) {
+    this.id = id;
+    this.name = name;
+    this.category = category;
+    this.hot = hot;
+    this.type = type
+  }
+}
+
+// 发现音乐-歌单-精品歌单
+export class HqSonglist {
+  constructor({ id, name, coverImgUrl, creator, copywriter, playCount }) {
+    this.id = id;
+    this.name = name;
+    this.picUrl = coverImgUrl;
+    this.copywriter = copywriter;
+    this.playCount = number2wan(playCount);
+    this.nickname = creator.nickname;
+    this.identityIconUrl = this.tansIdentityIconUrl(creator)
+  }
+  tansIdentityIconUrl(creator) {
+    if (creator.avatarDetail) {
+      let iconUrl = creator.avatarDetail.identityIconUrl;
+      iconUrl = iconUrl.replace(new RegExp('p[1-5]{1}'), 'p3');
+      return iconUrl
+    } else {
+      return null;
+
+    }
+  }
+}
 
 
 

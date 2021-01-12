@@ -7,12 +7,28 @@ Vue.use(VueRouter)
 const routes = [
   {
     path: '',
-    redirect: '/find/music',
+    redirect: '/find/music/alization',
     component: () => import('@/components/layout/LayOut'),
     children: [
       {
         path: 'find/music',
-        component: () => import('@/views/home/main/childComponents/findMusicWrap/FindMusicWrap'),
+        component: () => import('@/views/home/main/childComponents/findMusicWrap/FindMusicMain'),
+        children: [
+          {
+            path: 'alization',
+            component: () => import('@/views/home/main/childComponents/findMusicWrap/personalization/PersonAlizationMain.vue'),
+            meta:{
+              index:1
+            }
+          },
+          {
+            path: 'songlist',
+            component: () => import('@/views/home/main/childComponents/findMusicWrap/songlist/SongListMain.vue'),
+            meta:{
+              index:2
+            }
+          }
+        ]
       },
     ]
 

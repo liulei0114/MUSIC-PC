@@ -6,7 +6,7 @@
         <span></span>
       </div>
       <div class="direc_wrap">
-        <direction-nav direction="left"></direction-nav>
+        <direction-nav direction="left" @click.native="$router.go(-1)"></direction-nav>
         <direction-nav direction="right"></direction-nav>
       </div>
       <div class="search_wrap">
@@ -235,6 +235,7 @@ export default {
           position: absolute;
           top: 50px;
           left: -100px;
+          z-index: 200;
         }
       }
       .open_vip:hover {

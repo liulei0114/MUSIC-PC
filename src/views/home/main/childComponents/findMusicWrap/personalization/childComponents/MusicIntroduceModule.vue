@@ -23,7 +23,9 @@
       <div class="copywriter" v-if="isCopyWriter">
         <span>{{musicItem.copywriter}}</span>
       </div>
-      <div class="imgName" v-if="isImgName">{{musicItem.name}}</div>
+      <div class="imgBottom" v-if="isImgBottom">
+        <slot name="imgBottom"></slot>
+      </div>
     </div>
     <div class="floot">
       <span>{{musicItem.name}}</span>
@@ -73,7 +75,7 @@ export default {
       type: Boolean,
       default: false,
     },
-    isImgName: {
+    isImgBottom: {
       type: Boolean,
       default: false,
     },
@@ -134,7 +136,7 @@ export default {
     position: relative;
     overflow: hidden;
     img {
-      transition: transform .5s;
+      transition: transform 0.5s;
     }
     .play {
       position: absolute;
@@ -171,7 +173,7 @@ export default {
       border-radius: 3px;
       text-indent: 1em;
     }
-    .imgName {
+    .imgBottom {
       position: absolute;
       bottom: 0;
       left: 0;
@@ -180,6 +182,7 @@ export default {
       height: 30px;
       width: 100%;
       background-color: rgba(0, 0, 0, 0.3);
+      flex-wrap: nowrap;
       line-height: 30px;
     }
     .blowUp {

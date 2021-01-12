@@ -277,10 +277,10 @@ export default {
         cursor: pointer;
         z-index: 21;
         &.icon-left {
-          left: 0px;
+          left: 10px;
         }
         &.icon-right {
-          right: 0px;
+          right: 10px;
         }
       }
       &:hover {

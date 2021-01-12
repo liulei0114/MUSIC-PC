@@ -37,6 +37,9 @@ export default {
     text-align: center;
     line-height: 25px;
     font-size: 12px;
+    &:hover{
+      cursor: pointer;
+    }
   }
 }
 </style>

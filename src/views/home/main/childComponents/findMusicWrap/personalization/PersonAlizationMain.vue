@@ -101,11 +101,12 @@
           v-for="item in privateDJList"
           :key="item.id"
           :musicItem="item"
-          :isCopyWriter="false"
           :isPlay="false"
-          :isImgName='true'
+          :isImgBottom="true"
           :isScale="true"
-        ></music-introduce-module>
+        >
+          <span slot="imgBottom">{{item.copywriter}}</span>
+        </music-introduce-module>
       </div>
     </div>
   </div>
@@ -152,7 +153,9 @@ export default {
     },
   },
   created() {
-    this.initLoading();
+    this.$nextTick(() => {
+      this.initLoading();
+    });
     this._initBanner();
     this._initPersonalized();
     this._initPrivatecontent();

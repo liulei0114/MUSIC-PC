@@ -9,7 +9,7 @@ const orignMenu = {
       type: "classify",
       text: "发现音乐",
       show: true,
-      path: "/find/music",
+      path: "/find/music/alization",
       icon: "",
       textIcon: "",
       optionIcon: "",

@@ -155,10 +155,49 @@ export function fetchPrivateDjAPI() {
 }
 
 
+// ! 发现音乐-歌单-歌单分类
+export function fetchPlaylistCategoryAPI() {
+  return request({
+    url: '/playlist/catlist',
+    method: 'get',
+  })
+}
+
+// ! 发现音乐-歌单-热门歌单分类
+export function fetchHotSonglistSubAPI() {
+  return request({
+    url: '/playlist/hot',
+    method: 'get',
+  })
+}
 
 
 
+// ! 发现音乐-歌单-精品歌单标签列表
+export function fetchHqSonglistSubAPI() {
+  return request({
+    url: '/playlist/highquality/tags',
+    method: 'get',
+  })
+}
 
 
+// ! 发现音乐-歌单-根据标签获取精品歌单
+export function fetchHqSonglistAPI(params) {
+  return request({
+    url: '/top/playlist/highquality',
+    method: 'get',
+    params: params
+  })
+}
+
+// ! 发现音乐-歌单-根据标签获取歌单 ( 网友精选碟 )
+export function fetchTopSonglistAPI(params) {
+  return request({
+    url: '/top/playlist',
+    method: 'get',
+    params: params
+  })
+}
 
 

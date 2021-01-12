@@ -192,6 +192,7 @@ export default {
     height: 125px;
     border-bottom: 1px solid #d8d8d8;
     padding: 20px 0;
+    background-color: #fff;
     .type_count {
       display: flex;
       justify-content: left;

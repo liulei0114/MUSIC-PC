@@ -1,7 +1,7 @@
 <template>
   <div id="FindMusicWrap">
     <happy-scroll color="#e0e0e0" size="8" :resize="true" :hide-horizontal="true">
-      <div class="con">
+      <div class="con" id="FindMusicPoint">
         <header>
           <span @click="handelTypeCheck(1)" :class="{typeFontBig: curCheckTypeIndex === 1}">
             个性推荐
@@ -24,15 +24,13 @@
             <i :class="{typeCheck: curCheckTypeIndex === 5}"></i>
           </span>
           <span @click="handelTypeCheck(6)" :class="{typeFontBig: curCheckTypeIndex === 6}">
-            音乐
+            最新音乐
             <i :class="{typeCheck: curCheckTypeIndex === 6}"></i>
           </span>
         </header>
 
         <article>
-          <div v-show="curCheckTypeIndex === 1">
-            <person-alization-wrap></person-alization-wrap>
-          </div>
+          <router-view></router-view>
         </article>
       </div>
     </happy-scroll>
@@ -40,24 +38,47 @@
 </template>
 
 <script>
-import PersonAlizationWrap from "./personalization/PersonAlizationWrap.vue";
 export default {
   data() {
     return {
       curCheckTypeIndex: 1,
     };
   },
-  created() {},
+  created() {
+    this.curCheckTypeIndex = this.$route.meta.index
+  },
   methods: {
     handelTypeCheck(index) {
       this.curCheckTypeIndex = index;
+      switch (index) {
+        case 1:
+          this.$router.push("/find/music/alization");
+          return;
+        case 2:
+          this.$router.push("/find/music/songlist");
+          return;
+        case 3:
+          this.$router.push();
+          return;
+        case 4:
+          this.$router.push();
+          return;
+        case 5:
+          this.$router.push();
+          return;
+        case 6:
+          this.$router.push();
+          return;
+      }
+    },
+    getTime() {
+      return new Date().valueOf();
     },
   },
-  components: {
-    PersonAlizationWrap,
-  },
+  components: {},
 };
 </script>
+    
 
 <style lang="less" scoped>
 #FindMusicWrap {
@@ -69,20 +90,27 @@ export default {
       height: 100% !important;
       .happy-scroll-content {
         width: 100%;
+        border-right: 10px !important;
       }
     }
   }
   .con {
     width: 100%;
     height: 100%;
+    position: relative;
     header {
-      padding: 10px 20px 0;
+      padding: 10px 20px 10px;
       width: 100%;
-      height: 45px;
+      height: 55px;
       display: flex;
       justify-content: left;
       align-items: center;
       color: #373737;
+      position: sticky;
+      background-color: #fff;
+      z-index: 100;
+      top: 0;
+      left: 0;
       span {
         height: 100%;
         padding: 0 15px;

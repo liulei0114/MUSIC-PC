@@ -214,9 +214,7 @@ export default {
   mounted() {},
   methods: {
     async _initSongListDetail(id) {
-      // this.$nextTick(() => {
-      //   this.initLoading();
-      // });
+      this.initLoading();
       this.songListDetail = await this.$store.dispatch(
         "songModule/SaveSongListDetail",
         {
@@ -225,7 +223,7 @@ export default {
       );
       this.commentCount = this.songListDetail.commentCount;
       this.songListTracks = this.songListDetail.tracks;
-      // this.endLoading();
+      this.endLoading();
     },
     toggleType(type) {
       this.typeIndex = type;
