@@ -260,9 +260,13 @@ export class Privatecontent {
     this.type = type // 歌单所属类型
     this.name = name
     this.copywriter = copywriter
-    this.picUrl = sPicUrl   // 显示小图片
+    this.picUrl = this.tansIdentityIconUrl(sPicUrl)   // 显示小图片
     this.playCount = number2wan(playCount)
     this.trackCount = trackCount
+  }
+  tansIdentityIconUrl(picUrl) {
+    picUrl = picUrl.replace(new RegExp('p[1-5]{1}'), 'p3');
+    return picUrl
   }
 }
 
@@ -323,8 +327,12 @@ export class PrivateDJ {
   constructor({ id, name, picUrl, rcmdText }) {
     this.id = id;
     this.name = rcmdText;
-    this.picUrl = picUrl
+    this.picUrl = this.tansIdentityIconUrl(picUrl)
     this.copywriter = name
+  }
+  tansIdentityIconUrl(picUrl) {
+    picUrl = picUrl.replace(new RegExp('p[1-5]{1}'), 'p3');
+    return picUrl
   }
 }
 
