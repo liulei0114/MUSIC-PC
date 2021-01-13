@@ -1,7 +1,7 @@
 <template>
   <div id="MusicHead">
     <div class="head_left">
-      <div class="logo_wrap">
+      <div class="logo_wrap" @click="$router.push('/')">
         <img src="~assets/format.png" alt />
         <span></span>
       </div>
@@ -106,6 +106,7 @@ export default {
         this.mineShow = false;
       }
     },
+
   },
   components: {
     DirectionNav,
@@ -134,6 +135,9 @@ export default {
       align-items: center;
       margin-right: 80px;
       -webkit-app-region: no-drag;
+      &:hover{
+        cursor: pointer;
+      }
       img {
         width: 25px;
         height: 25px;

@@ -27,7 +27,14 @@ const routes = [
             meta:{
               index:2
             }
-          }
+          },
+          {
+            path: 'rank',
+            component: () => import('@/views/home/main/childComponents/findMusicWrap/rankSonglist/RankSonglistMain.vue'),
+            meta:{
+              index:4
+            }
+          },
         ]
       },
     ]
@@ -41,7 +48,7 @@ const routes = [
         path: 'song/list/:id',
         name: 'PersonalizedSongList',
         meta: {
-          // isSubscribed: false
+          isSubscribed: null
         },
         component: () => import('@/views/home/main/childComponents/songListWrap/SongListWrap.vue'),
       }

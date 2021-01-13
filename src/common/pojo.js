@@ -402,6 +402,36 @@ export class HqSonglist {
 }
 
 
+// 发现音乐-排行榜歌曲
+export class RankSonglist {
+  constructor({ id, name, coverImgUrl, trackUpdateTime, playCount }) {
+    this.id = id;
+    this.name = name;
+    this.picUrl = this.tansIdentityIconUrl(coverImgUrl);
+    this.trackUpdateTime = trackUpdateTime;
+    this.playCount = number2wan(playCount);
+    this.list = [];
+  }
+  tansIdentityIconUrl(picUrl) {
+    picUrl = picUrl.replace(new RegExp('p[1-5]{1}'), 'p3');
+    return picUrl
+  }
+}
+
+
+// 发现音乐-排行榜歌手
+export class RankArtists {
+  constructor({ id, name, picUrl, albumSize }) {
+    this.id = id;
+    this.name = name;
+    this.picUrl = this.tansIdentityIconUrl(picUrl);
+    this.albumSize = albumSize
+  }
+  tansIdentityIconUrl(picUrl) {
+    picUrl = picUrl.replace(new RegExp('p[1-5]{1}'), 'p3');
+    return picUrl
+  }
+}
 
 
 

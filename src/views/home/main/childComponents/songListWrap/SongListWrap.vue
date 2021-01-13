@@ -142,7 +142,7 @@ export default {
       _debounceKeywords: null,
       loading: true,
       descIsFold: false,
-      foldDesc:[]
+      foldDesc: [],
     };
   },
   computed: {
@@ -193,10 +193,13 @@ export default {
     },
     tagCon() {
       if (Object.keys(this.songListDetail).length === 0) return;
-
-      if (this.isSubscribed !== null && !this.isSubscribed && this.songListDetail.tags.length === 0) {
-        return "<span class='tag'>添加标签</span>";
-      } else if (this.isSubscribed && this.songListDetail.tags.length === 0) {
+      if (
+        this.isSubscribed !== null &&
+        !this.isSubscribed &&
+        this.songListDetail.tags.length === 0
+      ) {
+        return "标签：<span class='tag'>添加标签</span>";
+      } else if (this.songListDetail.tags.length === 0) {
         return "";
       }
       let str = "标签：";
@@ -207,15 +210,19 @@ export default {
     },
     descCon() {
       if (Object.keys(this.songListDetail).length === 0) return;
-      if (this.isSubscribed !== null && !this.isSubscribed && !this.songListDetail.description) {
+      if (
+        this.isSubscribed !== null &&
+        !this.isSubscribed &&
+        !this.songListDetail.description
+      ) {
         return "简介：<span class='tag'>添加简介</span>";
-      } else if (this.isSubscribed && !this.songListDetail.description) {
+      } else if (!this.songListDetail.description) {
         return "";
       }
       // 描述有换行符，和折叠效果，取第一行显示
       let regexp = new RegExp("\n");
       let descList = this.songListDetail.description.split(regexp);
-      this.foldDesc = descList
+      this.foldDesc = descList;
       let str = "";
       if (this.descIsFold) {
         // 展开
@@ -233,7 +240,10 @@ export default {
   created() {
     // 从router获取songid和meta中的isSubscribe
     this.songId = this.$route.path.slice(this.$route.path.lastIndexOf("/") + 1);
-    this.isSubscribed = this.$route.meta.isSubscribed?this.$route.meta.isSubscribed:null;
+    this.isSubscribed =
+      this.$route.meta.isSubscribed === null
+        ? null
+        : this.$route.meta.isSubscribed;
     this._initSongListDetail(this.songId);
     // 创建关键词防抖函数
     this._debounceKeywords = this._.debounce(this.seachMusicInSongList, 1000);

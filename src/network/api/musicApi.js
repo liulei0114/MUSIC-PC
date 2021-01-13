@@ -201,3 +201,20 @@ export function fetchTopSonglistAPI(params) {
 }
 
 
+
+// ! 发现音乐-排行榜歌单
+export function fetchRankSonglistAPI() {
+  return request({
+    url: '/toplist',
+    method: 'get',
+  })
+}
+
+// ! 发现音乐-排行榜歌单
+export function fetchRankArtistAPI(params) {
+  return request({
+    url: '/toplist/artist',
+    method: 'get',
+    params
+  })
+}

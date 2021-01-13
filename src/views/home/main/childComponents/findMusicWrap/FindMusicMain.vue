@@ -45,7 +45,7 @@ export default {
     };
   },
   created() {
-    this.curCheckTypeIndex = this.$route.meta.index
+    this.curCheckTypeIndex = this.$route.meta.index;
   },
   methods: {
     handelTypeCheck(index) {
@@ -61,7 +61,7 @@ export default {
           this.$router.push();
           return;
         case 4:
-          this.$router.push();
+          this.$router.push("/find/music/rank");
           return;
         case 5:
           this.$router.push();
