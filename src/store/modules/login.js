@@ -291,8 +291,8 @@ function addRouter(menuList) {
       }
     }
     if (e.subscribed) {
-      temp.meta.isSubscribed = true,
-        subscribeRouter.children.push(temp)
+      temp.meta.isSubscribed = true
+      subscribeRouter.children.push(temp)
     } else {
       temp.meta.isSubscribed = false
       createRouter.children.push(temp)

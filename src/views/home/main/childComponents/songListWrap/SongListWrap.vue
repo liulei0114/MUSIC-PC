@@ -48,9 +48,19 @@
                 <span>歌曲：{{_songListLength}}</span>
                 <span style="margin-left:10px">播放：{{songListDetail.playCount | filterCount}}</span>
               </p>
-              <p v-if="isShow">
-                <span v-html="descCon"></span>
-              </p>
+              <div v-if="isShow" class="desc">
+                <div v-html="descCon"></div>
+                <div>
+                  <i
+                    class="fold_icon"
+                    @click="descIsFold = !descIsFold"
+                    :class="{rotate:descIsFold}"
+                    v-if="foldDesc.length !== 1"
+                  >
+                    <svg-icon icon-class="arrow-down-filling"></svg-icon>
+                  </i>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -110,6 +120,7 @@ import { number2wan } from "@/util/NumberTransfrom";
 import CommentListDetail from "../commentListWrap/CommentListDetail";
 import SubscribersDetail from "../subscribersWrap/SubscribersDetail.vue";
 import { seachMusicAPI } from "@/network/api/musicApi";
+import { Container } from "element-ui";
 export default {
   mixins: [loadingMixin],
   components: {
@@ -130,6 +141,8 @@ export default {
       songListTracks: [],
       _debounceKeywords: null,
       loading: true,
+      descIsFold: false,
+      foldDesc:[]
     };
   },
   computed: {
@@ -181,7 +194,7 @@ export default {
     tagCon() {
       if (Object.keys(this.songListDetail).length === 0) return;
 
-      if (!this.isSubscribed && this.songListDetail.tags.length === 0) {
+      if (this.isSubscribed !== null && !this.isSubscribed && this.songListDetail.tags.length === 0) {
         return "<span class='tag'>添加标签</span>";
       } else if (this.isSubscribed && this.songListDetail.tags.length === 0) {
         return "";
@@ -194,19 +207,33 @@ export default {
     },
     descCon() {
       if (Object.keys(this.songListDetail).length === 0) return;
-      if (!this.isSubscribed && !this.songListDetail.description) {
+      if (this.isSubscribed !== null && !this.isSubscribed && !this.songListDetail.description) {
         return "简介：<span class='tag'>添加简介</span>";
       } else if (this.isSubscribed && !this.songListDetail.description) {
         return "";
       }
-      return `简介：${this.songListDetail.description}`;
+      // 描述有换行符，和折叠效果，取第一行显示
+      let regexp = new RegExp("\n");
+      let descList = this.songListDetail.description.split(regexp);
+      this.foldDesc = descList
+      let str = "";
+      if (this.descIsFold) {
+        // 展开
+        descList.forEach((e, i) => {
+          str += `<span>${descList[i]}</span> <br>`;
+        });
+      } else {
+        str = descList.length === 1 ? descList[0] : descList[0] + "...";
+      }
+
+      return `简介：${str}</span>`;
     },
   },
   watch: {},
   created() {
     // 从router获取songid和meta中的isSubscribe
     this.songId = this.$route.path.slice(this.$route.path.lastIndexOf("/") + 1);
-    this.isSubscribed = this.$route.meta.isSubscribed;
+    this.isSubscribed = this.$route.meta.isSubscribed?this.$route.meta.isSubscribed:null;
     this._initSongListDetail(this.songId);
     // 创建关键词防抖函数
     this._debounceKeywords = this._.debounce(this.seachMusicInSongList, 1000);
@@ -354,12 +381,28 @@ export default {
         }
         .play_statistic {
           font-size: 14px;
-          p {
+          p,
+          .desc {
             margin-bottom: 5px;
             /deep/ .tag {
               color: #0b58b0;
               &:hover {
                 cursor: pointer;
+              }
+            }
+          }
+          .desc {
+            display: flex;
+            justify-content: left;
+            align-self: center;
+            div:last-child {
+              margin-left: auto;
+              .fold_icon {
+                display: block;
+                color: #999999;
+                &.rotate {
+                  transform: rotate(180deg);
+                }
               }
             }
           }

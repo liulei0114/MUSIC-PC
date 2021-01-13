@@ -41,7 +41,7 @@ const routes = [
         path: 'song/list/:id',
         name: 'PersonalizedSongList',
         meta: {
-          isSubscribed: false
+          // isSubscribed: false
         },
         component: () => import('@/views/home/main/childComponents/songListWrap/SongListWrap.vue'),
       }
