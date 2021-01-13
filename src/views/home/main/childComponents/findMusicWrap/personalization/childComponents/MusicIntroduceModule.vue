@@ -79,6 +79,17 @@ export default {
       type: Boolean,
       default: false,
     },
+    playSize: {
+      type: Object,
+      default() {
+        return {
+          width: "30px",
+          height: "30px",
+          "font-size": "18px",
+          "line-height": "30px",
+        };
+      },
+    },
   },
   computed: {
     getImgUrl() {
@@ -97,7 +108,9 @@ export default {
       return temp;
     },
     setPosition() {
-      let temp = {};
+      let temp = {
+        ...this.playSize,
+      };
       if (this.isCenterPlay) {
         temp.left = "50%";
         temp.top = "50%";
@@ -141,11 +154,8 @@ export default {
     .play {
       position: absolute;
       overflow: hidden;
-      width: 30px;
-      height: 30px;
       text-align: center;
-      font-size: 18px;
-      line-height: 30px;
+
       border-radius: 50%;
       background-color: #fff;
       opacity: 0;

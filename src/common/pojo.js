@@ -124,12 +124,13 @@ class Rate {
 }
 
 class Creator {
-  constructor({ avatarUrl, userId, nickname, signature, vipType }) {
+  constructor({ avatarUrl, userId, nickname, signature, vipType, avatarDetail }) {
     this.avatarUrl = this.tansIdentityIconUrl(avatarUrl);
     this.userId = userId;
     this.nickname = nickname;
     this.signature = signature;
     this.vipType = vipType;
+    this.identityIconUrl = avatarDetail ? this.tansIdentityIconUrl(avatarDetail.identityIconUrl) : null
   }
   tansIdentityIconUrl(avatarUrl) {
     avatarUrl = avatarUrl.replace(new RegExp('p[1-5]{1}'), 'p3');
@@ -404,11 +405,11 @@ export class HqSonglist {
 
 // 发现音乐-排行榜歌曲
 export class RankSonglist {
-  constructor({ id, name, coverImgUrl, trackUpdateTime, playCount }) {
+  constructor({ id, name, coverImgUrl, updateTime, playCount }) {
     this.id = id;
     this.name = name;
     this.picUrl = this.tansIdentityIconUrl(coverImgUrl);
-    this.trackUpdateTime = trackUpdateTime;
+    this.updateTime = updateTime;
     this.playCount = number2wan(playCount);
     this.list = [];
   }

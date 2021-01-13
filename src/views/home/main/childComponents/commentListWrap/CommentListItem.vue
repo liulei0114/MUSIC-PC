@@ -2,6 +2,7 @@
   <div class="CommentListItem" @mouseenter="commentMouseEnter" @mouseleave="commentMouseLeave">
     <div class="left">
       <img v-lazy="getUserUrl" alt />
+      <img :src="_songCreatorVipUrl" alt class="iconUrl" />
     </div>
     <div class="right">
       <div>
@@ -63,6 +64,9 @@ export default {
       return `${this.commentItem.user.avatarUrl}?param=35y35`;
     },
     ...mapGetters({ userProfile: "userProfile" }),
+    _songCreatorVipUrl() {
+      return this.commentItem.user.identityIconUrl + "?param=12y12";
+    },
   },
   created() {
     this.songListId = this.$route.path.slice(
@@ -141,6 +145,14 @@ export default {
   color: #333;
   .left {
     width: 40px;
+    position: relative;
+    .iconUrl {
+      position: absolute;
+      width: 12px;
+      height: 12px;
+      bottom: 0;
+      right: 0;
+    }
     img {
       width: 35px;
       height: 35px;

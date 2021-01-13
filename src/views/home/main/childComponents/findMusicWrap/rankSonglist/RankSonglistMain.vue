@@ -3,7 +3,13 @@
     <article class="official">
       <h2>官方榜</h2>
       <div class="con">
-        <rank-songlist-detail v-for="item in rankSonglist.slice(0,4)" :key="item.id" :rankSonglistItem="item"></rank-songlist-detail>
+        <rank-songlist-detail
+          v-for="item in rankSonglist.slice(0,4)"
+          :key="item.id"
+          :rankSonglistItem="item"
+        ></rank-songlist-detail>
+        <!-- 歌手排行榜 -->
+        <rank-songlist-detail :rankSonglistItem="singer" :isSonger='true'></rank-songlist-detail>
       </div>
     </article>
     <article class="global">
@@ -16,6 +22,7 @@
           width="140"
           height="140"
           :isCenterPlay="true"
+          :playSize="playSize"
           @click.native="handlePersonalizedSongList(item.id)"
         ></music-introduce-module>
       </div>
@@ -43,6 +50,12 @@ export default {
         trackUpdateTime: "",
         list: [],
       },
+      playSize: {
+        width: "40px",
+        height: "40px",
+        "font-size": "20px",
+        "line-height": "40px",
+      },
     };
   },
   created() {
@@ -56,9 +69,7 @@ export default {
     async _initRankType() {
       let result = await fetchRankSonglistAPI();
       result.list.forEach((e, i) => {
-        e.trackUpdateTime = this.$moment(e.trackUpdateTime).format(
-          "MM月DD日更新"
-        );
+        e.updateTime = this.$moment(e.updateTime).format("MM月DD日更新");
         this.rankSonglist.push(new RankSonglist(e));
       });
 
@@ -75,7 +86,7 @@ export default {
       this.singer.picUrl = this.tansIdentityIconUrl(
         result.artistToplist.coverUrl
       );
-      this.singer.trackUpdateTime = result.artistToplist.upateFrequency;
+      this.singer.updateTime = result.artistToplist.upateFrequency;
       this._initRankArtistslist(1);
     },
     // ? 歌单中歌曲列表

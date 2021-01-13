@@ -22,7 +22,7 @@ export default {};
 #PlayAllBtn {
   width: 150px;
   height: 35px;
-  background-color: #ed5353;
+  background-color: #ec4141;
   border-radius: 20px;
   color: #fff;
   font-size: 18px;

@@ -7,12 +7,13 @@
           <svg-icon icon-class="play" style="color:#ec4141"></svg-icon>
         </i>
       </div>
+      <div class="update_time">{{rankSonglistItem.updateTime}}</div>
     </div>
     <div class="right">
       <div v-for="(item,index) in rankSonglistItem.list" :key="item.id" class="item_con">
         <span class="normalIndex" :class="{index:index+1<=3?true:false}">{{index + 1}}</span>
         <span class="name">{{item.name}}</span>
-        <div class="ar_con">
+        <div class="ar_con" v-if="item.ar">
           <div class="ar" v-for="(songer,i) in item.ar" :key="songer.id">
             <span class="ar_name">{{songer.name}}</span>
             <span v-if="i+1 !== item.ar.length">&nbsp;&nbsp;/</span>
@@ -90,6 +91,14 @@ export default {
       background-color: rgba(255, 255, 255, 0.5);
       opacity: 0;
       transition: opacity 0.7s;
+    }
+    .update_time {
+      position: absolute;
+      left: 50%;
+      top: 70%;
+      transform: translate(-50%,-50%);
+      color: #fff;
+      font-size: 12px;
     }
   }
   .right {

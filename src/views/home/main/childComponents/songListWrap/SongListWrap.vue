@@ -18,7 +18,10 @@
               <h3>{{_songlistName}}</h3>
             </div>
             <div class="create_time flex">
-              <img :src="_songCreatorUrl" alt width="25px" height="25px" />
+              <div class="userImg">
+                <img :src="_songCreatorUrl" alt width="25px" height="25px" />
+                <img :src="_songCreatorVipUrl" alt class="iconUrl" />
+              </div>
               <span>{{_songCreatorNickname}}</span>
               <span>{{songListDetail.createTime | filterCreateTIme}}</span>
             </div>
@@ -179,6 +182,10 @@ export default {
     _songCreatorNickname() {
       if (Object.keys(this.songListDetail).length === 0) return;
       return this.songListDetail.creator.nickname;
+    },
+    _songCreatorVipUrl() {
+      if (Object.keys(this.songListDetail).length === 0) return;
+      return this.songListDetail.creator.identityIconUrl + "?param=12y12";
     },
     isShow() {
       if (Object.keys(this.songListDetail).length === 0) return;
@@ -341,7 +348,6 @@ export default {
     height: 100%;
     .head_wrap {
       padding: 30px;
-      // height: 250px;
       width: 100%;
       display: flex;
       justify-content: left;
@@ -349,6 +355,8 @@ export default {
       .cover_img {
         width: 185px;
         height: 185px;
+        border-radius: 5px;
+        overflow: hidden;
         img {
           width: 100%;
           height: 100%;
@@ -373,21 +381,32 @@ export default {
           }
         }
         .create_time {
-          margin-top: 5px;
+          margin-top: 10px;
           font-size: 12px;
-          img {
-            border-radius: 50%;
+          .userImg {
+            position: relative;
+            display: inline-block;
+            .iconUrl {
+              position: absolute;
+              width: 12px;
+              height: 12px;
+              bottom: 0;
+              right: -5px;
+            }
+            img {
+              border-radius: 50%;
+            }
           }
           span:nth-child(2) {
             color: #507daf;
-            margin: 0 10px;
+            margin: 0 7px;
           }
         }
         .share {
           display: flex;
           justify-content: left;
           align-items: center;
-          margin: 15px 0;
+          margin: 10px 0 10px;
         }
         .play_statistic {
           font-size: 14px;
