@@ -37,10 +37,24 @@ const routes = [
             }
           },
           {
+            path: 'dj',
+            component: () => import('@/views/home/main/childComponents/findMusicWrap/dj/DjMain.vue'),
+            meta: {
+              index: 3
+            }
+          },
+          {
             path: 'rank',
             component: () => import('@/views/home/main/childComponents/findMusicWrap/rankSonglist/RankSonglistMain.vue'),
             meta: {
               index: 4
+            }
+          },
+          {
+            path: 'artist',
+            component: () => import('@/views/home/main/childComponents/findMusicWrap/artist/ArtistMain.vue'),
+            meta: {
+              index: 5
             }
           },
         ]

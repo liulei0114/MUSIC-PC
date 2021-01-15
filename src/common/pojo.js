@@ -219,11 +219,16 @@ class BeReplied {
 export class Subscribers {
   constructor({ defaultAvatar, avatarUrl, gender, userId, nickname, signature }) {
     this.defaultAvatar = defaultAvatar; //true: 公开 false:不公开
-    this.avatarUrl = avatarUrl;
+    this.avatarUrl = this.tansIdentityIconUrl(avatarUrl);
     this.gender = gender; // 0保密 1：男 2：女
     this.userId = userId;
     this.nickname = nickname;
     this.signature = signature; // 签名
+  }
+
+  tansIdentityIconUrl(avatarUrl) {
+    avatarUrl = avatarUrl.replace(new RegExp('p[1-5]{1}'), 'p3');
+    return avatarUrl
   }
 }
 

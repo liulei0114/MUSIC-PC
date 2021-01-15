@@ -243,3 +243,14 @@ export function fetchLikeListAPI(params) {
     params
   })
 }
+
+
+
+// ! 搜索歌手列表
+export function fetchArtistListAPI(params) {
+  return request({
+    url: '/artist/list',
+    method: 'get',
+    params
+  })
+}

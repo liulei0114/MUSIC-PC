@@ -25,5 +25,6 @@ export default {
   /deep/ .el-loading-text{
     color: #ec4141;
   }
+  overflow-y: hidden;
 }
 </style>

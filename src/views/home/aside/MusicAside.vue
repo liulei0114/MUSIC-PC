@@ -37,7 +37,8 @@ export default {
     this.addMouseEnterBarShowEventListener();
     this.addMouseLeaveBarHiddenEventListener();
   },
-  watch: {},
+  watch: {
+  },
   computed: {
     showAsideMenu() {
       this.$nextTick(() => {
