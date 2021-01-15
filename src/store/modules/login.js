@@ -9,7 +9,7 @@ const orignMenu = {
       type: "classify",
       text: "发现音乐",
       show: true,
-      path: "/find/music/alization",
+      path: "/find/music",
       icon: "",
       textIcon: "",
       optionIcon: "",
@@ -291,10 +291,9 @@ function addRouter(menuList) {
       }
     }
     if (e.subscribed) {
-      temp.meta.isSubscribed = true
       subscribeRouter.children.push(temp)
     } else {
-      temp.meta.isSubscribed = false
+      temp.meta.isCreated = true;
       createRouter.children.push(temp)
     }
   })

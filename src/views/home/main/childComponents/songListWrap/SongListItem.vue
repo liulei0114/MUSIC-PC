@@ -3,28 +3,36 @@
     <div class="index">{{index | filterIndex}}</div>
     <div class="like">
       <i>
-        <svg-icon icon-class="redhead" class="svgnoraml" style="color:#ec4141"></svg-icon>
+        <svg-icon :icon-class="headStatus" class="svgnoraml"></svg-icon>
       </i>
     </div>
     <div class="down">
       <i>
-        <svg-icon icon-class="xiazai2" class="svgnoraml" style="color:#a8a9aa"></svg-icon>
+        <svg-icon icon-class="xiazai2" class="svgnoraml" ></svg-icon>
       </i>
     </div>
     <div class="name textOverflow flexLeft">
-      <span>{{songItem.name}}</span>
+      <span :class="{noCopyright:songItem.noCopyrightRcmd}">{{songItem.name}}</span>
       <span class="other" :class="getTextOverFlow(index)">{{_alias}}</span>
       <div class="icon_con flexLeft">
-        <i v-if="songItem.fee === 1" class="redColor" style="color:#fe672e">
+        <i
+          v-if="songItem.fee === 1"
+          class="vip_icon"
+          :class="{noCopyright:songItem.noCopyrightRcmd}"
+        >
           <svg-icon icon-class="song_vip"></svg-icon>
         </i>
-        <i v-if="songItem.fee === 1" class="redColor">
+        <i v-if="songItem.fee === 1" :class="{noCopyright:songItem.noCopyrightRcmd}">
           <svg-icon icon-class="song_shiting"></svg-icon>
         </i>
-        <i v-if="songItem.isSq" class="redColor">
+        <i v-if="songItem.isSq" :class="{noCopyright:songItem.noCopyrightRcmd}">
           <svg-icon icon-class="song_sq"></svg-icon>
         </i>
-        <i v-if="songItem.mv !== 0" class="redColor" style="font-size:35px">
+        <i
+          v-if="songItem.mv !== 0"
+          :class="{noCopyright:songItem.noCopyrightRcmd}"
+          style="font-size:35px"
+        >
           <svg-icon icon-class="song_mv"></svg-icon>
         </i>
       </div>
@@ -55,6 +63,12 @@ export default {
         return {};
       },
     },
+    likeListIdsMap: {
+      type: Map,
+      default(){
+        return new Map()
+      }
+    },
   },
   computed: {
     _alias() {
@@ -78,6 +92,12 @@ export default {
       let songItem = this.songItem;
       return songItem.al.tns.length !== 0 ? `(${songItem.al.tns[0]})` : "";
     },
+    headStatus(){
+      if(this.likeListIdsMap.get(this.songItem.id)){
+        return 'headlike'
+      }
+      return 'headnolike'
+    }
   },
   filters: {
     filterIndex(value) {
@@ -142,19 +162,24 @@ export default {
   }
   .svgnoraml {
     font-size: 16px;
+    color:#a8a9aa;
   }
   .textOverflow {
     white-space: nowrap;
     overflow: hidden;
     text-overflow: ellipsis;
   }
-  .redColor {
-    color: #ec4141;
-    font-size: 26px;
-    margin-left: 3px;
-  }
+
   .icon_con {
     margin-left: left;
+    i {
+      color: #ec4141;
+      font-size: 26px;
+      margin-left: 3px;
+      &.vip_icon {
+        color: #fe672e;
+      }
+    }
   }
   .other {
     font-size: 12px;
@@ -179,6 +204,9 @@ export default {
     color: #333;
     font-size: 14px;
     padding-right: 10px;
+    .noCopyright {
+      color: #999;
+    }
   }
   .ar {
     width: 140px;

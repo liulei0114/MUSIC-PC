@@ -32,6 +32,7 @@
               <div>
                 <share-btn
                   :isSubscribed="isSubscribed"
+                  :isCreated="isCreated"
                   icon="shoucangjia"
                   :textCon="_subscribedCount"
                 ></share-btn>
@@ -58,7 +59,7 @@
                     class="fold_icon"
                     @click="descIsFold = !descIsFold"
                     :class="{rotate:descIsFold}"
-                    v-if="foldDesc.length !== 1"
+                    v-if="foldDesc.length >1"
                   >
                     <svg-icon icon-class="arrow-down-filling"></svg-icon>
                   </i>
@@ -85,7 +86,7 @@
               </span>
             </div>
             <div class="right" v-show="typeIndex === 1">
-              <input type="text" placeholder="搜索歌单音乐" v-model="keywords" @input="_debounceKeywords" />
+              <input type="text" placeholder="搜索歌单音乐" v-model="keywords"/>
               <i @click="clearKeywords">
                 <svg-icon
                   class="blackColor"
@@ -97,8 +98,9 @@
           <div class="song_list_detail" v-if="typeIndex === 1">
             <song-list-detail
               :subscribedCount="songListDetail.subscribedCount"
-              :songList="songListTracks"
+              :songIds="songListDetail.trackIds"
               :vipCount="songListDetail.vipCount"
+              :keywords='keywords'
             ></song-list-detail>
           </div>
           <div class="commend_list_detail" v-else-if="typeIndex === 2">
@@ -122,7 +124,7 @@ import { loadingMixin } from "@/mixin/loadingMixin";
 import { number2wan } from "@/util/NumberTransfrom";
 import CommentListDetail from "../commentListWrap/CommentListDetail";
 import SubscribersDetail from "../subscribersWrap/SubscribersDetail.vue";
-import { seachMusicAPI } from "@/network/api/musicApi";
+import { seachMusicAPI, fetchPlayListDynamicAPI } from "@/network/api/musicApi";
 import { Container } from "element-ui";
 export default {
   mixins: [loadingMixin],
@@ -141,11 +143,10 @@ export default {
       typeIndex: 1,
       commentCount: 0,
       keywords: "",
-      songListTracks: [],
-      _debounceKeywords: null,
       loading: true,
       descIsFold: false,
       foldDesc: [],
+      isCreated: this.$route.meta.isCreated,
     };
   },
   computed: {
@@ -164,11 +165,11 @@ export default {
     },
     _songListLength() {
       if (Object.keys(this.songListDetail).length === 0) return;
-      return this.songListDetail.tracks.length;
+      return this.songListDetail.trackIds.length;
     },
     _subscribedCount() {
       if (Object.keys(this.songListDetail).length === 0) return;
-      let prefix = this.isSubscribed ? (prefix = "已收藏") : "收藏";
+      let prefix = this.isSubscribed ? "已收藏" : "收藏";
       return `${prefix}(${number2wan(this.songListDetail.subscribedCount)})`;
     },
     _shareCount() {
@@ -187,10 +188,13 @@ export default {
       if (Object.keys(this.songListDetail).length === 0) return;
       return this.songListDetail.creator.identityIconUrl + "?param=12y12";
     },
+
     isShow() {
       if (Object.keys(this.songListDetail).length === 0) return;
       if (this.userProfile) {
-        if (!~this.songListDetail.name.indexOf(this.userProfile.nickname)) {
+        if (
+          this.songListDetail.name.indexOf(this.userProfile.nickname) === -1
+        ) {
           return true;
         } else {
           return false;
@@ -200,60 +204,52 @@ export default {
     },
     tagCon() {
       if (Object.keys(this.songListDetail).length === 0) return;
-      if (
-        this.isSubscribed !== null &&
-        !this.isSubscribed &&
-        this.songListDetail.tags.length === 0
-      ) {
+
+      // 自创建没有标签，显示添加标签，不是自创建，如果没有标签不显示，
+      if (this.isCreated && this.songListDetail.tags.length === 0) {
         return "标签：<span class='tag'>添加标签</span>";
-      } else if (this.songListDetail.tags.length === 0) {
-        return "";
       }
-      let str = "标签：";
-      this.songListDetail.tags.forEach((e, i) => {
-        str += `<span class='tag'>${e}</span> / `;
-      });
-      return str.substring(0, str.length - 2);
+
+      if (this.songListDetail.tags.length !== 0) {
+        let str = "标签：";
+        this.songListDetail.tags.forEach((e, i) => {
+          str += `<span class='tag'>${e}</span> / `;
+        });
+        return str.substring(0, str.length - 2);
+      }
+      return "";
     },
     descCon() {
       if (Object.keys(this.songListDetail).length === 0) return;
-      if (
-        this.isSubscribed !== null &&
-        !this.isSubscribed &&
-        !this.songListDetail.description
-      ) {
+
+      if (this.isCreated && !this.songListDetail.description) {
         return "简介：<span class='tag'>添加简介</span>";
-      } else if (!this.songListDetail.description) {
-        return "";
-      }
-      // 描述有换行符，和折叠效果，取第一行显示
-      let regexp = new RegExp("\n");
-      let descList = this.songListDetail.description.split(regexp);
-      this.foldDesc = descList;
-      let str = "";
-      if (this.descIsFold) {
-        // 展开
-        descList.forEach((e, i) => {
-          str += `<span>${descList[i]}</span> <br>`;
-        });
-      } else {
-        str = descList.length === 1 ? descList[0] : descList[0] + "...";
       }
 
-      return `简介：${str}</span>`;
+      if (this.songListDetail.description) {
+        // 描述有换行符，和折叠效果，取第一行显示
+        let regexp = new RegExp("\n");
+        let descList = this.songListDetail.description.split(regexp);
+        this.foldDesc = descList;
+        let str = "";
+        if (this.descIsFold) {
+          // 展开
+          descList.forEach((e, i) => {
+            str += `<span>${descList[i]}</span> <br>`;
+          });
+        } else {
+          str = descList.length === 1 ? descList[0] : descList[0] + "...";
+        }
+        return `简介：${str}</span>`;
+      }
+      return "";
     },
   },
   watch: {},
   created() {
     // 从router获取songid和meta中的isSubscribe
     this.songId = this.$route.path.slice(this.$route.path.lastIndexOf("/") + 1);
-    this.isSubscribed =
-      this.$route.meta.isSubscribed === null
-        ? null
-        : this.$route.meta.isSubscribed;
     this._initSongListDetail(this.songId);
-    // 创建关键词防抖函数
-    this._debounceKeywords = this._.debounce(this.seachMusicInSongList, 1000);
   },
   mounted() {},
   methods: {
@@ -266,7 +262,8 @@ export default {
         }
       );
       this.commentCount = this.songListDetail.commentCount;
-      this.songListTracks = this.songListDetail.tracks;
+  
+      this.getPlayListDynamic();
       this.endLoading();
     },
     toggleType(type) {
@@ -275,38 +272,15 @@ export default {
     updateCommentCount(newCommentCount) {
       this.commentCount = newCommentCount;
     },
-    // ? 歌单内搜索
-    seachMusicInSongList() {
-      let regExp = new RegExp(`${this.keywords.trim()}`, "i");
-      if (this.keywords.trim() !== "") {
-        let temp = this.songListDetail.tracks.filter((e) => {
-          if (regExp.test(e.name) || regExp.test(e.alia.join(""))) {
-            return true;
-          }
-          if (e.tns && regExp.test(e.tns.join(""))) {
-            return true;
-          }
-          // 在歌手里面查找
-          let ar = "";
-          e.ar.forEach((e, i) => {
-            ar += e.name;
-          });
-          if (regExp.test(ar)) {
-            return true;
-          }
-          // 专辑里面查找
-          if (regExp.test(e.al.name) || regExp.test(e.al.tns.join(""))) {
-            return true;
-          }
-        });
-        this.songListTracks = temp;
-      } else {
-        this.songListTracks = this.songListDetail.tracks;
-      }
-    },
+   
     clearKeywords() {
       this.keywords = "";
-      this.songListTracks = this.songListDetail.tracks;
+    },
+    async getPlayListDynamic() {
+      let params = new URLSearchParams();
+      params.append("id", this.songId);
+      let reuslt = await fetchPlayListDynamicAPI(params);
+      this.isSubscribed = reuslt.subscribed;
     },
   },
   filters: {

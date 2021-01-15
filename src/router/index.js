@@ -5,41 +5,52 @@ import store from '@/store'
 Vue.use(VueRouter)
 
 const routes = [
+
   {
     path: '',
     redirect: '/find/music/alization',
+  },
+  {
+    path: '/find/music',
+    redirect: '/find/music/alization',
+  },
+  {
+    path: '/find',
     component: () => import('@/components/layout/LayOut'),
     children: [
       {
-        path: 'find/music',
+        path: 'music',
         component: () => import('@/views/home/main/childComponents/findMusicWrap/FindMusicMain'),
         children: [
           {
             path: 'alization',
             component: () => import('@/views/home/main/childComponents/findMusicWrap/personalization/PersonAlizationMain.vue'),
-            meta:{
-              index:1
+            meta: {
+              index: 1
             }
           },
           {
             path: 'songlist',
             component: () => import('@/views/home/main/childComponents/findMusicWrap/songlist/SongListMain.vue'),
-            meta:{
-              index:2
+            meta: {
+              index: 2
             }
           },
           {
             path: 'rank',
             component: () => import('@/views/home/main/childComponents/findMusicWrap/rankSonglist/RankSonglistMain.vue'),
-            meta:{
-              index:4
+            meta: {
+              index: 4
             }
           },
         ]
-      },
+      }
     ]
 
+
+
   },
+
   {
     path: '/personalized',
     component: () => import('@/components/layout/LayOut'),
@@ -47,9 +58,6 @@ const routes = [
       {
         path: 'song/list/:id',
         name: 'PersonalizedSongList',
-        meta: {
-          isSubscribed: null
-        },
         component: () => import('@/views/home/main/childComponents/songListWrap/SongListWrap.vue'),
       }
     ]

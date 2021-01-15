@@ -44,12 +44,27 @@ export function fetchUserPlayListAPi(params) {
 }
 
 
-// ! 根据歌单ID获取歌单详情
+// ! 根据歌单ID获取歌单详情(歌曲只有20条不全，要调用song/detai获取)
 export function fetchSongListDetailApi(params) {
   return request({
     url: '/playlist/detail',
     method: 'get',
     params: params
+  })
+}
+export function fetchSongDetailApi(params) {
+  return request({
+    url: '/song/detail',
+    method: 'get',
+    params
+  })
+}
+// ! 歌单详情-动态部分,如评论数,是否收藏,播放数
+export function fetchPlayListDynamicAPI(params) {
+  return request({
+    url: '/playlist/detail/dynamic',
+    method: 'get',
+    params
   })
 }
 
@@ -214,6 +229,16 @@ export function fetchRankSonglistAPI() {
 export function fetchRankArtistAPI(params) {
   return request({
     url: '/toplist/artist',
+    method: 'get',
+    params
+  })
+}
+
+
+// ! 喜欢的音乐列表
+export function fetchLikeListAPI(params) {
+  return request({
+    url: '/likelist',
     method: 'get',
     params
   })

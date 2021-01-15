@@ -1,7 +1,7 @@
 import { formatDate, millisecondToDate } from '@/util/DateUtil.js'
 import { number2wan } from '@/util/NumberTransfrom.js'
 export class SongListDeatil {
-  constructor(privileges, { playCount, subscribedCount, id, name, shareCount, commentCount, coverImgUrl, privacy, createTime, trackUpdateTime, tracks, tags, description, creator }) {
+  constructor(privileges, { playCount, subscribedCount, id, name, shareCount, commentCount, coverImgUrl, privacy, createTime, trackUpdateTime, trackIds, tracks, tags, description, creator }) {
     this.playCount = playCount;  // * 播放数量
     this.subscribedCount = subscribedCount; // * 订阅数量
     this.id = id; // * 歌单id
@@ -12,7 +12,8 @@ export class SongListDeatil {
     this.createTime = formatDate(new Date(createTime), 'yyyy-MM-dd hh:mm:ss'); // * 歌单创建时间
     this.privacy = privacy // * 是否私有 0非私有
     this.trackUpdateTime = formatDate(new Date(trackUpdateTime), 'yyyy-MM-dd hh:mm:ss') // * 歌单最后更新时间
-    this.trackList = this.getTrack(tracks, privileges);
+    this.trackIds = this.getTrackIds(trackIds)
+    // this.trackList = this.getTrack(tracks, privileges);
     this.tags = tags;  // * 歌单标签
     this.description = description // * 歌单描述
     this.creator = new Creator(creator); // * 歌单创建者
@@ -37,10 +38,17 @@ export class SongListDeatil {
     // console.log(imageUrl.substring(0, 10));
     return imageUrl
   }
+  getTrackIds(trackids) {
+    let trackList = []
+    trackList = trackids.map((e, i) => {
+      return e.id
+    })
+    return trackList;
+  }
 }
 
 
-class Track {
+export class Track {
   constructor({ name, id, ar, alia, pop, fee, al, dt, h, m, l, tns, noCopyrightRcmd, mv, publishTime }, { playMaxbr, downloadMaxbr }) {
     this.name = name; // * 歌曲名称
     this.id = id; // * 歌曲id

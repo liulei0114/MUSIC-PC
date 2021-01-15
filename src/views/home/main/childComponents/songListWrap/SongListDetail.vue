@@ -13,12 +13,13 @@
         <span>含{{vipCount}}首vip专享歌曲</span>
         <span>首开VIP仅5元</span>
       </div>
-      <div class="list_con">
+      <div class="list_con" v-if="getSongList">
         <song-list-item
-          v-for="(item,index) in songList"
+          v-for="(item,index) in songListTracks"
           :key="item.id"
           :index="index+1"
           :songItem="item"
+          :likeListIdsMap="likeListIdsMap"
         ></song-list-item>
       </div>
     </div>
@@ -28,15 +29,21 @@
 <script>
 import SongListItem from "./SongListItem.vue";
 import { mapGetters } from "vuex";
+import { fetchLikeListAPI, fetchSongDetailApi } from "@/network/api/musicApi";
+import { Track } from "@/common/pojo.js";
 export default {
   components: { SongListItem },
   data() {
     return {
       typeIndex: 1,
+      likeListIdsMap: new Map(),
+      songlist: [],
+      _debounceKeywords: null,
+      songListTracks: [],
     };
   },
   props: {
-    songList: {
+    songIds: {
       type: Array,
       default() {
         return [];
@@ -50,11 +57,78 @@ export default {
       type: Number,
       default: 0,
     },
+    keywords: {
+      type: String,
+      default: "",
+    },
   },
   computed: {
     ...mapGetters({ userProfile: "userProfile" }),
+    getSongList() {
+      if (this.songIds.length === 0) {
+        return false;
+      }
+      this._initSongDetail();
+      return true;
+    },
   },
-  methods: {},
+  watch: {
+    keywords(newKeyword) {
+      this._debounceKeywords();
+    },
+  },
+  created() {
+    this._initLikeList();
+    // 创建关键词防抖函数
+    this._debounceKeywords = this._.debounce(this.seachMusicInSongList, 1000);
+  },
+  methods: {
+    async _initLikeList() {
+      let result = await fetchLikeListAPI({ uid: this.userProfile.userId });
+      let map = new Map();
+      result.ids.forEach((e, i) => {
+        map.set(e, true);
+      });
+      this.likeListIdsMap = map;
+    },
+    _initSongDetail() {
+      fetchSongDetailApi({ ids: this.songIds.join(",") }).then((result) => {
+        result.songs.forEach((e, i) => {
+          this.songlist.push(new Track(e, result.privileges[i]));
+          this.songListTracks = this.songlist;
+        });
+      });
+    },
+    // ? 歌单内搜索
+    seachMusicInSongList() {
+      let regExp = new RegExp(`${this.keywords.trim()}`, "i");
+      if (this.keywords.trim() !== "") {
+        let temp = this.songlist.filter((e) => {
+          if (regExp.test(e.name) || regExp.test(e.alia.join(""))) {
+            return true;
+          }
+          if (e.tns && regExp.test(e.tns.join(""))) {
+            return true;
+          }
+          // 在歌手里面查找
+          let ar = "";
+          e.ar.forEach((e, i) => {
+            ar += e.name;
+          });
+          if (regExp.test(ar)) {
+            return true;
+          }
+          // 专辑里面查找
+          if (regExp.test(e.al.name) || regExp.test(e.al.tns.join(""))) {
+            return true;
+          }
+        });
+        this.songListTracks = temp;
+      } else {
+        this.songListTracks = this.songlist;
+      }
+    },
+  },
 };
 </script>
 
