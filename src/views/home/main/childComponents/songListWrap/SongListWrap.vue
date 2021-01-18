@@ -86,7 +86,7 @@
               </span>
             </div>
             <div class="right" v-show="typeIndex === 1">
-              <input type="text" placeholder="搜索歌单音乐" v-model="keywords"/>
+              <input type="text" placeholder="搜索歌单音乐" v-model="keywords" />
               <i @click="clearKeywords">
                 <svg-icon
                   class="blackColor"
@@ -97,14 +97,13 @@
           </div>
           <div class="song_list_detail" v-if="typeIndex === 1">
             <song-list-detail
-              :subscribedCount="songListDetail.subscribedCount"
               :songIds="songListDetail.trackIds"
               :vipCount="songListDetail.vipCount"
-              :keywords='keywords'
+              :keywords="keywords"
             ></song-list-detail>
           </div>
           <div class="commend_list_detail" v-else-if="typeIndex === 2">
-            <comment-list-detail @updateCommentCount="updateCommentCount"></comment-list-detail>
+            <comment-list-detail @updateCommentCount="updateCommentCount" commentType="playlist"></comment-list-detail>
           </div>
           <div class="subscribers_detail" v-else-if="typeIndex === 3">
             <subscribers-detail></subscribers-detail>
@@ -262,7 +261,7 @@ export default {
         }
       );
       this.commentCount = this.songListDetail.commentCount;
-  
+
       this.getPlayListDynamic();
       this.endLoading();
     },
@@ -272,7 +271,7 @@ export default {
     updateCommentCount(newCommentCount) {
       this.commentCount = newCommentCount;
     },
-   
+
     clearKeywords() {
       this.keywords = "";
     },

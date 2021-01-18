@@ -58,6 +58,10 @@ export default {
       type: Object,
       default: {},
     },
+    commentType: {
+      type: String,
+      default: "",
+    },
   },
   computed: {
     getUserUrl() {
@@ -66,6 +70,20 @@ export default {
     ...mapGetters({ userProfile: "userProfile" }),
     _songCreatorVipUrl() {
       return this.commentItem.user.identityIconUrl + "?param=12y12";
+    },
+    _commentType() {
+      switch (this.commentType) {
+        case "music":
+          return 0;
+        case "mv":
+          return 1;
+        case "playlist":
+          return 2;
+        case "album":
+          return 3;
+        case "dj":
+          return 4;
+      }
     },
   },
   created() {
@@ -97,7 +115,7 @@ export default {
       let params = new URLSearchParams();
       params.append("id", this.songListId);
       params.append("cid", commentId);
-      params.append("type", 2);
+      params.append("type", this._commentType);
       params.append("t", ~~!liked);
       doCommentLikedAPI(params).then((result) => {
         // 点赞成功

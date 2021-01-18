@@ -26,14 +26,9 @@
         <i :class="{typeCheck: curCheckTypeIndex === 6}"></i>
       </span>
     </header>
-    <happy-scroll
-      color="#e0e0e0"
-      size="8"
-      :resize="true"
-      :hide-horizontal="true"
-    >
+    <happy-scroll color="#e0e0e0" size="8" :resize="true" :hide-horizontal="true">
       <div class="con" id="FindMusicPoint">
-        <article >
+        <article>
           <router-view></router-view>
         </article>
       </div>
@@ -52,10 +47,8 @@ export default {
   created() {
     this.curCheckTypeIndex = this.$route.meta.index;
   },
-  
-  watch: {
-  
-  },
+
+  watch: {},
   methods: {
     handelTypeCheck(index) {
       this.curCheckTypeIndex = index;
@@ -76,14 +69,13 @@ export default {
           this.$router.push("/find/music/artist");
           return;
         case 6:
-          this.$router.push();
+          this.$router.push("/find/music/new");
           return;
       }
     },
     getTime() {
       return new Date().valueOf();
     },
- 
   },
   components: {},
 };
@@ -98,7 +90,7 @@ export default {
     height: calc(100% - 55px) !important;
     /deep/ .happy-scroll-container {
       width: 100% !important;
-      height: 100%;
+      height: 485px !important;
       .happy-scroll-content {
         width: 100%;
         border-right: 10px !important;
@@ -151,7 +143,7 @@ export default {
     article {
       width: 100%;
       height: 100%;
-      padding: 10px 20px 0;
+      // padding: 10px 20px 0;
     }
   }
 }

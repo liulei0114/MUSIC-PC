@@ -217,6 +217,7 @@ export default {
 <style lang="less" scoped>
 #PersonAlizationWrap {
   width: 100%;
+  padding: 10px 20px 0;
   .bannerCon {
     height: 250px;
   }

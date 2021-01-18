@@ -5,12 +5,14 @@
         <span>音乐标题</span>
         <span>歌手</span>
         <span>专辑</span>
-        <span>时长</span>
+        <span :style="_dtMarginLeft">时长</span>
+        <span v-if="isShowPop" :style="_PopMarginLeft">热度</span>
       </div>
       <!-- 不是会员 -->
       <div v-if="!userProfile || userProfile.vipType === 0" class="vip_buy_info">
         <i></i>
-        <span>含{{vipCount}}首vip专享歌曲</span>
+        <span v-if="!isAlbumTitle">含{{vipCount}}首vip专享歌曲</span>
+        <span v-else>会员享高品质听觉盛宴</span>
         <span>首开VIP仅5元</span>
       </div>
       <div class="list_con" v-if="getSongList">
@@ -20,6 +22,7 @@
           :index="index+1"
           :songItem="item"
           :likeListIdsMap="likeListIdsMap"
+          :isShowPop="isShowPop"
         ></song-list-item>
       </div>
     </div>
@@ -49,10 +52,6 @@ export default {
         return [];
       },
     },
-    subscribedCount: {
-      type: Number,
-      default: 0,
-    },
     vipCount: {
       type: Number,
       default: 0,
@@ -60,6 +59,14 @@ export default {
     keywords: {
       type: String,
       default: "",
+    },
+    isAlbumTitle: {
+      type: Boolean,
+      default: false,
+    },
+    isShowPop: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {
@@ -70,6 +77,17 @@ export default {
       }
       this._initSongDetail();
       return true;
+    },
+    _PopMarginLeft() {
+      if (this.isShowPop) {
+        return { "margin-left": "40px" };
+      }
+    },
+    _dtMarginLeft() {
+      if (this.isShowPop) {
+        return { "margin-left": "80px" };
+      }
+      return { "margin-left": "175px" };
     },
   },
   watch: {
@@ -150,9 +168,6 @@ export default {
       }
       span:nth-child(3) {
         margin-left: 112px;
-      }
-      span:nth-child(4) {
-        margin-left: 175px;
       }
     }
     .flexTable {

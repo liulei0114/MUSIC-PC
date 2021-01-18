@@ -57,6 +57,13 @@ const routes = [
               index: 5
             }
           },
+          {
+            path: 'new',
+            component: () => import('@/views/home/main/childComponents/findMusicWrap/newSonglist/NewSonglistMain.vue'),
+            meta: {
+              index: 6
+            }
+          },
         ]
       }
     ]
@@ -69,13 +76,21 @@ const routes = [
     path: '/personalized',
     component: () => import('@/components/layout/LayOut'),
     children: [
+      // 歌单详情页
       {
         path: 'song/list/:id',
         name: 'PersonalizedSongList',
         component: () => import('@/views/home/main/childComponents/songListWrap/SongListWrap.vue'),
-      }
+      },
+      // 专辑详情页
+      {
+        path: 'album/:id',
+        name: 'PersonalizedAlbum',
+        component: () => import('@/views/home/main/childComponents/findMusicWrap/newSonglist/childComponents/AlbumDetail.vue'),
+      },
     ]
-  }
+  },
+
 ]
 const originalPush = VueRouter.prototype.push
 VueRouter.prototype.push = function push(location, onResolve, onReject) {

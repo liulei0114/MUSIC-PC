@@ -134,6 +134,7 @@ export default {
 .RankSonglistMain {
   width: 100%;
   color: #333;
+  padding: 10px 20px 0;
   h2 {
     margin-bottom: 20px;
   }

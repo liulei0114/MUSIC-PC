@@ -1,16 +1,29 @@
 <template>
-  <div class="SongListItem" :class="{isOdd:index%2!=0}">
+  <div class="SongListItem" :class="{isOdd:index%2!=0}" :style="{height:height}">
     <div class="index">{{index | filterIndex}}</div>
-    <div class="like">
-      <i>
-        <svg-icon :icon-class="headStatus" class="svgnoraml"></svg-icon>
-      </i>
+    <div>
+      <div class="flexL" v-if="!isShowALpic">
+        <div class="like">
+          <i>
+            <svg-icon :icon-class="headStatus" class="svgnoraml"></svg-icon>
+          </i>
+        </div>
+        <div class="down">
+          <i>
+            <svg-icon icon-class="xiazai2" class="svgnoraml"></svg-icon>
+          </i>
+        </div>
+      </div>
+      <div v-if="isShowALpic" class="alPic">
+        <img :src="songItem.picurl + '?param=60y60'" alt width="60px" height="60px" />
+        <div class="play">
+          <i style="margin-left:5px;line-height:25px">
+            <svg-icon icon-class="play" style="color:#ec4141"></svg-icon>
+          </i>
+        </div>
+      </div>
     </div>
-    <div class="down">
-      <i>
-        <svg-icon icon-class="xiazai2" class="svgnoraml" ></svg-icon>
-      </i>
-    </div>
+
     <div class="name textOverflow flexLeft">
       <span :class="{noCopyright:songItem.noCopyrightRcmd}">{{songItem.name}}</span>
       <span class="other" :class="getTextOverFlow(index)">{{_alias}}</span>
@@ -40,12 +53,17 @@
     <div class="ar textOverflow">
       <span>{{_ar}}</span>
     </div>
-    <div class="al textOverflow">
+    <div class="al textOverflow" :style="_alWidth">
       <span>{{songItem.al.name}}</span>
       <span class="other">{{_al}}</span>
     </div>
     <div class="dt">
       <span>{{songItem.formatDt}}</span>
+    </div>
+    <div class="pop" v-if="isShowPop">
+      <span class="pop_line">
+        <i :style="_popPercent"></i>
+      </span>
     </div>
   </div>
 </template>
@@ -65,9 +83,21 @@ export default {
     },
     likeListIdsMap: {
       type: Map,
-      default(){
-        return new Map()
-      }
+      default() {
+        return new Map();
+      },
+    },
+    height: {
+      type: String,
+      default: "30px",
+    },
+    isShowALpic: {
+      type: Boolean,
+      default: false,
+    },
+    isShowPop: {
+      type: Boolean,
+      default: false,
     },
   },
   computed: {
@@ -90,14 +120,27 @@ export default {
     },
     _al() {
       let songItem = this.songItem;
-      return songItem.al.tns.length !== 0 ? `(${songItem.al.tns[0]})` : "";
-    },
-    headStatus(){
-      if(this.likeListIdsMap.get(this.songItem.id)){
-        return 'headlike'
+      if (songItem.al.tns) {
+        return songItem.al.tns.length !== 0 ? `(${songItem.al.tns[0]})` : "";
       }
-      return 'headnolike'
-    }
+      return "";
+    },
+    headStatus() {
+      if (this.likeListIdsMap.get(this.songItem.id)) {
+        return "headlike";
+      }
+      return "headnolike";
+    },
+    _alWidth() {
+      if (this.isShowPop) {
+        return { width: "150px" };
+      }
+      return { width: "180px", "margin-left": "50px", "margin-right": "20px" };
+    },
+    _popPercent() {
+      let percent = ((this.songItem.pop / 100) * 80).toFixed(1) + "px";
+      return { width: percent };
+    },
   },
   filters: {
     filterIndex(value) {
@@ -145,7 +188,6 @@ export default {
 <style lang="less" scoped>
 .SongListItem {
   width: 100%;
-  height: 30px;
   display: flex;
   justify-content: left;
   align-items: center;
@@ -162,7 +204,7 @@ export default {
   }
   .svgnoraml {
     font-size: 16px;
-    color:#a8a9aa;
+    color: #a8a9aa;
   }
   .textOverflow {
     white-space: nowrap;
@@ -199,6 +241,25 @@ export default {
   .down {
     width: 30px;
   }
+  .alPic {
+    position: relative;
+    margin-right: 10px;
+    img {
+      border-radius: 5px;
+    }
+    .play {
+      position: absolute;
+      overflow: hidden;
+      text-align: center;
+      border-radius: 50%;
+      background-color: #fff;
+      width: 25px;
+      height: 25px;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
   .name {
     width: 300px;
     color: #333;
@@ -209,21 +270,37 @@ export default {
     }
   }
   .ar {
-    width: 140px;
+    width: 100px;
     color: #807e7e;
     padding-right: 10px;
     font-size: 13px;
   }
   .al {
-    width: 190px;
     color: #807e7e;
     font-size: 13px;
   }
   .dt {
-    flex: 1;
     color: #9f9f9f;
-    margin-left: 10px;
     font-size: 13px;
+  }
+  .pop {
+    flex: 1;
+    margin-left: 20px;
+    line-height: 0px;
+
+    .pop_line {
+      width: 80px;
+      height: 6px;
+      display: inline-block;
+      border-radius: 3px;
+      background-color: #dfdfdf;
+      overflow: hidden;
+      i {
+        height: 100%;
+        background-color: #c9c9c9;
+        display: inline-block;
+      }
+    }
   }
 }
 .isOdd {

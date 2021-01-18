@@ -229,6 +229,7 @@ export default {
 <style lang="less" scoped>
 .SongListWrap {
   width: 100%;
+  padding: 10px 20px 0;
   .hot_tag_con {
     display: flex;
     justify-content: space-between;

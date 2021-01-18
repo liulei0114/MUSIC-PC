@@ -2,7 +2,7 @@
   <div class="ArtistMain" @scroll="handleScroll" ref="artistMain">
     <header>
       <div class="seach_con">
-        <div class="title" @click="searchKey.curPage++">语种：</div>
+        <div class="title">语种：</div>
         <div class="type_con flexL">
           <p v-for="item in areaList" :key="item.type">
             <span
@@ -213,6 +213,7 @@ export default {
 .ArtistMain {
   width: 100%;
   overflow: hidden;
+  padding: 10px 20px 0;
   header {
     width: 100%;
     color: #676767;

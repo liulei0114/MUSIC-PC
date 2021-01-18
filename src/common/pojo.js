@@ -447,6 +447,85 @@ export class RankArtists {
   }
 }
 
+export class Single {
+  constructor({ id, name, mp3Url, duration, alias, artists, album, fee, privilege, mvid }) {
+    this.id = id;
+    this.name = name;
+    this.mp3Url = mp3Url;
+    this.formatDt = this.getFormatDt(duration)
+    this.picurl = this.tansIdentityIconUrl(album.picUrl);
+    this.isSq = this.isSq(privilege.maxbr) // * sq标志
+    this.mv = mvid;
+    this.alia = alias;
+    this.fee = fee;
+    this.ar = this.getArList(artists); // * 歌曲作者 arr[Ar]
+    this.al = new Al(album); // * 歌曲专辑 arr[Al]
+  }
+  tansIdentityIconUrl(picUrl) {
+    picUrl = picUrl.replace(new RegExp('p[1-5]{1}'), 'p3');
+    return picUrl
+  }
+  getFormatDt(dt) {
+    if (dt) {
+      return millisecondToDate(dt);
+    }
+    return "00:00"
+  }
+  isSq(playMaxbr) {
+    if (playMaxbr && playMaxbr === 999000) {
+      return true;
+    }
+    return false;
+  }
+  getArList(ar) {
+    let arList = []
+    ar.forEach((e, i) => {
+      arList.push(new Ar(e))
+    })
+    return arList
+  }
+}
+
+// 专辑
+export class Album {
+  constructor({ id, name, picUrl, artist, publishTime }) {
+    this.id = id;
+    this.name = name;
+    this.picUrl = this.tansIdentityIconUrl(picUrl)
+    this.artistName = artist.name;
+    this.publishTime = formatDate(new Date(publishTime), 'M-yyyy')
+  }
+  tansIdentityIconUrl(picUrl) {
+    picUrl = picUrl.replace(new RegExp('p[1-5]{1}'), 'p3');
+    return picUrl
+  }
+}
+
+// 专辑详情页
+export class AlbumDetail {
+  constructor({ id, name, picUrl, alias, publishTime, description, artist }, songs) {
+    this.id = id;
+    this.name = name;
+    this.picUrl = this.tansIdentityIconUrl(picUrl)
+    this.al = new Al(artist)
+    this.publishTime = formatDate(new Date(publishTime), 'yyyy-MM-dd')
+    this.alias = (alias?.length !== 0) ? alias[0] : ''
+    this.description = description;
+    this.songIds = this.getSongIds(songs)
+  }
+  tansIdentityIconUrl(picUrl) {
+    picUrl = picUrl.replace(new RegExp('p[1-5]{1}'), 'p3');
+    return picUrl
+  }
+  getSongIds(songs) {
+    let result = []
+    songs.forEach((e, i) => {
+      result.push(e.id)
+    })
+    return result
+  }
+}
+
 
 
 

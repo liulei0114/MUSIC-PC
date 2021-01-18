@@ -65,6 +65,7 @@
         :commentItem="item"
         @doReplay="doReplay"
         @openDeleteCommentDialog="openDeleteCommentDialog"
+        :commentType='commentType'
       ></comment-list-item>
     </div>
     <div class="pageination">
@@ -94,7 +95,7 @@
 </template>
 
 <script>
-import { fetchSongCommentAPI, doCommentAPI } from "@/network/api/musicApi";
+import { fetchCommentAPI, doCommentAPI } from "@/network/api/musicApi";
 import { CommentDetail } from "@/common/pojo";
 import CommentListItem from "./CommentListItem.vue";
 import { loadingMixin } from "@/mixin/loadingMixin";
@@ -360,6 +361,12 @@ export default {
       deleteCommentId: "",
     };
   },
+  props: {
+    commentType: {
+      type: String,
+      default: "",
+    },
+  },
   computed: {
     emojiItemStyle() {
       return {
@@ -372,6 +379,20 @@ export default {
         border: "1px solid #fff",
         "margin-bottom": "5px",
       };
+    },
+    _commentType() {
+      switch (this.commentType) {
+        case "music":
+          return 0;
+        case "mv":
+          return 1;
+        case "playlist":
+          return 2;
+        case "album":
+          return 3;
+        case "dj":
+          return 4;
+      }
     },
   },
   created() {
@@ -386,7 +407,7 @@ export default {
       this.initLoading();
       let params = Object.assign({ id: this.songListId }, this.pageInfo);
       params.timestamp = new Date().valueOf();
-      let result = await fetchSongCommentAPI(params);
+      let result = await fetchCommentAPI(this.commentType, params);
       this.commentListDetail = new CommentDetail(result);
       this.scrollParentStart("#AnchorPoint");
       this.endLoading();
@@ -458,7 +479,7 @@ export default {
         params.append("content", this.ruleForm.textarea);
       }
       params.append("id", this.songListId);
-      params.append("type", 2);
+      params.append("type", this._commentType);
       let result = await doCommentAPI(params);
       this._initSongComment();
       this.ruleForm.textarea = "";
@@ -470,7 +491,7 @@ export default {
     async deleteComment() {
       let params = new URLSearchParams();
       params.append("t", 0);
-      params.append("type", 2);
+      params.append("type", this._commentType);
       params.append("id", this.songListId);
       params.append("commentId", this.deleteCommentId);
       this.dialogTableVisible = false;

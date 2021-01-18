@@ -69,9 +69,9 @@ export function fetchPlayListDynamicAPI(params) {
 }
 
 // ! 根据歌单ID获取评论信息
-export function fetchSongCommentAPI(params) {
+export function fetchCommentAPI(type, params) {
   return request({
-    url: '/comment/playlist',
+    url: '/comment/' + type,
     method: 'get',
     params: params
   })
@@ -250,6 +250,55 @@ export function fetchLikeListAPI(params) {
 export function fetchArtistListAPI(params) {
   return request({
     url: '/artist/list',
+    method: 'get',
+    params
+  })
+}
+
+
+// ! 发现音乐-最新音乐-新歌速递
+export function fetchTopSongAPI(params) {
+  return request({
+    url: '/top/song',
+    method: 'get',
+    params
+  })
+}
+
+
+// ! 发现音乐-最新音乐-新碟上架(推荐)
+export function fetchTopAlbumAPI(params) {
+  return request({
+    url: '/top/album',
+    method: 'get',
+    params
+  })
+}
+
+
+// ! 发现音乐-最新音乐-新碟上架(全部)
+export function fetchAllAlbumAPI(params) {
+  return request({
+    url: '/album/new',
+    method: 'get',
+    params
+  })
+}
+
+
+// ! 专辑详情
+export function fetchAlbumDetailAPI(params) {
+  return request({
+    url: '/album',
+    method: 'get',
+    params
+  })
+}
+
+// ! 专辑动态如是否收藏,收藏数,评论数,分享数
+export function fetchAlbumDynamicAPI(params) {
+  return request({
+    url: '/album/detail/dynamic',
     method: 'get',
     params
   })
