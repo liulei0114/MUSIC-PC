@@ -9,7 +9,7 @@
           :rankSonglistItem="item"
         ></rank-songlist-detail>
         <!-- 歌手排行榜 -->
-        <rank-songlist-detail :rankSonglistItem="singer" :isSonger='true'></rank-songlist-detail>
+        <rank-songlist-detail :rankSonglistItem="singer" :isSonger="true"></rank-songlist-detail>
       </div>
     </article>
     <article class="global">
@@ -36,7 +36,7 @@ import {
   fetchSongListDetailApi,
   fetchRankArtistAPI,
 } from "@/network/api/musicApi";
-import { RankSonglist, SongListDeatil, RankArtists } from "@/common/pojo";
+import { RankSonglist, RankArtists } from "@/common/pojo";
 import { loadingMixin } from "@/mixin/loadingMixin";
 import MusicIntroduceModule from "../personalization/childComponents/MusicIntroduceModule.vue";
 import RankSonglistDetail from "./childComponents/RankSonglistDetail.vue";

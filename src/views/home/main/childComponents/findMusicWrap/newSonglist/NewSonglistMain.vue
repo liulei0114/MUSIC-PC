@@ -215,7 +215,6 @@ export default {
     },
     // ? 加载上一个月份
     initPreMonth() {
-      // 月份减一，单个年和月份自动跟新
       if (this.isAlbumRecommend) {
         this.monthSubtract();
         this._initAlbumRecommendlist();

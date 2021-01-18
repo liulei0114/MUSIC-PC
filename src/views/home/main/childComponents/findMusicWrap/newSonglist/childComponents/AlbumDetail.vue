@@ -46,8 +46,9 @@
             <div class="introduce">
               <div>
                 <span>歌手：</span>
-                <span>
-                  <router-link to>{{_albumAlName}}</router-link>
+                <span v-for="(item,index) in albumDetail.als" :key="item.id">
+                  <router-link to>{{item.name}}</router-link>
+                  <span v-show="(index +1) !== albumDetail.als.length">&nbsp;&nbsp;/&nbsp;&nbsp;</span>
                 </span>
               </div>
               <div>
@@ -125,10 +126,6 @@ export default {
     _albumName() {
       if (Object.keys(this.albumDetail).length === 0) return;
       return this.albumDetail.name;
-    },
-    _albumAlName() {
-      if (Object.keys(this.albumDetail).length === 0) return;
-      return this.albumDetail.al.name;
     },
     _description() {
       // 描述有换行符，和折叠效果，取第一行显示

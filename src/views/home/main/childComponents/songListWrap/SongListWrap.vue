@@ -96,11 +96,7 @@
             </div>
           </div>
           <div class="song_list_detail" v-if="typeIndex === 1">
-            <song-list-detail
-              :songIds="songListDetail.trackIds"
-              :vipCount="songListDetail.vipCount"
-              :keywords="keywords"
-            ></song-list-detail>
+            <song-list-detail :songIds="songListDetail.trackIds" :keywords="keywords"></song-list-detail>
           </div>
           <div class="commend_list_detail" v-else-if="typeIndex === 2">
             <comment-list-detail @updateCommentCount="updateCommentCount" commentType="playlist"></comment-list-detail>

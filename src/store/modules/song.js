@@ -22,7 +22,7 @@ const songModule = {
       params.append("id", data.id)
       params.append('timestamp', (new Date()).valueOf())
       let songListDetailData = await fetchSongListDetailApi(params);
-      let songListDetail = new SongListDeatil(songListDetailData.privileges, songListDetailData.playlist);
+      let songListDetail = new SongListDeatil(songListDetailData.playlist);
       return songListDetail;
     }
 

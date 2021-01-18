@@ -1,7 +1,7 @@
 import { formatDate, millisecondToDate } from '@/util/DateUtil.js'
 import { number2wan } from '@/util/NumberTransfrom.js'
 export class SongListDeatil {
-  constructor(privileges, { playCount, subscribedCount, id, name, shareCount, commentCount, coverImgUrl, privacy, createTime, trackUpdateTime, trackIds, tracks, tags, description, creator }) {
+  constructor({ playCount, subscribedCount, id, name, shareCount, commentCount, coverImgUrl, privacy, createTime, trackUpdateTime, trackIds, tracks, tags, description, creator }) {
     this.playCount = playCount;  // * 播放数量
     this.subscribedCount = subscribedCount; // * 订阅数量
     this.id = id; // * 歌单id
@@ -13,26 +13,11 @@ export class SongListDeatil {
     this.privacy = privacy // * 是否私有 0非私有
     this.trackUpdateTime = formatDate(new Date(trackUpdateTime), 'yyyy-MM-dd hh:mm:ss') // * 歌单最后更新时间
     this.trackIds = this.getTrackIds(trackIds)
-    // this.trackList = this.getTrack(tracks, privileges);
     this.tags = tags;  // * 歌单标签
     this.description = description // * 歌单描述
     this.creator = new Creator(creator); // * 歌单创建者
   }
 
-  getTrack(tracks, privileges) {
-    let trackList = [];
-    let vipCount = 0;
-    if (tracks && tracks.length != 0) {
-      tracks.forEach((e, i) => {
-        if (e.fee === 1) {
-          vipCount++;
-        }
-        trackList.push(new Track(e, privileges[i]))
-      })
-    }
-    this.tracks = trackList;  // * 歌曲列表 arr[Track]
-    this.vipCount = vipCount;  // * vip歌曲数量
-  }
   tansIdentityIconUrl(imageUrl) {
     imageUrl = imageUrl.replace(new RegExp('p[1-5]{1}'), 'p3');
     // console.log(imageUrl.substring(0, 10));
@@ -503,11 +488,12 @@ export class Album {
 
 // 专辑详情页
 export class AlbumDetail {
-  constructor({ id, name, picUrl, alias, publishTime, description, artist }, songs) {
+  constructor({ id, name, picUrl, alias, publishTime, description, artist, artists }, songs) {
     this.id = id;
     this.name = name;
     this.picUrl = this.tansIdentityIconUrl(picUrl)
-    this.al = new Al(artist)
+    this.ar = new Ar(artist)
+    this.als = this.getArtists(artists)
     this.publishTime = formatDate(new Date(publishTime), 'yyyy-MM-dd')
     this.alias = (alias?.length !== 0) ? alias[0] : ''
     this.description = description;
@@ -523,6 +509,13 @@ export class AlbumDetail {
       result.push(e.id)
     })
     return result
+  }
+  getArtists(artists) {
+    let list = []
+    artists.forEach((e, i) => {
+      list.push(new Ar(e))
+    })
+    return list;
   }
 }
 

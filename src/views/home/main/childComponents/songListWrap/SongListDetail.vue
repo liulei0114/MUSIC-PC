@@ -43,6 +43,7 @@ export default {
       songlist: [],
       _debounceKeywords: null,
       songListTracks: [],
+      vipCount: 0,
     };
   },
   props: {
@@ -51,10 +52,6 @@ export default {
       default() {
         return [];
       },
-    },
-    vipCount: {
-      type: Number,
-      default: 0,
     },
     keywords: {
       type: String,
@@ -112,6 +109,9 @@ export default {
     _initSongDetail() {
       fetchSongDetailApi({ ids: this.songIds.join(",") }).then((result) => {
         result.songs.forEach((e, i) => {
+          if (e.fee === 1) {
+            this.vipCount++;
+          }
           this.songlist.push(new Track(e, result.privileges[i]));
           this.songListTracks = this.songlist;
         });
@@ -154,7 +154,6 @@ export default {
 .SongListDetail {
   width: 100%;
   height: 100%;
-
   .body {
     .title {
       font-size: 13px;
