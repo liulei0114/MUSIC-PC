@@ -9,11 +9,11 @@
       </div>
     </div>
     <div class="right">
-      <div class="textOverflowElli" style="margin-bottom:5px">
+      <div class="song_name" style="margin-bottom:5px">
         <span>{{newSong.name}}</span>
         <span class="name_alias" v-if="newSong.alias.trim()!==''">({{newSong.alias}})</span>
       </div>
-      <div class="icon_con flexLeft">
+      <div class="song_intro">
         <i v-if="newSong.fee === 1" class="redColor" style="color:#fe672e">
           <svg-icon icon-class="song_vip"></svg-icon>
         </i>
@@ -23,10 +23,18 @@
         <i v-if="newSong.isSq" class="redColor">
           <svg-icon icon-class="song_sq"></svg-icon>
         </i>
-        <i v-if="newSong.mv !== 0" class="redColor" style="font-size:35px">
+        <i v-if="newSong.mv !== 0" class="redColor" style="font-size:38px">
           <svg-icon icon-class="song_mv"></svg-icon>
         </i>
-        <span style="margin-left:3px">{{newSong.ar}}</span>
+        <div class="ar_con">
+          <div v-for="(item,index) in newSong.arList" :key="item.id" class="textOverflowElli">
+            <span
+              class="ar_name"
+              @click="$router.push({ name: 'PersonalizedArtist', params: { id:item.id }})"
+            >{{item.name}}</span>
+            <span v-if="index +1 !== newSong.arList.length">&nbsp;&nbsp;/&nbsp;&nbsp;</span>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -44,6 +52,11 @@ export default {
     getUrl() {
       return `${this.newSong.picUrl}?param=45y45`;
     },
+    _newSongAr() {
+      this.newSong.arList.map((e, i) => {
+        return e.name;
+      });
+    },
   },
 };
 </script>
@@ -54,14 +67,16 @@ export default {
   height: 47px;
   font-size: 12px;
   margin-bottom: 5px;
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
   .left {
-    float: left;
     width: 47px;
     border: 1px solid #cccccc;
     height: 100%;
     border-radius: 5px;
     position: relative;
-    &:hover{
+    &:hover {
       cursor: pointer;
     }
     .play {
@@ -79,38 +94,46 @@ export default {
     }
   }
   .right {
-    padding-left: 10px;
-    float: left;
     width: calc(100% - 47px);
+    padding-left: 10px;
     height: 100%;
-    position: relative;
     &:hover {
       background-color: #eaeaea;
     }
-    .name_alias {
-      color: #9f9f9f;
-      margin-left: 5px;
+    .song_name {
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
     }
-    .icon_con {
-      position: absolute;
-      bottom: -8px;
-      left: 6px;
-      span {
-        color: #9f9f9f;
-      }
+    .song_intro {
+      width: 100%;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      display: flex;
+      justify-content: flex-start;
+      align-items: center;
+      transform: translateY(-5px);
+      line-height: 30px;
       .redColor {
         color: #ec4141;
-        margin-left: 3px;
+        margin-right: 3px;
         font-size: 30px;
+        line-height: 0;
       }
-      .icon_size {
-        width: 23px;
-        height: 11px;
-      }
-      &.flexLeft {
+      .ar_con {
+        width: 100%;
         display: flex;
-        justify-content: left;
+        justify-content: flex-start;
         align-items: center;
+        color: #9f9f9f;
+        .ar_name {
+          &:hover {
+            cursor: pointer;
+            color: #5f5f5f;
+          }
+        }
       }
     }
   }

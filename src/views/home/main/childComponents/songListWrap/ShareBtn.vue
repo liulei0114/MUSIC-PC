@@ -33,13 +33,13 @@ export default {
   computed: {
     isForBid() {
       let temp = {
-        background: "#fff",
         "border-color": "#d8d8d8",
       };
       // 自创建的
       if (this.isCreated) {
         temp.cursor = "default";
         temp.color = "#d8d8d8";
+        temp.backgroundColor= "#fff";
         return temp;
       }
       if (this.isSubscribed) {
@@ -50,7 +50,6 @@ export default {
       }
       return temp;
     },
-    
   },
   filters: {
     filterCount(value) {
@@ -64,7 +63,7 @@ export default {
 <style lang="less" scoped>
 .ShareBtn {
   height: 35px;
-  margin-left: 10px;
+  margin-right: 10px;
   border-radius: 20px;
   background-color: #fff;
   border: 1px solid #d8d8d8;

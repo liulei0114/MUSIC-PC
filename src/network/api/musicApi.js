@@ -255,6 +255,65 @@ export function fetchArtistListAPI(params) {
   })
 }
 
+// ! 获取歌手信息
+export function fetchArtistDetailAPI(params) {
+  return request({
+    url: '/artist/detail',
+    method: 'get',
+    params
+  })
+}
+
+
+// ! 获取歌手描述
+export function fetchArtistDescAPI(params) {
+  return request({
+    url: '/artist/desc',
+    method: 'get',
+    params
+  })
+}
+
+// ! 获取相似歌手
+export function fetchSimArtistAPI(params) {
+  return request({
+    url: '/simi/artist',
+    method: 'get',
+    params
+  })
+}
+
+
+// ! 收藏的歌手信息
+export function fetchSubArtistListAPI() {
+  return request({
+    url: '/artist/sublist',
+    method: 'get',
+    params: {
+      timestamp: new Date().valueOf()
+    }
+  })
+}
+
+
+// ! 歌手TOP50
+export function fetchArtistTop50API(params) {
+  return request({
+    url: '/artist/top/song',
+    method: 'get',
+    params
+  })
+}
+
+// ! 歌手专辑信息
+export function fetchArtistAlbumListAPI(params) {
+  return request({
+    url: '/artist/album',
+    method: 'get',
+    params
+  })
+}
+
 
 // ! 发现音乐-最新音乐-新歌速递
 export function fetchTopSongAPI(params) {

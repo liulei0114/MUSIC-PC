@@ -20,7 +20,6 @@ export class SongListDeatil {
 
   tansIdentityIconUrl(imageUrl) {
     imageUrl = imageUrl.replace(new RegExp('p[1-5]{1}'), 'p3');
-    // console.log(imageUrl.substring(0, 10));
     return imageUrl
   }
   getTrackIds(trackids) {
@@ -277,7 +276,7 @@ export class PrivateNewSong {
     this.alias = this.getAlias(song);
     this.picUrl = this.tansIdentityIconUrl(picUrl);
     this.fee = song.fee;
-    this.ar = this.getArtist(song);
+    this.arList = this.getArtist(song);
     this.mv = song.mvid;
     this.isSq = this.isSq(song.privilege.playMaxbr) // * sq标志
   }
@@ -289,11 +288,11 @@ export class PrivateNewSong {
     return song.alias.join(' / ')
   }
   getArtist(song) {
-    let nameStr = ''
+    let arList = []
     song.artists.forEach((e, i) => {
-      nameStr += e.name + ' /'
+      arList.push(new Ar(e))
     })
-    return nameStr.substring(0, nameStr.length - 2)
+    return arList;
   }
   isSq(playMaxbr) {
     if (playMaxbr && playMaxbr === 999000) {
@@ -420,11 +419,13 @@ export class RankSonglist {
 
 // 发现音乐-排行榜歌手
 export class RankArtists {
-  constructor({ id, name, picUrl, albumSize }) {
+  constructor({ id, name, picUrl, albumSize, trans, alias }) {
     this.id = id;
     this.name = name;
     this.picUrl = this.tansIdentityIconUrl(picUrl);
-    this.albumSize = albumSize
+    this.albumSize = albumSize;
+    this.trans = trans;
+    this.alias = alias
   }
   tansIdentityIconUrl(picUrl) {
     picUrl = picUrl.replace(new RegExp('p[1-5]{1}'), 'p3');
@@ -473,12 +474,16 @@ export class Single {
 
 // 专辑
 export class Album {
-  constructor({ id, name, picUrl, artist, publishTime }) {
+  constructor({ id, name, picUrl, artist, publishTime ,isSub}) {
     this.id = id;
     this.name = name;
     this.picUrl = this.tansIdentityIconUrl(picUrl)
     this.artistName = artist.name;
+    this.artistId = artist.id
     this.publishTime = formatDate(new Date(publishTime), 'M-yyyy')
+    this.dt = formatDate(new Date(publishTime),'yyyy-MM-dd')
+    this.isSub = isSub;
+    this.songlist=[]
   }
   tansIdentityIconUrl(picUrl) {
     picUrl = picUrl.replace(new RegExp('p[1-5]{1}'), 'p3');

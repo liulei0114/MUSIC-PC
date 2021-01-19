@@ -28,7 +28,12 @@
       </div>
     </div>
     <div class="floot">
-      <span>{{musicItem.name}}</span>
+      <span class="flexL">
+        {{musicItem.name}}
+        <i class="person" v-if="isPerson">
+          <svg-icon icon-class="person"></svg-icon>
+        </i>
+      </span>
       <div class="artist" v-if="musicItem.artistName">{{musicItem.artistName}}</div>
     </div>
   </div>
@@ -76,6 +81,10 @@ export default {
       default: false,
     },
     isImgBottom: {
+      type: Boolean,
+      default: false,
+    },
+    isPerson: {
       type: Boolean,
       default: false,
     },
@@ -218,7 +227,6 @@ export default {
     text-overflow: ellipsis;
     display: -webkit-box;
     -webkit-line-clamp: 2;
-    line-clamp: 2;
     -webkit-box-orient: vertical;
     color: #373737;
     .artist {
@@ -230,6 +238,17 @@ export default {
         color: #000000;
         cursor: pointer;
       }
+    }
+    .person {
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      background-color: #ef4441;
+      color: #fff;
+      margin-left: auto;
+      line-height: 20px;
+      font-size: 14px;
+      text-align: center;
     }
   }
 }

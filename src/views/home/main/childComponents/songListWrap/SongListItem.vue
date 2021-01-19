@@ -50,14 +50,14 @@
         </i>
       </div>
     </div>
-    <div class="ar textOverflow">
+    <div class="ar textOverflow" v-if="!isAr">
       <span>{{_ar}}</span>
     </div>
-    <div class="al textOverflow" :style="_alWidth">
+    <div class="al textOverflow" :style="_alWidth" v-if="!isAr">
       <span>{{songItem.al.name}}</span>
       <span class="other">{{_al}}</span>
     </div>
-    <div class="dt">
+    <div class="dt" :class="{maringLeftAuto:isAr}">
       <span>{{songItem.formatDt}}</span>
     </div>
     <div class="pop" v-if="isShowPop">
@@ -99,6 +99,11 @@ export default {
       type: Boolean,
       default: false,
     },
+    isAr: {
+      type: Boolean,
+      default: false,
+    },
+   
   },
   computed: {
     _alias() {
@@ -282,6 +287,10 @@ export default {
   .dt {
     color: #9f9f9f;
     font-size: 13px;
+    &.maringLeftAuto {
+      margin-left: auto;
+      margin-right: 5px;
+    }
   }
   .pop {
     flex: 1;

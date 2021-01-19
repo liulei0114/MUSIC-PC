@@ -47,7 +47,9 @@
               <div>
                 <span>歌手：</span>
                 <span v-for="(item,index) in albumDetail.als" :key="item.id">
-                  <router-link to>{{item.name}}</router-link>
+                  <router-link
+                    :to="{ name: 'PersonalizedArtist', params: { id:item.id }}"
+                  >{{item.name}}</router-link>
                   <span v-show="(index +1) !== albumDetail.als.length">&nbsp;&nbsp;/&nbsp;&nbsp;</span>
                 </span>
               </div>

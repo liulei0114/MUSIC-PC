@@ -78,7 +78,7 @@ const routes = [
     children: [
       // 歌单详情页
       {
-        path: 'song/list/:id',
+        path: 'songlist/:id',
         name: 'PersonalizedSongList',
         component: () => import('@/views/home/main/childComponents/songListWrap/SongListWrap.vue'),
       },
@@ -87,6 +87,12 @@ const routes = [
         path: 'album/:id',
         name: 'PersonalizedAlbum',
         component: () => import('@/views/home/main/childComponents/findMusicWrap/newSonglist/childComponents/AlbumDetail.vue'),
+      },
+      // 专辑详情页
+      {
+        path: 'artist/:id',
+        name: 'PersonalizedArtist',
+        component: () => import('@/views/home/main/childComponents/findMusicWrap/artist/childComponents/ArtistDetail.vue'),
       },
     ]
   },

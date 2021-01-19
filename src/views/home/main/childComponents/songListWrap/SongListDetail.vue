@@ -15,16 +15,16 @@
         <span v-else>会员享高品质听觉盛宴</span>
         <span>首开VIP仅5元</span>
       </div>
-      <div class="list_con" v-if="getSongList">
-        <song-list-item
-          v-for="(item,index) in songListTracks"
-          :key="item.id"
-          :index="index+1"
-          :songItem="item"
-          :likeListIdsMap="likeListIdsMap"
-          :isShowPop="isShowPop"
-        ></song-list-item>
-      </div>
+    </div>
+    <div v-if="getSongList">
+      <song-list-item
+        v-for="(item,index) in songListTracks"
+        :key="item.id"
+        :index="index+1"
+        :songItem="item"
+        :likeListIdsMap="likeListIdsMap"
+        :isShowPop="isShowPop"
+      ></song-list-item>
     </div>
   </div>
 </template>
@@ -65,6 +65,7 @@ export default {
       type: Boolean,
       default: false,
     },
+    
   },
   computed: {
     ...mapGetters({ userProfile: "userProfile" }),

@@ -30,6 +30,7 @@ export default {};
   justify-content: space-between;
   align-items: center;
   overflow: hidden;
+  margin-right: 10px;
   .left {
     width: 105px;
     height: 100%;

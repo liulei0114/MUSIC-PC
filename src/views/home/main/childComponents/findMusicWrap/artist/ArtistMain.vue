@@ -46,6 +46,8 @@
           width="140"
           height="140"
           :isPlay="false"
+          :isPerson="true"
+          @click.native="handleArtistDetail(item)"
         ></music-introduce-module>
       </div>
     </article>
@@ -155,12 +157,7 @@ export default {
       this.handleScroll(contain);
     });
   },
-  destroyed() {
-    let contain = document
-      .querySelector("#FindMusicWrap")
-      .querySelector(".happy-scroll-container");
-    contain.removeEventListener("scroll", this.handleScroll(contain));
-  },
+
   methods: {
     async _initArtistList(offset = 0) {
       if (this.more) {
@@ -187,13 +184,20 @@ export default {
     },
     handleScroll(contain) {
       let scrollTop = contain.scrollTop;
-      if (this.contentOffsetHeight - scrollTop <= 540) {
+      if (this.contentOffsetHeight - scrollTop <= 540 * 2) {
         if (!this.initLock) {
           this.curPage++;
           this.initLock = true;
           this._initArtistList((this.curPage - 1) * this.searchKey.limit);
         }
       }
+    },
+    handleArtistDetail(item) {
+      let id = item.id;
+      this.$router.push({
+        name: "PersonalizedArtist",
+        params: { id },
+      });
     },
   },
   filters: {

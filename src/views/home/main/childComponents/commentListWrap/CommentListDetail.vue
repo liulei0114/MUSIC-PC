@@ -103,6 +103,7 @@ export default {
   mixins: [loadingMixin],
   data() {
     let textareaValid = (rule, value, callback) => {
+      value = value.trim()
       if (!value) {
         return callback(new Error("请输入内容"));
       }
@@ -412,9 +413,6 @@ export default {
       this.scrollParentStart("#AnchorPoint");
       this.endLoading();
       this.$emit("updateCommentCount", this.commentListDetail.total);
-    },
-    onInput(event) {
-      console.log(event);
     },
     handleMouseEnter(index) {
       let emoji = document.getElementsByClassName("emoji_list")[0].children[

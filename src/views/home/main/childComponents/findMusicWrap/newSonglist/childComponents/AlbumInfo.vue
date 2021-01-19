@@ -11,7 +11,7 @@
     </header>
     <footer>
       <p>{{albumInfo.name}}</p>
-      <p>{{albumInfo.artistName}}</p>
+      <p @click="$router.push({name:'PersonalizedArtist',params:{id:albumInfo.artistId}})">{{albumInfo.artistName}}</p>
     </footer>
   </div>
 </template>
