@@ -108,7 +108,6 @@ export default {
   border-right: 1px solid #d8d8d8;
   .con {
     width: 100%;
-    // height: 100%;
     .aside_item:first-child {
       margin-top: 0;
     }
