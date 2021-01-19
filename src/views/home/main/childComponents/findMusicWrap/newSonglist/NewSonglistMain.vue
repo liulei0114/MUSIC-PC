@@ -57,7 +57,6 @@
         :index="index+1"
         :songItem="item"
         height="80px"
-        @click="handleAreaChange(item.type)"
         :isShowALpic="true"
       ></song-list-item>
     </article>

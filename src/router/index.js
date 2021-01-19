@@ -88,7 +88,7 @@ const routes = [
         name: 'PersonalizedAlbum',
         component: () => import('@/views/home/main/childComponents/findMusicWrap/newSonglist/childComponents/AlbumDetail.vue'),
       },
-      // 专辑详情页
+      // 歌手详情页
       {
         path: 'artist/:id',
         name: 'PersonalizedArtist',

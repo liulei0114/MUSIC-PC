@@ -1,6 +1,4 @@
 import axios from 'axios'
-import store from '@/store'
-import { Message, MessageBox } from 'element-ui';
 
 
 // 创建axios实例

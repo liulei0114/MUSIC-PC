@@ -51,7 +51,10 @@
       </div>
     </div>
     <div class="ar textOverflow" v-if="!isAr">
-      <span>{{_ar}}</span>
+      <span v-for="(item,index) in songItem.ar" :key="item.id">
+        <i @click="$router.push({name:'PersonalizedArtist',params:{id:item.id}})">{{item.name}}</i>
+        <i v-if="index +1 !== songItem.ar.length">&nbsp;&nbsp;/&nbsp;&nbsp;</i>
+      </span>
     </div>
     <div class="al textOverflow" :style="_alWidth" v-if="!isAr">
       <span>{{songItem.al.name}}</span>
@@ -103,7 +106,6 @@ export default {
       type: Boolean,
       default: false,
     },
-   
   },
   computed: {
     _alias() {
