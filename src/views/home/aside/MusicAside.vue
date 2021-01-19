@@ -1,7 +1,7 @@
 <template>
   <div id="MusicAside">
     <!-- 这里的标签名称要和main.js文件中定义的组件名称保持一致 -->
-    <happy-scroll color="#e0e0e0" size="8" :resize="true" :hide-horizontal="true">
+    <happy-scroll color="#e0e0e0" size="8" resize :hide-horizontal="true">
       <!-- 内层盒子——内容区 -->
       <div class="con">
         <aside-item
@@ -21,10 +21,8 @@ import AsideItem from "./AsideItem.vue";
 export default {
   data() {
     return {
-      conScrollHeight: 0,
       conHeight: 0,
       asideDom: null,
-      scrollBarDom: null,
       checkMenuIndex: 0,
       activedMenuId: "",
     };
@@ -37,19 +35,21 @@ export default {
     this.addMouseEnterBarShowEventListener();
     this.addMouseLeaveBarHiddenEventListener();
   },
+
   watch: {
+    "$store.getters.asideMenu": {
+      immediate: true,
+      handler() {
+        this.$nextTick(() => {
+          this.conHeight = this.asideDom.querySelector(
+            ".happy-scroll-content"
+          ).offsetHeight;
+        });
+      },
+    },
   },
   computed: {
     showAsideMenu() {
-      this.$nextTick(() => {
-        this.conScrollHeight = document
-          .getElementById("MusicAside")
-          .querySelector(".con").scrollHeight;
-        this.conHeight = document
-          .getElementById("MusicAside")
-          .querySelector(".con").clientHeight;
-      });
-
       let storeAsideMenu = this.$store.getters.asideMenu;
       let _asideMenu = [
         ...storeAsideMenu.base,
@@ -80,11 +80,10 @@ export default {
     addMouseEnterBarShowEventListener() {
       this.asideDom.onmouseenter = () => {
         // 移入时判断容器高度是否超出盒子高度，没超出不显示滚动条
-        if (this.conScrollHeight <= this.conHeight) {
-          //修改.happy-scroll-bar opacity:1
-          this.scrollBarDom.style.opacity = 0;
-        } else {
+        if (this.conHeight >= 540) {
           this.scrollBarDom.style.opacity = 1;
+        } else {
+          this.scrollBarDom.style.opacity = 0;
         }
       };
     },
@@ -94,7 +93,7 @@ export default {
       };
     },
     hiddenScrollBar() {
-      this.scrollBarDom.style.opacity = 0;
+      this.asideDom.querySelector(".happy-scroll-bar").style.opacity = 0;
     },
   },
   components: { AsideItem },
@@ -109,7 +108,7 @@ export default {
   border-right: 1px solid #d8d8d8;
   .con {
     width: 100%;
-    height: 100%;
+    // height: 100%;
     .aside_item:first-child {
       margin-top: 0;
     }
@@ -121,7 +120,6 @@ export default {
       border-right: 0 !important;
       border-bottom: 0 !important;
       width: calc(100% - 8px);
-      height: 100%;
     }
   }
 }
