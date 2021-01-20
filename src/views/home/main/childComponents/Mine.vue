@@ -120,8 +120,7 @@ export default {
     handelLogOut() {
       this.$store.dispatch("loginModule/LoginOut").then((result) => {
         this.$emit("input", !this.value);
-        this.$router.replace("/");
-        location.reload();
+        this.$router.push("/");
       });
     },
     // ? 添加监听

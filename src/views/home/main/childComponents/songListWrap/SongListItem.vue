@@ -241,15 +241,16 @@ export default {
         if (routeId == myListSonglistId) {
           // * 在我喜欢的音乐界面
           this.$emit("openDeleteSongDialog");
+          return
         }
-      } else {
+      } 
         // 普通歌单界面
         if (this.isLike) {
           this.cancelLikeMusic();
         } else {
           this.doLikeMusic();
         }
-      }
+      
     },
   },
 };
