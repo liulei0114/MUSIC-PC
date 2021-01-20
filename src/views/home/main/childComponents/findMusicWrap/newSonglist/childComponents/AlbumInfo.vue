@@ -10,8 +10,12 @@
       <div class="cipan"></div>
     </header>
     <footer>
-      <p>{{albumInfo.name}}</p>
-      <p @click="$router.push({name:'PersonalizedArtist',params:{id:albumInfo.artistId}})">{{albumInfo.artistName}}</p>
+      <p
+        @click="$router.push({name:'PersonalizedAlbum',params:{id:albumInfo.id}})"
+      >{{albumInfo.name}}</p>
+      <p
+        @click="$router.push({name:'PersonalizedArtist',params:{id:albumInfo.artistId}})"
+      >{{albumInfo.artistName}}</p>
     </footer>
   </div>
 </template>
@@ -32,7 +36,7 @@ export default {
   methods: {
     handleAlbumDetail() {
       this.$router.push({
-        name: 'PersonalizedAlbum',
+        name: "PersonalizedAlbum",
         params: { id: this.albumInfo.id },
       });
     },

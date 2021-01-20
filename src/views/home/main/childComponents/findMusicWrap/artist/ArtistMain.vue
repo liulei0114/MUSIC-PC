@@ -227,7 +227,7 @@ export default {
       margin-bottom: 20px;
       display: flex;
       justify-content: flex-start;
-      align-items: start;
+      align-items: flex-start;
       .title {
         width: 40px;
         color: #373737;

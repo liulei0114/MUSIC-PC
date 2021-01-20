@@ -54,7 +54,7 @@ export default {
 <style lang="less">
 #GlobalMessage {
   overflow: hidden;
-  padding: 18px 15px;
+  padding: 15px 20px;
   border-radius: 5px;
   color: #fff;
   background-color: rgba(0, 0, 0, 0.7);

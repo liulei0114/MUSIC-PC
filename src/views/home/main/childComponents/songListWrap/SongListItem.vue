@@ -57,7 +57,9 @@
       </span>
     </div>
     <div class="al textOverflow" :style="_alWidth" v-if="!isAr">
-      <span>{{songItem.al.name}}</span>
+      <span
+        @click="$router.push({name:'PersonalizedAlbum',params:{id:songItem.al.id}})"
+      >{{songItem.al.name}}</span>
       <span class="other">{{_al}}</span>
     </div>
     <div class="dt" :class="{maringLeftAuto:isAr}">
@@ -145,7 +147,7 @@ export default {
     },
     _alWidth() {
       if (this.isShowPop) {
-        return { width: "150px" };
+        return { width: "140px" };
       }
       return { width: "180px", "margin-left": "50px", "margin-right": "20px" };
     },
@@ -357,7 +359,7 @@ export default {
   }
   .pop {
     flex: 1;
-    margin-left: 20px;
+    margin-left: 40px;
     line-height: 0px;
 
     .pop_line {

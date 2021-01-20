@@ -4,7 +4,7 @@
       <div class="title flexTable">
         <span>音乐标题</span>
         <span>歌手</span>
-        <span>专辑</span>
+        <span :style="_alMarginLef">专辑</span>
         <span :style="_dtMarginLeft">时长</span>
         <span v-if="isShowPop" :style="_PopMarginLeft">热度</span>
       </div>
@@ -96,14 +96,20 @@ export default {
     },
     _PopMarginLeft() {
       if (this.isShowPop) {
-        return { "margin-left": "40px" };
+        return { right: "70px" };
       }
     },
     _dtMarginLeft() {
       if (this.isShowPop) {
-        return { "margin-left": "80px" };
+        return { right: "145px" };
       }
-      return { "margin-left": "175px" };
+      return { right: "35px" };
+    },
+    _alMarginLef() {
+      if (this.isShowPop) {
+        return { left: "505px" };
+      }
+      return { right: "235px" };
     },
   },
   watch: {
@@ -201,15 +207,18 @@ export default {
     .title {
       font-size: 13px;
       color: #807e7e;
-      margin: 20px 0 10px;
-      span:nth-child(1) {
-        margin-left: 120px;
-      }
-      span:nth-child(2) {
-        margin-left: 248px;
-      }
-      span:nth-child(3) {
-        margin-left: 112px;
+      height: 30px;
+      line-height: 30px;
+      position: relative;
+      span {
+        position: absolute;
+        top: 0;
+        &:nth-child(1) {
+          left: 120px;
+        }
+        &:nth-child(2) {
+          left: 410px;
+        }
       }
     }
     .flexTable {
