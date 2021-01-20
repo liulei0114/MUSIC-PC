@@ -362,3 +362,34 @@ export function fetchAlbumDynamicAPI(params) {
     params
   })
 }
+
+// ! 喜欢音乐
+export function fetchLikeMusicAPI(params) {
+  return request({
+    url: '/like',
+    method: 'get',
+    params
+  })
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

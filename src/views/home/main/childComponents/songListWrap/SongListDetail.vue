@@ -22,28 +22,47 @@
         :key="item.id"
         :index="index+1"
         :songItem="item"
-        :likeListIdsMap="likeListIdsMap"
+        :likeListIdsMap.sync="likeListIdsMap"
         :isShowPop="isShowPop"
+        @openDeleteSongDialog="openDeleteSongDialog(index)"
       ></song-list-item>
     </div>
+    <el-dialog
+      :visible.sync="dialogTableVisible"
+      center
+      width="470px"
+      :modal-append-to-body="false"
+      :modal="false"
+    >
+      <div style="text-align: center;">确定将选中歌曲从我喜欢的音乐中删除</div>
+      <div slot="footer" class="dialog-footer">
+        <el-button type="danger" plain @click="deleteSongItem">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
 <script>
 import SongListItem from "./SongListItem.vue";
 import { mapGetters } from "vuex";
-import { fetchLikeListAPI, fetchSongDetailApi } from "@/network/api/musicApi";
+import {
+  fetchLikeListAPI,
+  fetchSongDetailApi,
+  fetchLikeMusicAPI,
+} from "@/network/api/musicApi";
 import { Track } from "@/common/pojo.js";
 export default {
   components: { SongListItem },
   data() {
     return {
       typeIndex: 1,
-      likeListIdsMap: new Map(),
+      likeListIdsMap: {},
       songlist: [],
       _debounceKeywords: null,
       songListTracks: [],
       vipCount: 0,
+      dialogTableVisible: false,
+      deleteSongIndex: "",
     };
   },
   props: {
@@ -65,7 +84,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    
   },
   computed: {
     ...mapGetters({ userProfile: "userProfile" }),
@@ -100,12 +118,17 @@ export default {
   },
   methods: {
     async _initLikeList() {
-      let result = await fetchLikeListAPI({ uid: this.userProfile.userId });
-      let map = new Map();
-      result.ids.forEach((e, i) => {
-        map.set(e, true);
+      let result = await fetchLikeListAPI({
+        uid: this.userProfile.userId,
+        timestamp: new Date().valueOf(),
       });
-      this.likeListIdsMap = map;
+      result.ids.forEach((e, i) => {
+        this.likeListIdsMap[e] = true;
+      });
+    },
+    openDeleteSongDialog(index) {
+      this.dialogTableVisible = true;
+      this.deleteSongIndex = index;
     },
     _initSongDetail() {
       fetchSongDetailApi({ ids: this.songIds.join(",") }).then((result) => {
@@ -145,6 +168,25 @@ export default {
         this.songListTracks = temp;
       } else {
         this.songListTracks = this.songlist;
+      }
+    },
+    deleteSongItem() {
+      this.dialogTableVisible = false;
+      let songId = this.songListTracks[this.deleteSongIndex].id;
+      this.cancelLikeMusic(songId);
+    },
+    // ? 取消喜欢音乐
+    async cancelLikeMusic(songId) {
+      try {
+        let result = await fetchLikeMusicAPI({
+          id: songId,
+          like: false,
+        });
+        this.$delete(this.likeListIdsMap, songId);
+        // * 将歌曲移除列表
+        this.songListTracks.splice(this.deleteSongIndex, 1);
+      } catch (error) {
+        this.$gMessage.show("你TM不是VIP你不知道吗？？？");
       }
     },
   },

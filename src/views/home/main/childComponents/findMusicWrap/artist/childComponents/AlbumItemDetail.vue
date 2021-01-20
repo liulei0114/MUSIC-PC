@@ -22,7 +22,7 @@
             :key="item.id"
             :index="i+1"
             :songItem="item"
-            :likeListIdsMap="likeListIdsMap"
+            :likeListIdsMap.sync="likeListIdsMap"
             :isAr="true"
             v-show="isShowItem(album,i)"
           ></song-list-item>
@@ -168,10 +168,13 @@ export default {
       await this._initSongDetail(e, songIds.join(","));
     },
     async _initLikeList() {
-      let result = await fetchLikeListAPI({ uid: this.userProfile.userId });
-      let map = new Map();
+      let result = await fetchLikeListAPI({
+        uid: this.userProfile.userId,
+        timestamp: new Date().valueOf(),
+      });
+      let map = {};
       result.ids.forEach((e, i) => {
-        map.set(e, true);
+        map[e] = true;
       });
       this.likeListIdsMap = map;
     },

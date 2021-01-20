@@ -4,7 +4,7 @@
     <div>
       <div class="flexL" v-if="!isShowALpic">
         <div class="like">
-          <i>
+          <i @click="handleLikeMusic">
             <svg-icon :icon-class="headStatus" class="svgnoraml"></svg-icon>
           </i>
         </div>
@@ -72,7 +72,13 @@
 </template>
 
 <script>
+import { fetchLikeMusicAPI } from "@/network/api/musicApi.js";
 export default {
+  data() {
+    return {
+      isLike: false,
+    };
+  },
   props: {
     index: {
       type: Number,
@@ -85,10 +91,8 @@ export default {
       },
     },
     likeListIdsMap: {
-      type: Map,
-      default() {
-        return new Map();
-      },
+      type: Object,
+      default: () => {},
     },
     height: {
       type: String,
@@ -133,7 +137,8 @@ export default {
       return "";
     },
     headStatus() {
-      if (this.likeListIdsMap.get(this.songItem.id)) {
+      if (this.likeListIdsMap[this.songItem.id]) {
+        this.isLike = true;
         return "headlike";
       }
       return "headnolike";
@@ -187,6 +192,62 @@ export default {
           aliasName.classList.add("textOverflow");
         }
       });
+    },
+    // ? 取消喜欢音乐
+    async cancelLikeMusic() {
+      try {
+        let result = await fetchLikeMusicAPI({
+          id: this.songItem.id,
+          like: false,
+        });
+        this.isLike = false;
+        this.$delete(this.likeListIdsMap, this.songItem.id);
+        this.$emit("update:likeListIdsMap", this.likeListIdsMap);
+        this.$gMessage.show(`<span>取消喜欢成功</span>`, "complate", "40px");
+      } catch (error) {
+        this.$gMessage.show("你TM不是VIP你不知道吗？？？");
+      }
+    },
+    // ? 添加我喜欢的音乐
+    async doLikeMusic() {
+      try {
+        let result = await fetchLikeMusicAPI({
+          id: this.songItem.id,
+          like: true,
+        });
+        this.isLike = true;
+        this.$set(this.likeListIdsMap, this.songItem.id, true);
+        this.$emit("update:likeListIdsMap", this.likeListIdsMap);
+        this.$gMessage.show(
+          `<span>已添加到我喜欢的音乐</span>`,
+          "complate",
+          "40px"
+        );
+      } catch (error) {
+        this.$gMessage.show("你TM不是VIP你不知道吗？？？");
+      }
+    },
+    // ? 喜欢音乐
+    async handleLikeMusic() {
+      // * 在我喜欢的音乐，喜欢/不喜欢会把歌曲移除列表
+      let myListSonglistId = this.$store.getters.asideMenu.myPlayList[0]
+        .childrens[0].id;
+      if (this.$route.meta.isCreated) {
+        let routeId = this.$route.path.slice(
+          this.$route.path.lastIndexOf("/") + 1
+        );
+        if (routeId == myListSonglistId) {
+          // * 在我喜欢的音乐界面
+          this.$emit("openDeleteSongDialog");
+        }
+      } else {
+        // 普通歌单界面
+        if (this.isLike) {
+          this.cancelLikeMusic();
+        } else {
+          this.doLikeMusic();
+        }
+      }
     },
   },
 };
