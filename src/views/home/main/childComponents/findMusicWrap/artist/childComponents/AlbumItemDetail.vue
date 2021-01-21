@@ -2,7 +2,13 @@
   <div class="AlbumItemDetail">
     <article v-for="album in allAlbum" :key="album.id">
       <aside>
-        <img v-lazy="album.picUrl + '?param?150y150'" alt width="150px" height="150px" />
+        <img
+          v-lazy="album.picUrl + '?param?150y150'"
+          alt
+          width="150px"
+          height="150px"
+          @click="album.id !== '1' && $router.push({name:'PersonalizedAlbum',params:{id:album.id}})"
+        />
         <div class="cipan"></div>
         <p>{{album.dt}}</p>
       </aside>
@@ -256,6 +262,9 @@ export default {
       margin-right: 50px;
       img {
         border-radius: 5px;
+        &:hover {
+          cursor: pointer;
+        }
       }
       .cipan {
         position: absolute;

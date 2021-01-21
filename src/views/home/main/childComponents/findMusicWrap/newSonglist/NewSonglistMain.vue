@@ -1,5 +1,5 @@
 <template>
-  <div class="NewSonglistMain">
+  <div class="NewSonglistMain" v-mask-loading="{loading:loading}">
     <header>
       <div class="category_con">
         <div
@@ -97,6 +97,7 @@ export default {
         limit: 500,
         curPage: 1,
       },
+      loading: "on",
     };
   },
   computed: {
@@ -118,14 +119,33 @@ export default {
   created() {
     this._initTopSonglist();
   },
+  watch: {
+    topSongList() {
+      this.$nextTick(() => {
+        this.loading = "off";
+      });
+    },
+    albumRecommendMap: {
+      deep: true,
+      handler(newValue) {
+        setTimeout(() => {
+          this.loading = "off";
+        }, 500);
+       
+      },
+    },
+  },
   methods: {
     async _initTopSonglist() {
+      this.loading = "on";
       let result = await fetchTopSongAPI({ type: this.areaCheckIndex });
       result.data.forEach((e, i) => {
         this.topSongList.push(new Single(e));
       });
     },
     async _initAlbumRecommendlist() {
+      this.loading = "on";
+
       let year = this.curDate.year();
       let month = this.curDate.month() + 1;
       let param = new URLSearchParams();
@@ -150,6 +170,8 @@ export default {
       this.$set(this.albumRecommendMap, `${month}-${year}`, monthData);
     },
     async _initAllAlbumlist() {
+      this.loading = "on";
+
       // 这接口就返回500条
       let param = new URLSearchParams();
       param.append("limit", this.allAllbumSearch.limit);

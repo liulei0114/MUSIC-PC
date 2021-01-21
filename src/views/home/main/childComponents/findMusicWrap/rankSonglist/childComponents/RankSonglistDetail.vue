@@ -10,7 +10,7 @@
       <div class="update_time">{{rankSonglistItem.updateTime}}</div>
     </div>
     <div class="right">
-      <div v-for="(item,index) in rankSonglistItem.list" :key="item.id" class="item_con">
+      <div v-for="(item,index) in rankSonglistItem.list" :key="item.id" class="item_con" @click="handleDetail(item)">
         <span class="normalIndex" :class="{index:index+1<=3?true:false}">{{index + 1}}</span>
         <span class="name">{{item.name}}</span>
         <div class="ar_con" v-if="item.ar">
@@ -45,6 +45,7 @@ export default {
   methods: {
     goMore() {
       if (this.isSonger) {
+        this.$router.push('/find/music/artist')
       } else {
         this.$router.push({
           name: "PersonalizedSongList",
@@ -52,6 +53,13 @@ export default {
         });
       }
     },
+    handleDetail(item){
+      if (this.isSonger) {
+        this.$router.push({name:'PersonalizedArtist',params:{id:item.id}})
+      } else {
+        
+      }
+    }
   },
 };
 </script>
@@ -140,6 +148,7 @@ export default {
         background-color: #f9f9f9;
       }
       &:hover {
+        cursor: pointer;
         background-color: #f4f4f4;
       }
     }

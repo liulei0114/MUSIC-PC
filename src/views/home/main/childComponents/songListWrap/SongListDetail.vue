@@ -1,5 +1,5 @@
 <template>
-  <div class="SongListDetail">
+  <div class="SongListDetail" v-mask-loading="{loading:loading}">
     <div class="body">
       <div class="title flexTable">
         <span>音乐标题</span>
@@ -63,6 +63,7 @@ export default {
       vipCount: 0,
       dialogTableVisible: false,
       deleteSongIndex: "",
+      loading: "on",
     };
   },
   props: {
@@ -115,6 +116,11 @@ export default {
   watch: {
     keywords(newKeyword) {
       this._debounceKeywords();
+    },
+    songListTracks() {
+      this.$nextTick(() => {
+        this.loading = "off";
+      });
     },
   },
   created() {

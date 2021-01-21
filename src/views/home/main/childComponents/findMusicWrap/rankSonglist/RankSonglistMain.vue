@@ -1,5 +1,5 @@
 <template>
-  <div class="RankSonglistMain">
+  <div class="RankSonglistMain" v-mask-loading={loading:loading}>
     <article class="official">
       <h2>官方榜</h2>
       <div class="con">
@@ -56,14 +56,18 @@ export default {
         "font-size": "20px",
         "line-height": "40px",
       },
+      loading:'on'
     };
   },
   created() {
-    this.$nextTick(() => {
-      this.initLoading();
-    });
     this._initRankType();
-    this.endLoading();
+  },
+  watch:{
+    rankSonglist(){
+      this.$nextTick(()=>{
+        this.loading = 'off'
+      })
+    }
   },
   methods: {
     async _initRankType() {

@@ -1,5 +1,5 @@
 <template>
-  <div class="ArtistDetail">
+  <div class="ArtistDetail" v-mask-loading="{loading:loading}">
     <happy-scroll
       color="#e0e0e0"
       size="8"
@@ -100,9 +100,9 @@ export default {
       },
       typeIndex: 1,
       musicTop50: [],
+      loading: "on",
     };
   },
-  computed: {},
   created() {
     this.artistId = this.$route.path.slice(
       this.$route.path.lastIndexOf("/") + 1
@@ -113,6 +113,8 @@ export default {
     setTimeout(() => {
       this.artistDetail.trans = this.$refs.albumItemDetail.artist.trans;
       this.artistDetail.alias = this.$refs.albumItemDetail.artist.alias;
+      this.loading = "off";
+
     }, 500);
   },
   methods: {

@@ -107,7 +107,7 @@ export default {
     color: #373737;
     position: sticky;
     background-color: #fff;
-    z-index: 100;
+    z-index: 2001;
     top: 0;
     left: 0;
     span {

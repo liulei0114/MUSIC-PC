@@ -1,5 +1,5 @@
 <template>
-  <div class="SongListWrap">
+  <div class="SongListWrap" v-mask-loading={loading:loading}>
     <song-list-head :subName="curTag"></song-list-head>
     <div class="hot_tag_con">
       <div class="curTag" @click.stop="isAllSubShow = !isAllSubShow">
@@ -101,19 +101,16 @@ export default {
         currentPage: 1,
         total: 0,
       },
+      loading:'on'
     };
   },
   props: {},
   computed: {},
   created() {
-    this.$nextTick(() => {
-      this.initLoading();
-    });
     this._initSonglistCategory();
     this._initHotSonglistSub();
     this._initHqSonglistSub();
     this._initTopSonglist();
-    this.endLoading();
   },
   watch: {
     isAllSubShow(flag) {
@@ -121,6 +118,11 @@ export default {
         ? this.addAppClickEventListener()
         : this.removeAppClickEventListener();
     },
+    topSonglist(newValue){
+      this.$nextTick(()=>{
+        this.loading = 'off'
+      })
+    }
   },
   destroyed() {
     this.removeAppClickEventListener();
@@ -167,16 +169,13 @@ export default {
     },
     // ? 选择标签
     handleChangeTag(name) {
+      this.loading = 'on'
       this.curTag = name;
       this.isAllSubShow = false;
       // * 渲染页面数据
       this.pageInfo.currentPage = 1;
       this.pageInfo.offset = 0;
-      this.$nextTick(() => {
-        this.initLoading();
-      });
       this._initTopSonglist();
-      this.endLoading();
     },
     // ? 添加监听
     addAppClickEventListener() {
@@ -206,14 +205,12 @@ export default {
       this.$router.push({ name: "PersonalizedSongList", params: { id } });
     },
     handelChangeCurrentPage(curPage) {
+      this.loading = 'on'
       this.pageInfo.currentPage = curPage;
       this.pageInfo.offset = (curPage - 1) * this.pageInfo.limit;
-      this.$nextTick(() => {
-        this.initLoading();
-      });
+     
       this._initTopSonglist();
       this.scrollParentStart("#FindMusicPoint");
-      this.endLoading();
     },
     scrollParentStart(name) {
       document.querySelector(name).scrollIntoView({
@@ -230,6 +227,7 @@ export default {
 .SongListWrap {
   width: 100%;
   padding: 10px 20px 0;
+  position: relative;
   .hot_tag_con {
     display: flex;
     justify-content: space-between;

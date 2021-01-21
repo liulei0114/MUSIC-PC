@@ -115,14 +115,12 @@ import { mapGetters } from "vuex";
 import PlayAllBtn from "./PlayAllBtn.vue";
 import ShareBtn from "./ShareBtn.vue";
 import SongListDetail from "./SongListDetail.vue";
-import { loadingMixin } from "@/mixin/loadingMixin";
 import { number2wan } from "@/util/NumberTransfrom";
 import CommentListDetail from "../commentListWrap/CommentListDetail";
 import SubscribersDetail from "../subscribersWrap/SubscribersDetail.vue";
 import { seachMusicAPI, fetchPlayListDynamicAPI } from "@/network/api/musicApi";
 import { Container } from "element-ui";
 export default {
-  mixins: [loadingMixin],
   components: {
     PlayAllBtn,
     ShareBtn,
@@ -138,7 +136,6 @@ export default {
       typeIndex: 1,
       commentCount: 0,
       keywords: "",
-      loading: true,
       descIsFold: false,
       foldDesc: [],
       isCreated: this.$route.meta.isCreated,
@@ -240,16 +237,15 @@ export default {
       return "";
     },
   },
-  watch: {},
+  
   created() {
     // 从router获取songid和meta中的isSubscribe
     this.songId = this.$route.path.slice(this.$route.path.lastIndexOf("/") + 1);
     this._initSongListDetail(this.songId);
   },
-  mounted() {},
+  
   methods: {
     async _initSongListDetail(id) {
-      this.initLoading();
       this.songListDetail = await this.$store.dispatch(
         "songModule/SaveSongListDetail",
         {
@@ -259,7 +255,6 @@ export default {
       this.commentCount = this.songListDetail.commentCount;
 
       this.getPlayListDynamic();
-      this.endLoading();
     },
     toggleType(type) {
       this.typeIndex = type;

@@ -1,11 +1,7 @@
 <template>
-  <div class="SubscribersDetail">
+  <div class="SubscribersDetail" v-mask-loading="{loading:loading}">
     <div class="subscribers_wrap">
-      <subscribers-item
-        v-for="item in this.subscribersList"
-        :key="item.userId"
-        :subscrbersItem="item"
-      ></subscribers-item>
+      <subscribers-item v-for="item in subscribersList" :key="item.userId" :subscrbersItem="item"></subscribers-item>
     </div>
 
     <div class="pageination">
@@ -26,12 +22,10 @@
 
 <script>
 import { playListSubscribersInfoAPI } from "@/network/api/musicApi";
-import { loadingMixin } from "@/mixin/loadingMixin";
 import { Subscribers } from "@/common/pojo.js";
 import SubscribersItem from "./SubscribersItem.vue";
 export default {
   components: { SubscribersItem },
-  mixins: [loadingMixin],
   data() {
     return {
       pageInfo: {
@@ -42,6 +36,7 @@ export default {
       subscribersList: [],
       subscribersListTotal: 0,
       songListId: "",
+      loading: "on",
     };
   },
   created() {
@@ -50,9 +45,16 @@ export default {
     );
     this._initSubscribersInfo();
   },
+  watch: {
+    subscribersList() {
+      this.$nextTick(() => {
+        this.loading = "off";
+      });
+    },
+  },
   methods: {
     async _initSubscribersInfo() {
-      this.initLoading();
+      this.loading = 'on'
       let params = new URLSearchParams();
       params.append("id", this.songListId);
       params.append("limit", this.pageInfo.limit);
@@ -64,7 +66,6 @@ export default {
         this.subscribersList.push(new Subscribers(e));
       });
       this.scrollParentStart("#AnchorPoint");
-      this.endLoading();
     },
     handelChangeCurrentPage(curPage) {
       this.pageInfo.currentPage = curPage;

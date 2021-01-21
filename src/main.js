@@ -22,6 +22,8 @@ import '@/icons/index'
 // 引入css
 import 'vue-happy-scroll/docs/happy-scroll.css'
 
+import gLoading from  '@/components/loading'
+
 Vue.prototype._ = _
 Vue.config.productionTip = false
 Vue.prototype.$bus = new Vue()
@@ -31,6 +33,7 @@ Vue.prototype.$moment = moment;
 Vue.use(gMessage)
 Vue.use(ElementUI)
 Vue.use(HappyScroll)
+Vue.use(gLoading)
 
 //3.调用API进行汉化
 moment.locale('zh-cn');

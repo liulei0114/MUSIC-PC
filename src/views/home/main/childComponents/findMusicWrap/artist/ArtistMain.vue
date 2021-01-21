@@ -1,5 +1,10 @@
 <template>
-  <div class="ArtistMain" @scroll="handleScroll" ref="artistMain">
+  <div
+    class="ArtistMain"
+    @scroll="handleScroll"
+    ref="artistMain"
+    v-mask-loading="{loading:loading}"
+  >
     <header>
       <div class="seach_con">
         <div class="title">语种：</div>
@@ -117,6 +122,7 @@ export default {
       artistList: [],
       contentOffsetHeight: null,
       initLock: false,
+      loading: "on",
     };
   },
   computed: {
@@ -143,6 +149,7 @@ export default {
         let content = contain.children[0];
         this.contentOffsetHeight = content.offsetHeight;
         this.initLock = false;
+        this.loading = "off";
       });
     },
   },
@@ -160,6 +167,7 @@ export default {
 
   methods: {
     async _initArtistList(offset = 0) {
+      this.loading = "on";
       if (this.more) {
         let params = this._.cloneDeep(this.searchKey);
         params.offset = offset;
@@ -174,12 +182,15 @@ export default {
       }
     },
     handelSexChange(type) {
+      this.loading = "on";
       this.searchKey.type = type;
     },
     handelAreaChange(type) {
+      this.loading = "on";
       this.searchKey.area = type;
     },
     handelInitialChange(type) {
+      this.loading = "on";
       this.searchKey.initial = type;
     },
     handleScroll(contain) {

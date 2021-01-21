@@ -1,5 +1,5 @@
 <template>
-  <div class="CommentListWrap">
+  <div class="CommentListWrap" v-mask-loading="{loading:loading}">
     <div>
       <el-form :rules="rules" ref="ruleForm" :model="ruleForm" :show-message="false">
         <el-form-item prop="textarea">
@@ -65,7 +65,7 @@
         :commentItem="item"
         @doReplay="doReplay"
         @openDeleteCommentDialog="openDeleteCommentDialog"
-        :commentType='commentType'
+        :commentType="commentType"
       ></comment-list-item>
     </div>
     <div class="pageination">
@@ -98,12 +98,10 @@
 import { fetchCommentAPI, doCommentAPI } from "@/network/api/musicApi";
 import { CommentDetail } from "@/common/pojo";
 import CommentListItem from "./CommentListItem.vue";
-import { loadingMixin } from "@/mixin/loadingMixin";
 export default {
-  mixins: [loadingMixin],
   data() {
     let textareaValid = (rule, value, callback) => {
-      value = value.trim()
+      value = value.trim();
       if (!value) {
         return callback(new Error("请输入内容"));
       }
@@ -360,6 +358,7 @@ export default {
       replayNickName: "",
       dialogTableVisible: false,
       deleteCommentId: "",
+      loading: "on",
     };
   },
   props: {
@@ -396,6 +395,13 @@ export default {
       }
     },
   },
+  watch: {
+    "commentListDetail.comments"() {
+      this.$nextTick(() => {
+        this.loading = "off";
+      });
+    },
+  },
   created() {
     this.songListId = this.$route.path.slice(
       this.$route.path.lastIndexOf("/") + 1
@@ -405,13 +411,12 @@ export default {
   methods: {
     // ? 初始化评论数据
     async _initSongComment() {
-      this.initLoading();
+      this.loading = 'on'
       let params = Object.assign({ id: this.songListId }, this.pageInfo);
       params.timestamp = new Date().valueOf();
       let result = await fetchCommentAPI(this.commentType, params);
       this.commentListDetail = new CommentDetail(result);
       this.scrollParentStart("#AnchorPoint");
-      this.endLoading();
       this.$emit("updateCommentCount", this.commentListDetail.total);
     },
     handleMouseEnter(index) {
