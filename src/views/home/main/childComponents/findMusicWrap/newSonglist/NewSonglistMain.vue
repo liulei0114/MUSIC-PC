@@ -125,15 +125,14 @@ export default {
         this.loading = "off";
       });
     },
-    albumRecommendMap: {
-      deep: true,
-      handler(newValue) {
-        setTimeout(() => {
-          this.loading = "off";
-        }, 500);
-       
-      },
-    },
+    // albumRecommendMap: {
+    //   deep: true,
+    //   handler(newValue) {
+    //     this.$nextTick(() => {
+    //       this.loading = "off";
+    //     });
+    //   },
+    // },
   },
   methods: {
     async _initTopSonglist() {
@@ -145,7 +144,6 @@ export default {
     },
     async _initAlbumRecommendlist() {
       this.loading = "on";
-
       let year = this.curDate.year();
       let month = this.curDate.month() + 1;
       let param = new URLSearchParams();
@@ -153,6 +151,7 @@ export default {
       param.append("year", year);
       param.append("month", month);
       let result = await fetchTopAlbumAPI(param);
+      console.log("dfdfdfdfd");
       let monthData = [];
       let weekData = [];
       result.monthData.forEach((e, i) => {
@@ -168,6 +167,7 @@ export default {
       }
 
       this.$set(this.albumRecommendMap, `${month}-${year}`, monthData);
+      this.loading = "off";
     },
     async _initAllAlbumlist() {
       this.loading = "on";
@@ -191,6 +191,7 @@ export default {
           this.albumRecommendMap[temp.publishTime] = arr;
         }
       });
+      this.loading = "off";
     },
     handleCategoryChangeNewSong() {
       this.categroyIndex = 0;

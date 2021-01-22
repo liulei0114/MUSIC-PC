@@ -51,13 +51,11 @@ const maskLoading = {
         toggleLoading(el, binding)
       },
       componentUpdated(el, binding) {
-        console.log('in',binding.value.loading,binding.oldValue.loading);
         if (binding.value.loading !== binding.oldValue.loading) {
           if (binding.value.loading === 'off') {
             el.maskDOM && el.maskDOM.parentNode && el.maskDOM.parentNode.removeChild(el.maskDOM);
             el.maskIns && el.maskIns.$destroy();
           } else if (binding.value.loading === 'on') {
-            console.log('loading');
             toggleLoading(el, binding)
           }
         }
