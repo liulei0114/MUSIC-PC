@@ -125,14 +125,6 @@ export default {
         this.loading = "off";
       });
     },
-    // albumRecommendMap: {
-    //   deep: true,
-    //   handler(newValue) {
-    //     this.$nextTick(() => {
-    //       this.loading = "off";
-    //     });
-    //   },
-    // },
   },
   methods: {
     async _initTopSonglist() {
