@@ -9,7 +9,7 @@
       <img v-lazy="getImgUrl" ref="picImg" :width="width+'px'" :height="height+'px'" />
       <div class="play" v-if="isPlay" :style="setPosition()">
         <i style="margin-left:5px">
-          <svg-icon icon-class="play" style="color:#ec4141"></svg-icon>
+          <svg-icon icon-class="play1" style="color:#ec4141"></svg-icon>
         </i>
       </div>
       <div class="playCount" v-if="musicItem.playCount">

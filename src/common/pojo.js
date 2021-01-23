@@ -33,7 +33,7 @@ export class SongListDeatil {
 
 
 export class Track {
-  constructor({ name, id, ar, alia, pop, fee, al, dt, h, m, l, tns, noCopyrightRcmd, mv, publishTime }, { playMaxbr, downloadMaxbr }) {
+  constructor({ name, id, ar, alia, pop, fee, al, dt, h, m, l, tns, noCopyrightRcmd, mv, publishTime }, { playMaxbr, downloadMaxbr, maxbr }) {
     this.name = name; // * 歌曲名称
     this.id = id; // * 歌曲id
     this.ar = this.getArList(ar); // * 歌曲作者 arr[Ar]
@@ -49,9 +49,9 @@ export class Track {
     this.mv = mv; // * 0为没有mv，
     this.tns = tns ? tns : null; // * 歌曲名称别名 arr[String] 有tns是不显示alia，优先显示tns
     this.publishTime = this.getPublishTime(publishTime) // * 歌曲发布时间
-    this.playMaxbr = playMaxbr; // *  播放最大码率
+    this.playMaxbr = playMaxbr ? playMaxbr : maxbr; // *  播放最大码率
     this.downloadMaxbr = downloadMaxbr // * 下载最大码率 999000为sq无损音质
-    this.sq = this.isSq(playMaxbr) // * sq标志
+    this.sq = this.isSq(this.playMaxbr) // * sq标志
     this.formatDt = this.getFormatDt(dt) // * 装换的时长
   }
 
@@ -474,16 +474,16 @@ export class Single {
 
 // 专辑
 export class Album {
-  constructor({ id, name, picUrl, artist, publishTime ,isSub}) {
+  constructor({ id, name, picUrl, artist, publishTime, isSub }) {
     this.id = id;
     this.name = name;
     this.picUrl = this.tansIdentityIconUrl(picUrl)
     this.artistName = artist.name;
     this.artistId = artist.id
     this.publishTime = formatDate(new Date(publishTime), 'M-yyyy')
-    this.dt = formatDate(new Date(publishTime),'yyyy-MM-dd')
+    this.dt = formatDate(new Date(publishTime), 'yyyy-MM-dd')
     this.isSub = isSub;
-    this.songlist=[]
+    this.songlist = []
   }
   tansIdentityIconUrl(picUrl) {
     picUrl = picUrl.replace(new RegExp('p[1-5]{1}'), 'p3');

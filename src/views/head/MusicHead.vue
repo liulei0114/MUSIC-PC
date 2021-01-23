@@ -239,7 +239,6 @@ export default {
           position: absolute;
           top: 50px;
           left: -100px;
-          z-index: 200;
         }
       }
       .open_vip:hover {

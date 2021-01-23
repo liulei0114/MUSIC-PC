@@ -22,7 +22,7 @@
         :key="item.id"
         :index="index+1"
         :songItem="item"
-        :likeListIdsMap.sync="likeListIdsMap"
+        :likeListIdsMap="likeListIdsMap"
         :isShowPop="isShowPop"
         @openDeleteSongDialog="openDeleteSongDialog(index)"
       ></song-list-item>
@@ -45,18 +45,13 @@
 <script>
 import SongListItem from "./SongListItem.vue";
 import { mapGetters } from "vuex";
-import {
-  fetchLikeListAPI,
-  fetchSongDetailApi,
-  fetchLikeMusicAPI,
-} from "@/network/api/musicApi";
+import { fetchSongDetailApi, fetchLikeMusicAPI } from "@/network/api/musicApi";
 import { Track } from "@/common/pojo.js";
 export default {
   components: { SongListItem },
   data() {
     return {
       typeIndex: 1,
-      likeListIdsMap: {},
       songlist: [],
       _debounceKeywords: null,
       songListTracks: [],
@@ -87,7 +82,10 @@ export default {
     },
   },
   computed: {
-    ...mapGetters({ userProfile: "userProfile" }),
+    ...mapGetters({
+      userProfile: "userProfile",
+      likeListIdsMap: "likeMusicList",
+    }),
     getSongList() {
       if (this.songIds.length === 0) {
         return false;
@@ -124,20 +122,10 @@ export default {
     },
   },
   created() {
-    this._initLikeList();
     // 创建关键词防抖函数
     this._debounceKeywords = this._.debounce(this.seachMusicInSongList, 1000);
   },
   methods: {
-    async _initLikeList() {
-      let result = await fetchLikeListAPI({
-        uid: this.userProfile.userId,
-        timestamp: new Date().valueOf(),
-      });
-      result.ids.forEach((e, i) => {
-        this.likeListIdsMap[e] = true;
-      });
-    },
     openDeleteSongDialog(index) {
       this.dialogTableVisible = true;
       this.deleteSongIndex = index;
@@ -190,13 +178,17 @@ export default {
     // ? 取消喜欢音乐
     async cancelLikeMusic(songId) {
       try {
-        let result = await fetchLikeMusicAPI({
+        await fetchLikeMusicAPI({
           id: songId,
           like: false,
         });
         this.$delete(this.likeListIdsMap, songId);
         // * 将歌曲移除列表
         this.songListTracks.splice(this.deleteSongIndex, 1);
+        this.$store.commit(
+          "songModule/SET_LIKE_MUSIC_MAP",
+          this.likeListIdsMap
+        );
       } catch (error) {
         this.$gMessage.show("你TM不是VIP你不知道吗？？？");
       }

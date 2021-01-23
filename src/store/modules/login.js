@@ -194,6 +194,12 @@ const loginModule = {
 
         // * 调用获取创建菜单
         await dispatch('FetchUserPlayListAPi');
+
+        // * 保存我喜欢的音乐
+        await dispatch('songModule/SaveLikeMusicList', {}, { root: true })
+
+        // * 保存用户历史播放记录
+        await dispatch('songModule/SaveHistoryMusicList', {}, { root: true })
       } catch (error) {
         throw error;
       }
@@ -207,6 +213,10 @@ const loginModule = {
           commit('SET_USER_PROFILE', {})
           setLocalAsideMenu(orignMenu)
           commit('SET_ASIDE_MENU', orignMenu)
+          // * 删除vuex中的我喜欢音乐
+          commit('songModule/SET_LIKE_MUSIC_MAP', null, { root: true })
+          // * 删除vuex中的历史记录
+          commit('songModule/SET_HISTORY_MUSIC_LIST', null, { root: true })
           resolve()
         }).catch((err) => {
           reject(err)

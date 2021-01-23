@@ -23,6 +23,10 @@
             <login-wrap></login-wrap>
           </div>
         </transition>
+
+        <!-- 播放列表 -->
+        <play-list-wrap class="paly_list_wrap"></play-list-wrap>
+        <router-view name="SongMain" class="SongMainClass"></router-view>
       </el-container>
       <!-- 内容区  END -->
 
@@ -41,6 +45,7 @@ import MusicFooter from "@/views/footer/MusicFooter.vue";
 import MusicAside from "@/views/home/aside/MusicAside.vue";
 import MusicMain from "@/views/home/main/MusicMain.vue";
 import LoginWrap from "@/views/home/main/childComponents/LoginWrap.vue";
+import PlayListWrap from "../playList/PlayListWrap.vue";
 export default {
   name: "LayOut",
   data() {
@@ -58,6 +63,7 @@ export default {
     MusicAside,
     MusicMain,
     LoginWrap,
+    PlayListWrap,
   },
 };
 </script>
@@ -78,6 +84,16 @@ export default {
       position: relative;
       .el-main {
         padding: 0;
+      }
+      .SongMainClass {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        z-index: 1000;
+      }
+      .paly_list_wrap {
+        position: absolute;
+       
       }
     }
     .el-footer {

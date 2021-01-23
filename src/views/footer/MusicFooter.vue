@@ -1,11 +1,164 @@
 <template>
-  <div id="MusicFooter">
-    Footer
+  <div id="MusicFooter" class="flexL">
+    <div class="play_song flexL">
+      <img :src="_songImg" alt width="50px" height="50px" />
+      <article>
+        <div class="textOverflowElli">
+          <span style="margin-right:5px">{{songInfo.name}}</span>
+          <span style="color:#949495">{{_songAliasName}}</span>
+        </div>
+        <div class="textOverflowElli" style="margin-top:5px">
+          <span class="songName" v-for="(item,index) in songInfo.ar" :key="item.id">
+            <router-link :to="{name:'PersonalizedArtist',params:{id:item.id}}">{{item.name}}</router-link>
+            <i v-if="(index + 1) !== songInfo.ar.length">&nbsp;&nbsp;/&nbsp;&nbsp;</i>
+          </span>
+        </div>
+      </article>
+      <div class="like">
+        <span @click="handleLikeMusic()">
+          <svg-icon :icon-class="headStatus" class="svgnoraml"></svg-icon>
+        </span>
+      </div>
+    </div>
+    <div class="play_progress">
+      <audio-player :audio-list="audioList" />
+    </div>
+    <div class="play_history">
+      <div class="bar"></div>
+      <div class="history" @click="handleOpenPlayListDrawer()"></div>
+    </div>
   </div>
 </template>
 
 <script>
-export default {};
+import {
+  fetchSongUrlAPI,
+  fetchSongDetailApi,
+  fetchLikeMusicAPI,
+} from "@/network/api/musicApi";
+import { Track } from "@/common/pojo.js";
+import { mapGetters } from "vuex";
+export default {
+  data() {
+    return {
+      songInfo: {},
+      audioList: [],
+      isLike: false,
+      isDrawer: false,
+    };
+  },
+  created() {
+    this._initSongDetail(1813888105);
+    this._initSongUrl(1813888105);
+  },
+  mounted() {
+    this.$nextTick(() => {
+      this._hiddenPlayPorgessItem();
+    });
+  },
+  computed: {
+    ...mapGetters({ likeListIdsMap: "likeMusicList" }),
+    _songImg() {
+      if (Object.keys(this.songInfo).length === 0) return;
+      return this.tansIdentityIconUrl(this.songInfo.al.picUrl) + "?param=50y50";
+    },
+    _songAliasName() {
+      if (Object.keys(this.songInfo).length === 0) return;
+      if (this.songInfo.al.length !== 0) {
+        return `(${this.songInfo.alia.join(" / ")})`;
+      }
+      return "";
+    },
+    headStatus() {
+      if (!this.likeListIdsMap) return "";
+      if (this.likeListIdsMap[this.songInfo.id]) {
+        this.isLike = true;
+        return "headlike";
+      }
+      return "headnolike";
+    },
+  },
+  methods: {
+    async _initSongDetail(id) {
+      let result = await fetchSongDetailApi({ ids: id });
+      result.songs.forEach((k, i) => {
+        this.songInfo = new Track(k, result.privileges[i]);
+      });
+    },
+    async _initSongUrl(id) {
+      let result = await fetchSongUrlAPI({ id: id });
+      result.data.forEach((e, i) => {
+        this.audioList.push(e.url);
+      });
+    },
+    tansIdentityIconUrl(picUrl) {
+      picUrl = picUrl.replace(new RegExp("p[1-5]{1}"), "p3");
+      return picUrl;
+    },
+    _hiddenPlayPorgessItem() {
+      document
+        .querySelector(".audio__btn-wrap")
+        .removeChild(document.querySelector(".audio__play-rate"));
+      document
+        .querySelector(".audio__btn-wrap")
+        .removeChild(document.querySelector(".audio__play-volume-icon-wrap"));
+    },
+    handleLikeMusic() {
+      // 普通歌单界面
+      if (this.isLike) {
+        this.cancelLikeMusic();
+      } else {
+        this.doLikeMusic();
+      }
+    },
+    // ? 取消喜欢音乐
+    async cancelLikeMusic() {
+      try {
+        await fetchLikeMusicAPI({
+          id: this.songInfo.id,
+          like: false,
+        });
+        this.isLike = false;
+        this.$delete(this.likeListIdsMap, this.songInfo.id);
+        this.$store.commit(
+          "songModule/SET_LIKE_MUSIC_MAP",
+          this.likeListIdsMap
+        );
+        this.$gMessage.show(`<span>取消喜欢成功</span>`, "complate", "40px");
+      } catch (error) {
+        this.$gMessage.show("你TM不是VIP你不知道吗？？？");
+      }
+    },
+    // ? 添加我喜欢的音乐
+    async doLikeMusic() {
+      try {
+        await fetchLikeMusicAPI({
+          id: this.songInfo.id,
+          like: true,
+        });
+        this.isLike = true;
+        this.$set(this.likeListIdsMap, this.songInfo.id, true);
+        this.$gMessage.show(
+          `<span>已添加到我喜欢的音乐</span>`,
+          "complate",
+          "40px"
+        );
+        this.$store.commit(
+          "songModule/SET_LIKE_MUSIC_MAP",
+          this.likeListIdsMap
+        );
+      } catch (error) {
+        console.log(error);
+        this.$gMessage.show("你TM不是VIP你不知道吗？？？");
+      }
+    },
+    // 打开关闭历史播放记录
+    handleOpenPlayListDrawer() {
+      this.isDrawer = !this.isDrawer;
+      this.$bus.$emit('handleHistoryDrawer',this.isDrawer)
+    },
+  },
+};
 </script>
 
 <style lang="less" scoped>
@@ -13,5 +166,106 @@ export default {};
   width: 100%;
   height: 100%;
   background-color: var(--footerBgColor);
+  .play_song {
+    padding: 10px;
+    height: 100%;
+    align-items: flex-start;
+    img {
+      border-radius: 5px;
+    }
+    article {
+      width: 175px;
+      height: 100%;
+      margin-left: 5px;
+      color: #333;
+      font-size: 16px;
+      .songName {
+        font-size: 14px;
+        color: #333;
+        a {
+          color: #333;
+          &:hover {
+            color: #333;
+          }
+        }
+      }
+    }
+    .like {
+      &:hover {
+        cursor: pointer;
+      }
+      .svgnoraml {
+        font-size: 16px;
+        color: #a8a9aa;
+      }
+    }
+  }
+  .play_progress {
+    padding-top: 5px;
+    width: 470px;
+    height: 100%;
+    margin-left: 50px;
+    /deep/ .audio-player {
+      .audio__btn-wrap {
+        .audio__play-icon {
+          color: #2f2f30;
+        }
+        .audio__play-prev {
+          width: 20px;
+          height: 16px;
+        }
+        .audio__play-next {
+          width: 20px;
+          height: 16px;
+        }
+        .audio__play-start {
+          width: 30px;
+          height: 30px;
+        }
+        .audio__play-pause {
+          width: 30px;
+          height: 30px;
+        }
+        .audio__play-loading {
+          width: 30px;
+          height: 30px;
+          span {
+            background: #ff4e4e;
+          }
+        }
+      }
+      .audio__progress-wrap {
+        margin-top: 5px;
+        .audio__progress {
+          background: #ff4e4e;
+        }
+        .audio__progress-point {
+          background: #ff4e4e;
+          box-shadow: 0 0 10px 1px rgba(255, 78, 78, 0.5);
+        }
+      }
+    }
+  }
+  .play_history {
+    flex: 1;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    .bar {
+      width: 200px;
+      height: 30px;
+      background: no-repeat url("~assets/footer_bar.png");
+    }
+    .history {
+      flex: 1;
+      height: 18px;
+      background: no-repeat url("~assets/history.png");
+      margin-left: 10px;
+      &:hover {
+        cursor: pointer;
+      }
+    }
+  }
 }
 </style>

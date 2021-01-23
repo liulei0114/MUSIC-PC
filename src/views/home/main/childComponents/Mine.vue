@@ -74,7 +74,6 @@
 </template>
 
 <script>
-import { Loading } from "element-ui";
 import { loadingMixin } from "@/mixin/loadingMixin";
 export default {
   mixins: [loadingMixin],
@@ -154,7 +153,7 @@ export default {
   border-radius: 2px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
   background-color: #fff;
-  z-index: 40;
+  z-index: 2005;
   display: flex;
   flex-direction: column;
   color: #333;

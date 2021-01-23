@@ -2,7 +2,7 @@
   <div id="PlayAllBtn">
     <div class="left">
       <i class="play">
-        <svg-icon icon-class="play"></svg-icon>
+        <svg-icon icon-class="play1"></svg-icon>
       </i>
       <span>播放全部</span>
     </div>

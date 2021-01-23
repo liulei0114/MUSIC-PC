@@ -28,7 +28,7 @@
             :key="item.id"
             :index="i+1"
             :songItem="item"
-            :likeListIdsMap.sync="likeListIdsMap"
+            :likeListIdsMap="likeListIdsMap"
             :isAr="true"
             v-show="isShowItem(album,i)"
           ></song-list-item>
@@ -50,7 +50,6 @@
 import {
   fetchArtistAlbumListAPI,
   fetchAlbumDetailAPI,
-  fetchLikeListAPI,
   fetchSongDetailApi,
   fetchArtistTop50API,
 } from "@/network/api/musicApi";
@@ -70,7 +69,6 @@ export default {
         more: true,
       },
       artist: {},
-      likeListIdsMap: {},
       contentOffsetHeight: null,
       initLock: false,
     };
@@ -98,7 +96,10 @@ export default {
     },
   },
   computed: {
-    ...mapGetters({ userProfile: "userProfile" }),
+    ...mapGetters({
+      userProfile: "userProfile",
+      likeListIdsMap: "likeMusicList",
+    }),
     allAlbum() {
       if (Object.keys(this.albumTop50).length === 0) return;
       let arr = [];
@@ -108,7 +109,6 @@ export default {
     },
   },
   created() {
-    this._initLikeList();
     this._initAllAlbum();
   },
   mounted() {
@@ -172,17 +172,6 @@ export default {
       let result = await fetchAlbumDetailAPI({ id: e.id });
       let songIds = this.getSongIds(result.songs);
       await this._initSongDetail(e, songIds.join(","));
-    },
-    async _initLikeList() {
-      let result = await fetchLikeListAPI({
-        uid: this.userProfile.userId,
-        timestamp: new Date().valueOf(),
-      });
-      let map = {};
-      result.ids.forEach((e, i) => {
-        map[e] = true;
-      });
-      this.likeListIdsMap = map;
     },
     async _initSongDetail(e, ids) {
       let result = await fetchSongDetailApi({ ids });

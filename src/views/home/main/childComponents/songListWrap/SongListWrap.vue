@@ -118,8 +118,7 @@ import SongListDetail from "./SongListDetail.vue";
 import { number2wan } from "@/util/NumberTransfrom";
 import CommentListDetail from "../commentListWrap/CommentListDetail";
 import SubscribersDetail from "../subscribersWrap/SubscribersDetail.vue";
-import { seachMusicAPI, fetchPlayListDynamicAPI } from "@/network/api/musicApi";
-import { Container } from "element-ui";
+import { fetchPlayListDynamicAPI } from "@/network/api/musicApi";
 export default {
   components: {
     PlayAllBtn,
@@ -237,13 +236,13 @@ export default {
       return "";
     },
   },
-  
+
   created() {
     // 从router获取songid和meta中的isSubscribe
     this.songId = this.$route.path.slice(this.$route.path.lastIndexOf("/") + 1);
     this._initSongListDetail(this.songId);
   },
-  
+
   methods: {
     async _initSongListDetail(id) {
       this.songListDetail = await this.$store.dispatch(

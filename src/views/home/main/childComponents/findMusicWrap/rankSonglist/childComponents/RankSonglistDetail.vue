@@ -4,7 +4,7 @@
       <img v-lazy="rankSonglistItem.picUrl" alt width="170" height="170" />
       <div class="play">
         <i style="margin-left:5px">
-          <svg-icon icon-class="play" style="color:#ec4141"></svg-icon>
+          <svg-icon icon-class="play1" style="color:#ec4141"></svg-icon>
         </i>
       </div>
       <div class="update_time">{{rankSonglistItem.updateTime}}</div>

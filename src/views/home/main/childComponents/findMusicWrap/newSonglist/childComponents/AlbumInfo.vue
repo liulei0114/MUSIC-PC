@@ -4,7 +4,7 @@
       <img :src="_albumUrl" alt />
       <div class="play">
         <i style="text-align: center; font-size:20px;line-height:40px;margin-left:5px">
-          <svg-icon icon-class="play" style="color:#ec4141"></svg-icon>
+          <svg-icon icon-class="play1" style="color:#ec4141"></svg-icon>
         </i>
       </div>
       <div class="cipan"></div>

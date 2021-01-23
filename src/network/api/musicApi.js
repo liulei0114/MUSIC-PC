@@ -372,6 +372,33 @@ export function fetchLikeMusicAPI(params) {
   })
 }
 
+// ! 音乐歌词
+export function fetchSongLyricAPI(params) {
+  return request({
+    url: '/lyric',
+    method: 'get',
+    params
+  })
+}
+
+// ! 获取音乐URL
+export function fetchSongUrlAPI(params) {
+  return request({
+    url: '/song/url',
+    method: 'get',
+    params
+  })
+}
+
+// ! 获取历史播放记录
+export function fetchHistoryMusicListAPI(params) {
+  return request({
+    url: '/user/record',
+    method: 'get',
+    params
+  })
+}
+
 
 
 

@@ -94,6 +94,14 @@ const routes = [
         name: 'PersonalizedArtist',
         component: () => import('@/views/home/main/childComponents/findMusicWrap/artist/childComponents/ArtistDetail.vue'),
       },
+      // 歌曲详情页
+      {
+        path: 'song/:id',
+        name: 'SongMain',
+        components: {
+          SongMain: () => import('@/components/song/SongMain.vue'),
+        }
+      },
     ]
   },
 
@@ -113,9 +121,20 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
 
   if (store.getters.userProfile) {
+    // ! 有个bug，不影响使用，页面刷新vuex数据清空，加载所有喜欢音乐是异步操作会导致加载两次
+    // 是否有我喜欢的音乐，没有加载
+
     if (store.getters.menu) {
       next()
     } else {
+      if (!store.getters.likeMusicList) {
+        // 清空我喜欢的音乐
+        store.dispatch('songModule/SaveLikeMusicList')
+      }
+      if (!store.getters.historyMusicList) {
+        // 清空我喜欢的音乐
+        store.dispatch('songModule/SaveHistoryMusicList')
+      }
       store.dispatch('loginModule/AddMenuRouter').then((result) => {
         router.addRoutes(result)
         next({ ...to, replace: true })

@@ -1,10 +1,15 @@
 <template>
-  <div class="SongListItem" :class="{isOdd:index%2!=0}" :style="{height:height}">
+  <div
+    class="SongListItem"
+    :class="{isOdd:index%2!=0}"
+    :style="{height:height}"
+    @dblclick="handleDbClick()"
+  >
     <div class="index">{{index | filterIndex}}</div>
     <div>
       <div class="flexL" v-if="!isShowALpic">
         <div class="like">
-          <i @click="handleLikeMusic">
+          <i @click.stop="handleLikeMusic">
             <svg-icon :icon-class="headStatus" class="svgnoraml"></svg-icon>
           </i>
         </div>
@@ -18,7 +23,7 @@
         <img :src="songItem.picurl + '?param=60y60'" alt width="60px" height="60px" />
         <div class="play">
           <i style="margin-left:5px;line-height:25px">
-            <svg-icon icon-class="play" style="color:#ec4141"></svg-icon>
+            <svg-icon icon-class="play1" style="color:#ec4141"></svg-icon>
           </i>
         </div>
       </div>
@@ -52,13 +57,13 @@
     </div>
     <div class="ar textOverflow" v-if="!isAr">
       <span v-for="(item,index) in songItem.ar" :key="item.id">
-        <i @click="$router.push({name:'PersonalizedArtist',params:{id:item.id}})">{{item.name}}</i>
+        <i @click.stop="$router.push({name:'PersonalizedArtist',params:{id:item.id}})">{{item.name}}</i>
         <i v-if="index +1 !== songItem.ar.length">&nbsp;&nbsp;/&nbsp;&nbsp;</i>
       </span>
     </div>
     <div class="al textOverflow" :style="_alWidth" v-if="!isAr">
       <span
-        @click="$router.push({name:'PersonalizedAlbum',params:{id:songItem.al.id}})"
+        @click.stop="$router.push({name:'PersonalizedAlbum',params:{id:songItem.al.id}})"
       >{{songItem.al.name}}</span>
       <span class="other">{{_al}}</span>
     </div>
@@ -74,7 +79,7 @@
 </template>
 
 <script>
-import { fetchLikeMusicAPI } from "@/network/api/musicApi.js";
+import { fetchLikeMusicAPI } from "@/network/api/musicApi";
 export default {
   data() {
     return {
@@ -139,6 +144,7 @@ export default {
       return "";
     },
     headStatus() {
+      if (!this.likeListIdsMap) return;
       if (this.likeListIdsMap[this.songItem.id]) {
         this.isLike = true;
         return "headlike";
@@ -198,13 +204,16 @@ export default {
     // ? 取消喜欢音乐
     async cancelLikeMusic() {
       try {
-        let result = await fetchLikeMusicAPI({
+        await fetchLikeMusicAPI({
           id: this.songItem.id,
           like: false,
         });
         this.isLike = false;
         this.$delete(this.likeListIdsMap, this.songItem.id);
-        this.$emit("update:likeListIdsMap", this.likeListIdsMap);
+        this.$store.commit(
+          "songModule/SET_LIKE_MUSIC_MAP",
+          this.likeListIdsMap
+        );
         this.$gMessage.show(`<span>取消喜欢成功</span>`, "complate", "40px");
       } catch (error) {
         this.$gMessage.show("你TM不是VIP你不知道吗？？？");
@@ -213,19 +222,23 @@ export default {
     // ? 添加我喜欢的音乐
     async doLikeMusic() {
       try {
-        let result = await fetchLikeMusicAPI({
+        await fetchLikeMusicAPI({
           id: this.songItem.id,
           like: true,
         });
         this.isLike = true;
         this.$set(this.likeListIdsMap, this.songItem.id, true);
-        this.$emit("update:likeListIdsMap", this.likeListIdsMap);
         this.$gMessage.show(
           `<span>已添加到我喜欢的音乐</span>`,
           "complate",
           "40px"
         );
+        this.$store.commit(
+          "songModule/SET_LIKE_MUSIC_MAP",
+          this.likeListIdsMap
+        );
       } catch (error) {
+        console.log(error);
         this.$gMessage.show("你TM不是VIP你不知道吗？？？");
       }
     },
@@ -241,16 +254,22 @@ export default {
         if (routeId == myListSonglistId) {
           // * 在我喜欢的音乐界面
           this.$emit("openDeleteSongDialog");
-          return
+          return;
         }
-      } 
-        // 普通歌单界面
-        if (this.isLike) {
-          this.cancelLikeMusic();
-        } else {
-          this.doLikeMusic();
-        }
-      
+      }
+      // 普通歌单界面
+      if (this.isLike) {
+        this.cancelLikeMusic();
+      } else {
+        this.doLikeMusic();
+      }
+    },
+    // ? 双击跳转到音乐详情
+    handleDbClick() {
+      this.$router.replace({
+        name: "SongMain",
+        params: { id: this.songItem.id },
+      });
     },
   },
 };
