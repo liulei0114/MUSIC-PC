@@ -399,6 +399,14 @@ export function fetchHistoryMusicListAPI(params) {
   })
 }
 
+// ! 检查音乐是否可用
+export function fetchCheckMusicAPI(params) {
+  return request({
+    url: '/check/music',
+    method: 'get',
+    params
+  })
+}
 
 
 

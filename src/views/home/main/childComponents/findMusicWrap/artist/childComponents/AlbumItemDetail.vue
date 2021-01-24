@@ -31,6 +31,7 @@
             :likeListIdsMap="likeListIdsMap"
             :isAr="true"
             v-show="isShowItem(album,i)"
+            @dblclick.native="handlePlaySong(item,i)"
           ></song-list-item>
           <div class="look_all" v-show="isShwoAllBtn(album)">
             <span @click="lookAll(album)">
@@ -52,11 +53,12 @@ import {
   fetchAlbumDetailAPI,
   fetchSongDetailApi,
   fetchArtistTop50API,
-} from "@/network/api/musicApi";
-import { Album, Track } from "@/common/pojo.js";
-import SongListDetail from "../../../songListWrap/SongListDetail.vue";
-import { mapGetters } from "vuex";
-import SongListItem from "../../../songListWrap/SongListItem.vue";
+  fetchCheckMusicAPI,
+} from '@/network/api/musicApi'
+import { Album, Track } from '@/common/pojo.js'
+import SongListDetail from '../../../songListWrap/SongListDetail.vue'
+import { mapGetters } from 'vuex'
+import SongListItem from '../../../songListWrap/SongListItem.vue'
 export default {
   data() {
     return {
@@ -71,169 +73,187 @@ export default {
       artist: {},
       contentOffsetHeight: null,
       initLock: false,
-    };
+    }
   },
   props: {
     artistId: {
       type: String,
-      default: "",
+      default: '',
     },
   },
   watch: {
     hotAlbums() {
       if (this.hotAlbums.length === 0) {
-        return;
+        return
       }
       // this.$nextTick(() => {});
       setTimeout(() => {
         let contain = document
-          .querySelector(".ArtistDetail")
-          .querySelector(".happy-scroll-container");
-        let content = contain.children[0];
-        this.contentOffsetHeight = content.scrollHeight;
-        this.initLock = false;
-      }, 500);
+          .querySelector('.ArtistDetail')
+          .querySelector('.happy-scroll-container')
+        let content = contain.children[0]
+        this.contentOffsetHeight = content.scrollHeight
+        this.initLock = false
+      }, 500)
     },
   },
   computed: {
     ...mapGetters({
-      userProfile: "userProfile",
-      likeListIdsMap: "likeMusicList",
+      userProfile: 'userProfile',
+      likeListIdsMap: 'likeMusicList',
     }),
     allAlbum() {
-      if (Object.keys(this.albumTop50).length === 0) return;
-      let arr = [];
-      arr.push(this.albumTop50);
-      arr.push(...this.hotAlbums);
-      return arr;
+      if (Object.keys(this.albumTop50).length === 0) return
+      let arr = []
+      arr.push(this.albumTop50)
+      arr.push(...this.hotAlbums)
+      return arr
     },
   },
   created() {
-    this._initAllAlbum();
+    this._initAllAlbum()
   },
   mounted() {
     let contain = document
-      .querySelector(".ArtistDetail")
-      .querySelector(".happy-scroll-container");
-    contain.addEventListener("scroll", () => {
-      this.handleScroll(contain);
-    });
+      .querySelector('.ArtistDetail')
+      .querySelector('.happy-scroll-container')
+    contain.addEventListener('scroll', () => {
+      this.handleScroll(contain)
+    })
   },
   methods: {
     async _initAllAlbum() {
       Promise.all([this._initAlbumTop50(), this._initAlbumList()]).then(
         (result) => {
-          this.albumTop50 = result[0];
-          this.hotAlbums = result[1];
+          this.albumTop50 = result[0]
+          this.hotAlbums = result[1]
         }
-      );
+      )
     },
     async _initAlbumList() {
       if (this.pageInfo.more) {
-        let param = new URLSearchParams();
-        param.append("id", this.artistId);
-        param.append("limit", this.pageInfo.limit);
+        let param = new URLSearchParams()
+        param.append('id', this.artistId)
+        param.append('limit', this.pageInfo.limit)
         param.append(
-          "offset",
+          'offset',
           (this.pageInfo.curPage - 1) * this.pageInfo.limit
-        );
-        let result = await fetchArtistAlbumListAPI(param);
-        this.pageInfo.more = result.more;
-        this.artist.alias = result.artist.alias.join("  /  ");
-        this.artist.trans = result.artist.trans;
+        )
+        let result = await fetchArtistAlbumListAPI(param)
+        this.pageInfo.more = result.more
+        this.artist.alias = result.artist.alias.join('  /  ')
+        this.artist.trans = result.artist.trans
         result.hotAlbums.forEach((e, i) => {
-          let temp = new Album(e);
-          temp.threshold = true;
-          this.hotAlbums.push(temp);
-        });
+          let temp = new Album(e)
+          temp.threshold = true
+          this.hotAlbums.push(temp)
+        })
 
         // 加载每个专辑的私有歌曲
         this.hotAlbums.forEach((e, i) => {
-          this.getAlbumSonglist(e);
-        });
-        return this.hotAlbums;
+          this.getAlbumSonglist(e)
+        })
+        return this.hotAlbums
       }
     },
     async _initAlbumTop50() {
       let temp = {
-        name: "热门50首",
-        picUrl: require("@/assets/top50.png"),
-        id: "1",
+        name: '热门50首',
+        picUrl: require('@/assets/top50.png'),
+        id: '1',
         songlist: [],
         threshold: true,
-      };
-      let result = await fetchArtistTop50API({ id: this.artistId });
+      }
+      let result = await fetchArtistTop50API({ id: this.artistId })
       result.songs.forEach((e, i) => {
-        temp.songlist.push(new Track(e, e.privilege));
-      });
-      return temp;
+        temp.songlist.push(new Track(e, e.privilege))
+      })
+      return temp
     },
     async getAlbumSonglist(e) {
-      let result = await fetchAlbumDetailAPI({ id: e.id });
-      let songIds = this.getSongIds(result.songs);
-      await this._initSongDetail(e, songIds.join(","));
+      let result = await fetchAlbumDetailAPI({ id: e.id })
+      let songIds = this.getSongIds(result.songs)
+      await this._initSongDetail(e, songIds.join(','))
     },
     async _initSongDetail(e, ids) {
-      let result = await fetchSongDetailApi({ ids });
-      let songlist = [];
+      let result = await fetchSongDetailApi({ ids })
+      let songlist = []
       result.songs.forEach((k, i) => {
-        songlist.push(new Track(k, result.privileges[i]));
-      });
-      this.$set(e, "songlist", songlist);
+        songlist.push(new Track(k, result.privileges[i]))
+      })
+      this.$set(e, 'songlist', songlist)
     },
     handleScroll(contain) {
-      let scrollTop = contain.scrollTop;
+      let scrollTop = contain.scrollTop
       if (this.contentOffsetHeight - scrollTop <= 550) {
         if (!this.initLock) {
-          this.pageInfo.curPage++;
-          this.initLock = true;
-          this._initAlbumList();
+          this.pageInfo.curPage++
+          this.initLock = true
+          this._initAlbumList()
         }
       }
     },
     lookAll(album) {
-      album.threshold = false;
+      album.threshold = false
       let contain = document
-        .querySelector(".ArtistDetail")
-        .querySelector(".happy-scroll-container");
-      let content = contain.children[0];
-      this.contentOffsetHeight = content.scrollHeight;
+        .querySelector('.ArtistDetail')
+        .querySelector('.happy-scroll-container')
+      let content = contain.children[0]
+      this.contentOffsetHeight = content.scrollHeight
     },
     isShowItem(album, i) {
-      let threshold = album.threshold;
+      let threshold = album.threshold
       if (threshold) {
         if (i < 10) {
-          return true;
+          return true
         } else {
-          return false;
+          return false
         }
       } else {
-        return true;
+        return true
       }
     },
     isShwoAllBtn(album) {
-      let size = album.songlist.length;
-      let threshold = album.threshold;
+      let size = album.songlist.length
+      let threshold = album.threshold
       if (threshold) {
         if (size <= 10) {
-          return false;
+          return false
         } else {
-          return true;
+          return true
         }
       } else {
-        return false;
+        return false
       }
     },
     getSongIds(songs) {
-      let result = [];
+      let result = []
       songs.forEach((e, i) => {
-        result.push(e.id);
-      });
-      return result;
+        result.push(e.id)
+      })
+      return result
+    },
+    // ? 播放歌曲
+    async handlePlaySong(item, i) {
+      try {
+        await fetchCheckMusicAPI({ id: item.id })
+      } catch (error) {
+        // ! 这个接口和其他接口不同，返回没有code字段，导致全局拦截器认为失败,故处理在catch中
+        if (!error.success) {
+          this.$gMessage.show(error.message)
+        } else {
+          // 把当前歌曲所在列表加入到播放列表中
+          this.$store.commit(
+            'songModule/SET_PLAY_MUSIC_LIST',
+            this.album.songlist
+          )
+          this.$store.commit('songModule/SET_CUR_PLAY_SONG_INDEX', i)
+        }
+      }
     },
   },
   components: { SongListDetail, SongListItem },
-};
+}
 </script>
 
 <style lang="less" scoped>
@@ -262,7 +282,7 @@ export default {
         right: -25px;
         top: 3px;
         background-repeat: no-repeat;
-        background-image: url("~assets/aside.png");
+        background-image: url('~assets/aside.png');
       }
       p {
         font-size: 12px;

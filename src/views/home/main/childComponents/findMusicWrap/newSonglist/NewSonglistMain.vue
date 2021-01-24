@@ -58,6 +58,7 @@
         :songItem="item"
         height="80px"
         :isShowALpic="true"
+        @dblclick.native="handlePlaySong(item,index)"
       ></song-list-item>
     </article>
     <article v-else-if="categroyIndex === 1" class="flexL">
@@ -71,20 +72,21 @@ import {
   fetchTopSongAPI,
   fetchTopAlbumAPI,
   fetchAllAlbumAPI,
-} from "@/network/api/musicApi";
-import { Single, Album } from "@/common/pojo.js";
-import SongListItem from "../../songListWrap/SongListItem.vue";
-import TopAlbumDetail from "./childComponents/TopAlbumDetail.vue";
+  fetchCheckMusicAPI,
+} from '@/network/api/musicApi'
+import { Single, Album } from '@/common/pojo.js'
+import SongListItem from '../../songListWrap/SongListItem.vue'
+import TopAlbumDetail from './childComponents/TopAlbumDetail.vue'
 export default {
   data() {
     return {
       categroyIndex: 0,
       areaList: [
-        { type: 0, name: "全部" },
-        { type: 7, name: "华语" },
-        { type: 96, name: "欧美" },
-        { type: 16, name: "韩国" },
-        { type: 8, name: "日本" },
+        { type: 0, name: '全部' },
+        { type: 7, name: '华语' },
+        { type: 96, name: '欧美' },
+        { type: 16, name: '韩国' },
+        { type: 8, name: '日本' },
       ],
       areaCheckIndex: 0,
       topSongList: [],
@@ -97,146 +99,160 @@ export default {
         limit: 500,
         curPage: 1,
       },
-      loading: "on",
-    };
+      loading: 'on',
+    }
   },
   computed: {
     albumAreaType() {
       switch (this.areaCheckIndex) {
         case 0:
-          return "ALL";
+          return 'ALL'
         case 7:
-          return "ZH";
+          return 'ZH'
         case 96:
-          return "EA";
+          return 'EA'
         case 16:
-          return "KR";
+          return 'KR'
         case 8:
-          return "JP";
+          return 'JP'
       }
     },
   },
   created() {
-    this._initTopSonglist();
+    this._initTopSonglist()
   },
   watch: {
     topSongList() {
       this.$nextTick(() => {
-        this.loading = "off";
-      });
+        this.loading = 'off'
+      })
     },
   },
   methods: {
     async _initTopSonglist() {
-      this.loading = "on";
-      let result = await fetchTopSongAPI({ type: this.areaCheckIndex });
+      this.loading = 'on'
+      let result = await fetchTopSongAPI({ type: this.areaCheckIndex })
       result.data.forEach((e, i) => {
-        this.topSongList.push(new Single(e));
-      });
+        this.topSongList.push(new Single(e))
+      })
     },
     async _initAlbumRecommendlist() {
-      this.loading = "on";
-      let year = this.curDate.year();
-      let month = this.curDate.month() + 1;
-      let param = new URLSearchParams();
-      param.append("area", this.albumAreaType);
-      param.append("year", year);
-      param.append("month", month);
-      let result = await fetchTopAlbumAPI(param);
-      console.log("dfdfdfdfd");
-      let monthData = [];
-      let weekData = [];
+      this.loading = 'on'
+      let year = this.curDate.year()
+      let month = this.curDate.month() + 1
+      let param = new URLSearchParams()
+      param.append('area', this.albumAreaType)
+      param.append('year', year)
+      param.append('month', month)
+      let result = await fetchTopAlbumAPI(param)
+      let monthData = []
+      let weekData = []
       result.monthData.forEach((e, i) => {
-        monthData.push(new Album(e));
-      });
+        monthData.push(new Album(e))
+      })
       if (result.weekData) {
         result.weekData.forEach((e, i) => {
-          weekData.push(new Album(e));
-        });
-        if (!this.albumRecommendMap["本周新碟"]) {
-          this.$set(this.albumRecommendMap, "本周新碟", weekData);
+          weekData.push(new Album(e))
+        })
+        if (!this.albumRecommendMap['本周新碟']) {
+          this.$set(this.albumRecommendMap, '本周新碟', weekData)
         }
       }
 
-      this.$set(this.albumRecommendMap, `${month}-${year}`, monthData);
-      this.loading = "off";
+      this.$set(this.albumRecommendMap, `${month}-${year}`, monthData)
+      this.loading = 'off'
     },
     async _initAllAlbumlist() {
-      this.loading = "on";
+      this.loading = 'on'
 
       // 这接口就返回500条
-      let param = new URLSearchParams();
-      param.append("limit", this.allAllbumSearch.limit);
-      param.append("area", this.albumAreaType);
+      let param = new URLSearchParams()
+      param.append('limit', this.allAllbumSearch.limit)
+      param.append('area', this.albumAreaType)
       param.append(
-        "offset",
+        'offset',
         (this.allAllbumSearch.curPage - 1) * this.allAllbumSearch.limit
-      );
-      let result = await fetchAllAlbumAPI(param);
-      this.albumRecommendMap = {};
+      )
+      let result = await fetchAllAlbumAPI(param)
+      this.albumRecommendMap = {}
       result.albums.forEach((e, i) => {
-        let temp = new Album(e);
+        let temp = new Album(e)
         if (this.albumRecommendMap[temp.publishTime]) {
-          this.albumRecommendMap[temp.publishTime].push(temp);
+          this.albumRecommendMap[temp.publishTime].push(temp)
         } else {
-          let arr = [temp];
-          this.albumRecommendMap[temp.publishTime] = arr;
+          let arr = [temp]
+          this.albumRecommendMap[temp.publishTime] = arr
         }
-      });
-      this.loading = "off";
+      })
+      this.loading = 'off'
     },
     handleCategoryChangeNewSong() {
-      this.categroyIndex = 0;
-      this.areaCheckIndex = 0;
-      this.topSongList.length = [];
-      this._initTopSonglist();
+      this.categroyIndex = 0
+      this.areaCheckIndex = 0
+      this.topSongList.length = []
+      this._initTopSonglist()
     },
     handleCategoryChangeAlbum() {
-      this.categroyIndex = 1;
-      this.areaCheckIndex = 0;
-      this.albumRecommendMap = {};
-      this._initAlbumRecommendlist();
+      this.categroyIndex = 1
+      this.areaCheckIndex = 0
+      this.albumRecommendMap = {}
+      this._initAlbumRecommendlist()
     },
     handelAreaChange(type) {
-      this.areaCheckIndex = type;
+      this.areaCheckIndex = type
 
       if (this.categroyIndex === 0) {
         // 新歌速递
-        this.topSongList.length = [];
-        this._initTopSonglist();
+        this.topSongList.length = []
+        this._initTopSonglist()
       } else {
-        this.albumRecommendMap = {};
-        this.curDate = this.$moment();
+        this.albumRecommendMap = {}
+        this.curDate = this.$moment()
         // 新碟上架
 
         if (this.isAlbumRecommend) {
-          this._initAlbumRecommendlist();
+          this._initAlbumRecommendlist()
         } else {
-          this._initAllAlbumlist();
+          this._initAllAlbumlist()
         }
       }
     },
     handleRecommend() {
-      this.isAlbumRecommend = true;
-      this._initAlbumRecommendlist();
+      this.isAlbumRecommend = true
+      this._initAlbumRecommendlist()
     },
     handleAlbumAll() {
-      this.isAlbumRecommend = false;
-      this._initAllAlbumlist();
+      this.isAlbumRecommend = false
+      this._initAllAlbumlist()
     },
     monthSubtract() {
-      this.curDate.subtract(1, "months");
+      this.curDate.subtract(1, 'months')
     },
     // ? 加载上一个月份
     initPreMonth() {
       if (this.isAlbumRecommend) {
-        this.monthSubtract();
-        this._initAlbumRecommendlist();
+        this.monthSubtract()
+        this._initAlbumRecommendlist()
+      }
+    },
+    // ? 播放歌曲
+    async handlePlaySong(item,i) {
+      try {
+        await fetchCheckMusicAPI({ id: item.id })
+      } catch (error) {
+        // ! 这个接口和其他接口不同，返回没有code字段，导致全局拦截器认为失败,故处理在catch中
+        if (!error.success) {
+          this.$gMessage.show(error.message)
+        } else {
+          // 把当前歌曲所在列表加入到播放列表中
+          this.$store.commit('songModule/SET_PLAY_MUSIC_LIST', this.topSongList)
+          this.$store.commit('songModule/SET_CUR_PLAY_SONG_INDEX', i)
+        }
       }
     },
   },
   components: { SongListItem, TopAlbumDetail },
-};
+}
 </script>
 <style lang="less" scoped>
 .NewSonglistMain {

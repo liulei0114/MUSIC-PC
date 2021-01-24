@@ -1,5 +1,5 @@
 <template>
-  <div id="PersonAlizationWrap">
+  <div id="PersonAlizationWrap" v-mask-loading="{loading:loading}">
     <div class="bannerCon">
       <swiper :bannerList="bannerList"></swiper>
     </div>
@@ -113,7 +113,7 @@
 </template>
 
 <script>
-import Swiper from "@/components/swiper/Swiper.vue";
+import Swiper from '@/components/swiper/Swiper.vue'
 import {
   fetchBannerAPI,
   fetchPersonalizedAPI,
@@ -121,7 +121,7 @@ import {
   fetchPrivateNewSongAPI,
   fetchPrivateMVAPI,
   fetchPrivateDjAPI,
-} from "@/network/api/musicApi";
+} from '@/network/api/musicApi'
 import {
   Banner,
   Personalized,
@@ -129,13 +129,11 @@ import {
   PrivateNewSong,
   PrivateMV,
   PrivateDJ,
-} from "@/common/pojo";
-import { loadingMixin } from "@/mixin/loadingMixin";
-import MusicIntroduceModule from "./childComponents/MusicIntroduceModule.vue";
-import PrivateNewSongDetail from "./childComponents/PrivateNewSongDetail";
+} from '@/common/pojo'
+import MusicIntroduceModule from './childComponents/MusicIntroduceModule.vue'
+import PrivateNewSongDetail from './childComponents/PrivateNewSongDetail'
 
 export default {
-  mixins: [loadingMixin],
   data() {
     return {
       bannerList: [],
@@ -144,67 +142,80 @@ export default {
       privateNewSongList: [],
       privateMVList: [],
       privateDJList: [],
-    };
+      loading: 'on',
+      loadingStatus: [],
+    }
   },
   props: {},
   computed: {
     curDate() {
-      return this.$moment().format("DD");
+      return this.$moment().format('DD')
     },
   },
   created() {
-    this.$nextTick(() => {
-      this.initLoading();
-    });
-    this._initBanner();
-    this._initPersonalized();
-    this._initPrivatecontent();
-    this._initPrivateNewSong();
-    this._initPrivateMV();
-    this._initPrivateDJ();
-    this.endLoading();
+    this._initBanner()
+    this._initPersonalized()
+    this._initPrivatecontent()
+    this._initPrivateNewSong()
+    this._initPrivateMV()
+    this._initPrivateDJ()
+  },
+  watch: {
+    loadingStatus(newValue) {
+      this.$nextTick(() => {
+        if (newValue.length === 6) {
+          this.loading = 'off'
+        }
+      })
+    },
   },
   methods: {
     async _initBanner() {
-      let result = await fetchBannerAPI();
+      let result = await fetchBannerAPI()
       result.banners.forEach((e, i) => {
-        this.bannerList.push(new Banner(e));
-      });
+        this.bannerList.push(new Banner(e))
+      })
+      this.loadingStatus.push(true)
     },
     async _initPersonalized() {
-      let data = await fetchPersonalizedAPI();
+      let data = await fetchPersonalizedAPI()
       data.result.forEach((e, i) => {
-        this.personalizedList.push(new Personalized(e));
-      });
+        this.personalizedList.push(new Personalized(e))
+      })
+      this.loadingStatus.push(true)
     },
     async _initPrivatecontent() {
-      let data = await fetchPrivatecontentAPI();
+      let data = await fetchPrivatecontentAPI()
       data.result.forEach((e, i) => {
-        this.privatecontentList.push(new Privatecontent(e));
-      });
+        this.privatecontentList.push(new Privatecontent(e))
+      })
+      this.loadingStatus.push(true)
     },
     async _initPrivateNewSong() {
-      let data = await fetchPrivateNewSongAPI();
+      let data = await fetchPrivateNewSongAPI()
       data.result.forEach((e, i) => {
-        this.privateNewSongList.push(new PrivateNewSong(e));
-      });
+        this.privateNewSongList.push(new PrivateNewSong(e))
+      })
+      this.loadingStatus.push(true)
     },
     async _initPrivateMV() {
-      let data = await fetchPrivateMVAPI();
+      let data = await fetchPrivateMVAPI()
       data.result.forEach((e, i) => {
         if (i < 3) {
-          this.privateMVList.push(new PrivateMV(e));
+          this.privateMVList.push(new PrivateMV(e))
         }
-      });
+      })
+      this.loadingStatus.push(true)
     },
     async _initPrivateDJ() {
-      let result = await fetchPrivateDjAPI();
+      let result = await fetchPrivateDjAPI()
       result.data.forEach((e, i) => {
-        this.privateDJList.push(new PrivateDJ(e));
-      });
+        this.privateDJList.push(new PrivateDJ(e))
+      })
+      this.loadingStatus.push(true)
     },
     handlePersonalizedSongList(id) {
-      this.$router.push({ name: "PersonalizedSongList", params: { id } });
+      this.$router.push({ name: 'PersonalizedSongList', params: { id } })
     },
   },
   components: {
@@ -212,7 +223,7 @@ export default {
     MusicIntroduceModule,
     PrivateNewSongDetail,
   },
-};
+}
 </script>
 <style lang="less" scoped>
 #PersonAlizationWrap {

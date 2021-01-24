@@ -10,8 +10,9 @@ const songModule = {
     songListDetail: [],
     likeMusicMap: null,
     historyMusicList: null,
-    playMusicList: []
-
+    playMusicList: [],
+    playListDrawerStatus: false,
+    curPlaySongIndex: 0
   },
   mutations: {
     SET_SONG_LIST_DETAIL(state, data) {
@@ -25,6 +26,12 @@ const songModule = {
     },
     SET_PLAY_MUSIC_LIST(state, data) {
       state.playMusicList = data
+    },
+    SET_PLAY_LIST_DRAWER_STATUS(state, data) {
+      state.playListDrawerStatus = data
+    },
+    SET_CUR_PLAY_SONG_INDEX(state, data) {
+      state.curPlaySongIndex = data
     }
   },
   actions: {

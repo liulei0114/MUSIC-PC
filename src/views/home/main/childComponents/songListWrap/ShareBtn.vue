@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { number2wan } from "@/util/NumberTransfrom";
+import { number2wan } from '@/util/NumberTransfrom'
 export default {
   props: {
     isSubscribed: {
@@ -23,41 +23,41 @@ export default {
     },
     icon: {
       type: String,
-      default: "",
+      default: '',
     },
     textCon: {
       type: String,
-      default: "",
+      default: '',
     },
   },
   computed: {
     isForBid() {
       let temp = {
-        "border-color": "#d8d8d8",
-      };
+        'border-color': '#d8d8d8',
+      }
       // 自创建的
       if (this.isCreated) {
-        temp.cursor = "default";
-        temp.color = "#d8d8d8";
-        temp.backgroundColor= "#fff";
-        return temp;
+        temp.cursor = 'default'
+        temp.color = '#d8d8d8'
+        temp.backgroundColor = '#fff'
+        return temp
       }
       if (this.isSubscribed) {
         // 收藏
-        temp.cursor = "pointer";
-        temp.color = "#373737";
-        return temp;
+        temp.cursor = 'pointer'
+        temp.color = '#373737'
+        return temp
       }
-      return temp;
+      return temp
     },
   },
   filters: {
     filterCount(value) {
-      if (typeof value === "undefined") return;
-      return number2wan(value);
+      if (typeof value === 'undefined') return
+      return number2wan(value)
     },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>

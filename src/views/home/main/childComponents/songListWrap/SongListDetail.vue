@@ -25,6 +25,7 @@
         :likeListIdsMap="likeListIdsMap"
         :isShowPop="isShowPop"
         @openDeleteSongDialog="openDeleteSongDialog(index)"
+        @dblclick.native="handlePlaySong(item,index)"
       ></song-list-item>
     </div>
     <el-dialog
@@ -43,10 +44,14 @@
 </template>
 
 <script>
-import SongListItem from "./SongListItem.vue";
-import { mapGetters } from "vuex";
-import { fetchSongDetailApi, fetchLikeMusicAPI } from "@/network/api/musicApi";
-import { Track } from "@/common/pojo.js";
+import SongListItem from './SongListItem.vue'
+import { mapGetters } from 'vuex'
+import {
+  fetchSongDetailApi,
+  fetchLikeMusicAPI,
+  fetchCheckMusicAPI,
+} from '@/network/api/musicApi'
+import { Track } from '@/common/pojo.js'
 export default {
   components: { SongListItem },
   data() {
@@ -57,20 +62,20 @@ export default {
       songListTracks: [],
       vipCount: 0,
       dialogTableVisible: false,
-      deleteSongIndex: "",
-      loading: "on",
-    };
+      deleteSongIndex: '',
+      loading: 'on',
+    }
   },
   props: {
     songIds: {
       type: Array,
       default() {
-        return [];
+        return []
       },
     },
     keywords: {
       type: String,
-      default: "",
+      default: '',
     },
     isAlbumTitle: {
       type: Boolean,
@@ -83,97 +88,98 @@ export default {
   },
   computed: {
     ...mapGetters({
-      userProfile: "userProfile",
-      likeListIdsMap: "likeMusicList",
+      userProfile: 'userProfile',
+      likeListIdsMap: 'likeMusicList',
+      playListDrawerStatus: 'playListDrawerStatus',
     }),
     getSongList() {
       if (this.songIds.length === 0) {
-        return false;
+        return false
       }
-      this._initSongDetail();
-      return true;
+      this._initSongDetail()
+      return true
     },
     _PopMarginLeft() {
       if (this.isShowPop) {
-        return { right: "70px" };
+        return { right: '70px' }
       }
     },
     _dtMarginLeft() {
       if (this.isShowPop) {
-        return { right: "145px" };
+        return { right: '145px' }
       }
-      return { right: "35px" };
+      return { right: '35px' }
     },
     _alMarginLef() {
       if (this.isShowPop) {
-        return { left: "505px" };
+        return { left: '505px' }
       }
-      return { right: "235px" };
+      return { right: '235px' }
     },
   },
   watch: {
     keywords(newKeyword) {
-      this._debounceKeywords();
+      this._debounceKeywords()
     },
     songListTracks() {
       this.$nextTick(() => {
-        this.loading = "off";
-      });
+        this.loading = 'off'
+      })
     },
   },
   created() {
     // 创建关键词防抖函数
-    this._debounceKeywords = this._.debounce(this.seachMusicInSongList, 1000);
+    this._debounceKeywords = this._.debounce(this.seachMusicInSongList, 1000)
   },
   methods: {
     openDeleteSongDialog(index) {
-      this.dialogTableVisible = true;
-      this.deleteSongIndex = index;
+      this.dialogTableVisible = true
+      this.deleteSongIndex = index
     },
     _initSongDetail() {
-      fetchSongDetailApi({ ids: this.songIds.join(",") }).then((result) => {
+      fetchSongDetailApi({ ids: this.songIds.join(',') }).then((result) => {
         result.songs.forEach((e, i) => {
           if (e.fee === 1) {
-            this.vipCount++;
+            this.vipCount++
           }
-          this.songlist.push(new Track(e, result.privileges[i]));
-          this.songListTracks = this.songlist;
-        });
-      });
+          this.songlist.push(new Track(e, result.privileges[i]))
+          this.songListTracks = this.songlist
+        })
+      })
     },
     // ? 歌单内搜索
     seachMusicInSongList() {
-      let regExp = new RegExp(`${this.keywords.trim()}`, "i");
-      if (this.keywords.trim() !== "") {
+      let regExp = new RegExp(`${this.keywords.trim()}`, 'i')
+      if (this.keywords.trim() !== '') {
         let temp = this.songlist.filter((e) => {
-          if (regExp.test(e.name) || regExp.test(e.alia.join(""))) {
-            return true;
+          if (regExp.test(e.name) || regExp.test(e.alia.join(''))) {
+            return true
           }
-          if (e.tns && regExp.test(e.tns.join(""))) {
-            return true;
+          if (e.tns && regExp.test(e.tns.join(''))) {
+            return true
           }
           // 在歌手里面查找
-          let ar = "";
+          let ar = ''
           e.ar.forEach((e, i) => {
-            ar += e.name;
-          });
+            ar += e.name
+          })
           if (regExp.test(ar)) {
-            return true;
+            return true
           }
           // 专辑里面查找
-          if (regExp.test(e.al.name) || regExp.test(e.al.tns.join(""))) {
-            return true;
+          if (regExp.test(e.al.name) || regExp.test(e.al.tns.join(''))) {
+            return true
           }
-        });
-        this.songListTracks = temp;
+        })
+        this.songListTracks = temp
       } else {
-        this.songListTracks = this.songlist;
+        this.songListTracks = this.songlist
       }
     },
     deleteSongItem() {
-      this.dialogTableVisible = false;
-      let songId = this.songListTracks[this.deleteSongIndex].id;
-      this.cancelLikeMusic(songId);
+      this.dialogTableVisible = false
+      let songId = this.songListTracks[this.deleteSongIndex].id
+      this.cancelLikeMusic(songId)
     },
     // ? 取消喜欢音乐
     async cancelLikeMusic(songId) {
@@ -181,20 +187,35 @@ export default {
         await fetchLikeMusicAPI({
           id: songId,
           like: false,
-        });
-        this.$delete(this.likeListIdsMap, songId);
+        })
+        this.$delete(this.likeListIdsMap, songId)
         // * 将歌曲移除列表
-        this.songListTracks.splice(this.deleteSongIndex, 1);
-        this.$store.commit(
-          "songModule/SET_LIKE_MUSIC_MAP",
-          this.likeListIdsMap
-        );
+        this.songListTracks.splice(this.deleteSongIndex, 1)
+        this.$store.commit('songModule/SET_LIKE_MUSIC_MAP', this.likeListIdsMap)
       } catch (error) {
-        this.$gMessage.show("你TM不是VIP你不知道吗？？？");
+        this.$gMessage.show('你TM不是VIP你不知道吗？？？')
+      }
+    },
+    // ? 播放歌曲
+    async handlePlaySong(item, i) {
+      try {
+        await fetchCheckMusicAPI({ id: item.id })
+      } catch (error) {
+        // ! 这个接口和其他接口不同，返回没有code字段，导致全局拦截器认为失败,故处理在catch中
+        if (!error.success) {
+          this.$gMessage.show(error.message)
+        } else {
+          // 把当前歌曲所在列表加入到播放列表中
+          this.$store.commit(
+            'songModule/SET_PLAY_MUSIC_LIST',
+            this.songListTracks
+          )
+          this.$store.commit('songModule/SET_CUR_PLAY_SONG_INDEX', i)
+        }
       }
     },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>
@@ -235,7 +256,7 @@ export default {
       i {
         width: 18px;
         height: 15px;
-        background: no-repeat url("~assets/vipmusic.png");
+        background: no-repeat url('~assets/vipmusic.png');
         margin-left: 20px;
       }
       span:nth-child(2) {

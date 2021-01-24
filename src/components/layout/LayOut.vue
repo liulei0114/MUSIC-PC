@@ -93,7 +93,6 @@ export default {
       }
       .paly_list_wrap {
         position: absolute;
-       
       }
     }
     .el-footer {

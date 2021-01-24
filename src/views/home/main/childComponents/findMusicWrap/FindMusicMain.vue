@@ -42,43 +42,45 @@ export default {
     return {
       curCheckTypeIndex: 1,
       scrollTop: 0,
-    };
+    }
   },
   created() {
-    this.curCheckTypeIndex = this.$route.meta.index;
+    this.curCheckTypeIndex = this.$route.meta.index
   },
 
   watch: {},
   methods: {
     handelTypeCheck(index) {
-      this.curCheckTypeIndex = index;
+      // 关闭右侧播放列表
+      this.$bus.$emit('handleHistoryDrawer', false)
+      this.curCheckTypeIndex = index
       switch (index) {
         case 1:
-          this.$router.push("/find/music/alization");
-          return;
+          this.$router.push('/find/music/alization')
+          return
         case 2:
-          this.$router.push("/find/music/songlist");
-          return;
+          this.$router.push('/find/music/songlist')
+          return
         case 3:
-          this.$router.push("/find/music/dj");
-          return;
+          this.$router.push('/find/music/dj')
+          return
         case 4:
-          this.$router.push("/find/music/rank");
-          return;
+          this.$router.push('/find/music/rank')
+          return
         case 5:
-          this.$router.push("/find/music/artist");
-          return;
+          this.$router.push('/find/music/artist')
+          return
         case 6:
-          this.$router.push("/find/music/new");
-          return;
+          this.$router.push('/find/music/new')
+          return
       }
     },
     getTime() {
-      return new Date().valueOf();
+      return new Date().valueOf()
     },
   },
   components: {},
-};
+}
 </script>
     
 

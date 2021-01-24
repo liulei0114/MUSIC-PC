@@ -25,69 +25,61 @@
       </header>
       <!-- 播放记录 -->
       <article v-show="categroyIndex === 0">
-        <song-list-item
-          v-for="(item,index) in playMusicList"
-          :key="item.id"
-          :index="index+1"
-          :songItem="item"
-        ></song-list-item>
+        <play-item-list :musicList="playMusicList"></play-item-list>
       </article>
       <!-- 播放记录 -->
       <article v-show="categroyIndex === 1">
-        <song-list-item
-          v-for="(item,index) in historyMusicList"
-          :key="item.id"
-          :index="index+1"
-          :songItem="item"
-        ></song-list-item>
+        <play-item-list :musicList="historyMusicList"></play-item-list>
       </article>
     </el-drawer>
   </div>
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import SongListItem from "../../views/home/main/childComponents/songListWrap/SongListItem.vue";
+import { mapGetters } from 'vuex'
+import SongListItem from '../../views/home/main/childComponents/songListWrap/SongListItem.vue'
+import PlayItemList from './PlayItemList.vue'
 export default {
   data() {
     return {
       drawer: false,
       width: 0,
       categroyIndex: 0,
-    };
+    }
   },
   created() {
-    this.$bus.$on("handleHistoryDrawer", (isDrawer) => {
-      this.drawer = isDrawer;
-    });
+    this.$bus.$on('handleHistoryDrawer', (isDrawer) => {
+      if (isDrawer !== this.isDrawer) {
+        this.drawer = isDrawer
+        this.$store.commit(
+          'songModule/SET_PLAY_LIST_DRAWER_STATUS',
+          this.drawer
+        )
+      }
+    })
   },
   computed: {
     ...mapGetters({
-      playMusicList: "playMusicList",
-      historyMusicList: "historyMusicList",
+      playMusicList: 'playMusicList',
+      historyMusicList: 'historyMusicList',
     }),
-    // playMusicList() {
-    //   return this._playMusicList;
-    // },
-    // hisMusicList() {
-    //   return this._historyMusicList;
-    // },
   },
   methods: {
     handleClosed(flag) {
-      flag ? (this.width = 420) : (this.width = 0);
+      flag ? (this.width = 420) : (this.width = 0)
     },
     handleCategoryChangePlayList() {
-      this.categroyIndex = 0;
+      this.categroyIndex = 0
     },
     handleCategoryChangeHistory() {
-      this.categroyIndex = 1;
+      this.categroyIndex = 1
     },
   },
   components: {
     SongListItem,
+    PlayItemList,
   },
-};
+}
 </script>
 
 <style lang="less" scoped>
@@ -103,7 +95,7 @@ export default {
     }
   }
   header {
-    margin-top: 20px;
+    padding: 20px 0;
     .category_con {
       width: 230px;
       border-radius: 20px;

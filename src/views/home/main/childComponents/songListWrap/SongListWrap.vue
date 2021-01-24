@@ -111,14 +111,14 @@
 </template>
 
 <script>
-import { mapGetters } from "vuex";
-import PlayAllBtn from "./PlayAllBtn.vue";
-import ShareBtn from "./ShareBtn.vue";
-import SongListDetail from "./SongListDetail.vue";
-import { number2wan } from "@/util/NumberTransfrom";
-import CommentListDetail from "../commentListWrap/CommentListDetail";
-import SubscribersDetail from "../subscribersWrap/SubscribersDetail.vue";
-import { fetchPlayListDynamicAPI } from "@/network/api/musicApi";
+import { mapGetters } from 'vuex'
+import PlayAllBtn from './PlayAllBtn.vue'
+import ShareBtn from './ShareBtn.vue'
+import SongListDetail from './SongListDetail.vue'
+import { number2wan } from '@/util/NumberTransfrom'
+import CommentListDetail from '../commentListWrap/CommentListDetail'
+import SubscribersDetail from '../subscribersWrap/SubscribersDetail.vue'
+import { fetchPlayListDynamicAPI } from '@/network/api/musicApi'
 export default {
   components: {
     PlayAllBtn,
@@ -129,163 +129,163 @@ export default {
   },
   data() {
     return {
-      songId: "",
+      songId: '',
       songListDetail: {},
       isSubscribed: false,
       typeIndex: 1,
       commentCount: 0,
-      keywords: "",
+      keywords: '',
       descIsFold: false,
       foldDesc: [],
       isCreated: this.$route.meta.isCreated,
-    };
+    }
   },
   computed: {
-    ...mapGetters({ userProfile: "userProfile" }),
+    ...mapGetters({ userProfile: 'userProfile' }),
     _songlistName() {
-      if (Object.keys(this.songListDetail).length === 0) return;
+      if (Object.keys(this.songListDetail).length === 0) return
       if (this.userProfile) {
         if (
           this.songListDetail.name.indexOf(this.userProfile.nickname) !== -1
         ) {
-          return "我喜欢的音乐";
+          return '我喜欢的音乐'
         }
       }
 
-      return this.songListDetail.name;
+      return this.songListDetail.name
     },
     _songListLength() {
-      if (Object.keys(this.songListDetail).length === 0) return;
-      return this.songListDetail.trackIds.length;
+      if (Object.keys(this.songListDetail).length === 0) return
+      return this.songListDetail.trackIds.length
     },
     _subscribedCount() {
-      if (Object.keys(this.songListDetail).length === 0) return;
-      let prefix = this.isSubscribed ? "已收藏" : "收藏";
-      return `${prefix}(${number2wan(this.songListDetail.subscribedCount)})`;
+      if (Object.keys(this.songListDetail).length === 0) return
+      let prefix = this.isSubscribed ? '已收藏' : '收藏'
+      return `${prefix}(${number2wan(this.songListDetail.subscribedCount)})`
     },
     _shareCount() {
-      if (Object.keys(this.songListDetail).length === 0) return;
-      return `分享(${number2wan(this.songListDetail.shareCount)})`;
+      if (Object.keys(this.songListDetail).length === 0) return
+      return `分享(${number2wan(this.songListDetail.shareCount)})`
     },
     _songCreatorUrl() {
-      if (Object.keys(this.songListDetail).length === 0) return;
-      return this.songListDetail.creator.avatarUrl + "?param=25y25";
+      if (Object.keys(this.songListDetail).length === 0) return
+      return this.songListDetail.creator.avatarUrl + '?param=25y25'
     },
     _songCreatorNickname() {
-      if (Object.keys(this.songListDetail).length === 0) return;
-      return this.songListDetail.creator.nickname;
+      if (Object.keys(this.songListDetail).length === 0) return
+      return this.songListDetail.creator.nickname
     },
     _songCreatorVipUrl() {
-      if (Object.keys(this.songListDetail).length === 0) return;
-      return this.songListDetail.creator.identityIconUrl + "?param=12y12";
+      if (Object.keys(this.songListDetail).length === 0) return
+      return this.songListDetail.creator.identityIconUrl + '?param=12y12'
     },
 
     isShow() {
-      if (Object.keys(this.songListDetail).length === 0) return;
+      if (Object.keys(this.songListDetail).length === 0) return
       if (this.userProfile) {
         if (
           this.songListDetail.name.indexOf(this.userProfile.nickname) === -1
         ) {
-          return true;
+          return true
         } else {
-          return false;
+          return false
         }
       }
-      return true;
+      return true
     },
     tagCon() {
-      if (Object.keys(this.songListDetail).length === 0) return;
+      if (Object.keys(this.songListDetail).length === 0) return
 
       // 自创建没有标签，显示添加标签，不是自创建，如果没有标签不显示，
       if (this.isCreated && this.songListDetail.tags.length === 0) {
-        return "标签：<span class='tag'>添加标签</span>";
+        return "标签：<span class='tag'>添加标签</span>"
       }
 
       if (this.songListDetail.tags.length !== 0) {
-        let str = "标签：";
+        let str = '标签：'
         this.songListDetail.tags.forEach((e, i) => {
-          str += `<span class='tag'>${e}</span> / `;
-        });
-        return str.substring(0, str.length - 2);
+          str += `<span class='tag'>${e}</span> / `
+        })
+        return str.substring(0, str.length - 2)
       }
-      return "";
+      return ''
     },
     descCon() {
-      if (Object.keys(this.songListDetail).length === 0) return;
+      if (Object.keys(this.songListDetail).length === 0) return
 
       if (this.isCreated && !this.songListDetail.description) {
-        return "简介：<span class='tag'>添加简介</span>";
+        return "简介：<span class='tag'>添加简介</span>"
       }
 
       if (this.songListDetail.description) {
         // 描述有换行符，和折叠效果，取第一行显示
-        let regexp = new RegExp("\n");
-        let descList = this.songListDetail.description.split(regexp);
-        this.foldDesc = descList;
-        let str = "";
+        let regexp = new RegExp('\n')
+        let descList = this.songListDetail.description.split(regexp)
+        this.foldDesc = descList
+        let str = ''
         if (this.descIsFold) {
           // 展开
           descList.forEach((e, i) => {
-            str += `<span>${descList[i]}</span> <br>`;
-          });
+            str += `<span>${descList[i]}</span> <br>`
+          })
         } else {
-          str = descList.length === 1 ? descList[0] : descList[0] + "...";
+          str = descList.length === 1 ? descList[0] : descList[0] + '...'
         }
-        return `简介：${str}</span>`;
+        return `简介：${str}</span>`
       }
-      return "";
+      return ''
     },
   },
 
   created() {
     // 从router获取songid和meta中的isSubscribe
-    this.songId = this.$route.path.slice(this.$route.path.lastIndexOf("/") + 1);
-    this._initSongListDetail(this.songId);
+    this.songId = this.$route.path.slice(this.$route.path.lastIndexOf('/') + 1)
+    this._initSongListDetail(this.songId)
   },
 
   methods: {
     async _initSongListDetail(id) {
       this.songListDetail = await this.$store.dispatch(
-        "songModule/SaveSongListDetail",
+        'songModule/SaveSongListDetail',
         {
           id,
         }
-      );
-      this.commentCount = this.songListDetail.commentCount;
+      )
+      this.commentCount = this.songListDetail.commentCount
 
-      this.getPlayListDynamic();
+      this.getPlayListDynamic()
     },
     toggleType(type) {
-      this.typeIndex = type;
+      this.typeIndex = type
     },
     updateCommentCount(newCommentCount) {
-      this.commentCount = newCommentCount;
+      this.commentCount = newCommentCount
     },
 
     clearKeywords() {
-      this.keywords = "";
+      this.keywords = ''
     },
     async getPlayListDynamic() {
-      let params = new URLSearchParams();
-      params.append("id", this.songId);
-      let reuslt = await fetchPlayListDynamicAPI(params);
-      this.isSubscribed = reuslt.subscribed;
+      let params = new URLSearchParams()
+      params.append('id', this.songId)
+      let reuslt = await fetchPlayListDynamicAPI(params)
+      this.isSubscribed = reuslt.subscribed
     },
   },
   filters: {
     filterCreateTIme(value) {
-      if (!value) return;
+      if (!value) return
       if (value.length >= 10) {
-        return value.substring(0, 10) + " 创建";
+        return value.substring(0, 10) + ' 创建'
       }
-      return value + " 创建";
+      return value + ' 创建'
     },
     filterCount(value) {
-      if (typeof value === "undefined") return;
-      return number2wan(value);
+      if (typeof value === 'undefined') return
+      return number2wan(value)
     },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>

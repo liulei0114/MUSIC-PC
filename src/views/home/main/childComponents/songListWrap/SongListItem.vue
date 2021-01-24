@@ -1,10 +1,5 @@
 <template>
-  <div
-    class="SongListItem"
-    :class="{isOdd:index%2!=0}"
-    :style="{height:height}"
-    @dblclick="handleDbClick()"
-  >
+  <div class="SongListItem" :class="{isOdd:index%2!=0}" :style="{height:height}">
     <div class="index">{{index | filterIndex}}</div>
     <div>
       <div class="flexL" v-if="!isShowALpic">
@@ -79,12 +74,12 @@
 </template>
 
 <script>
-import { fetchLikeMusicAPI } from "@/network/api/musicApi";
+import { fetchLikeMusicAPI } from '@/network/api/musicApi'
 export default {
   data() {
     return {
       isLike: false,
-    };
+    }
   },
   props: {
     index: {
@@ -94,7 +89,7 @@ export default {
     songItem: {
       type: Object,
       default() {
-        return {};
+        return {}
       },
     },
     likeListIdsMap: {
@@ -103,7 +98,7 @@ export default {
     },
     height: {
       type: String,
-      default: "30px",
+      default: '30px',
     },
     isShowALpic: {
       type: Boolean,
@@ -120,86 +115,79 @@ export default {
   },
   computed: {
     _alias() {
-      let songItem = this.songItem;
+      let songItem = this.songItem
       if (songItem.tns) {
-        return `(${songItem.tns[0]})`;
+        return `(${songItem.tns[0]})`
       } else if (songItem.alia && songItem.alia.length >= 1) {
-        return `(${songItem.alia[0]})`;
+        return `(${songItem.alia[0]})`
       }
-      return "";
+      return ''
     },
-    _ar() {
-      let songItem = this.songItem;
-      let nameStr = "";
-      songItem.ar.forEach((e, i) => {
-        nameStr += e.name + " / ";
-      });
-      return nameStr != "" ? nameStr.substring(0, nameStr.length - 2) : nameStr;
-    },
+
     _al() {
-      let songItem = this.songItem;
+      let songItem = this.songItem
       if (songItem.al.tns) {
-        return songItem.al.tns.length !== 0 ? `(${songItem.al.tns[0]})` : "";
+        return songItem.al.tns.length !== 0 ? `(${songItem.al.tns[0]})` : ''
       }
-      return "";
+      return ''
     },
     headStatus() {
-      if (!this.likeListIdsMap) return;
+      if (!this.likeListIdsMap) return
       if (this.likeListIdsMap[this.songItem.id]) {
-        this.isLike = true;
-        return "headlike";
+        this.isLike = true
+        return 'headlike'
       }
-      return "headnolike";
+      return 'headnolike'
     },
     _alWidth() {
       if (this.isShowPop) {
-        return { width: "140px" };
+        return { width: '140px' }
       }
-      return { width: "180px", "margin-left": "50px", "margin-right": "20px" };
+      return { width: '180px', 'margin-left': '50px', 'margin-right': '20px' }
     },
     _popPercent() {
-      let percent = ((this.songItem.pop / 100) * 80).toFixed(1) + "px";
-      return { width: percent };
+      let percent = ((this.songItem.pop / 100) * 80).toFixed(1) + 'px'
+      return { width: percent }
     },
   },
   filters: {
     filterIndex(value) {
-      value = value + "";
+      value = value + ''
       if (value.length === 1) {
-        return "0" + value;
+        return '0' + value
       }
-      return value;
+      return value
     },
   },
   methods: {
     getTextOverFlow(index) {
       this.$nextTick(() => {
         let itemName = document
-          .getElementsByClassName("SongListItem")
-          [index - 1].querySelector(".name");
-        let songName = itemName.children[0];
-        let aliasName = itemName.children[1];
-        let iconCon = itemName.children[2];
+          .getElementsByClassName('SongListItem')
+          [index - 1].querySelector('.name')
+        let songName = itemName.children[0]
+        let aliasName = itemName.children[1]
+        let iconCon = itemName.children[2]
 
         let itemNameWidth =
           itemName.clientWidth -
-          ~~getComputedStyle(itemName, false)["paddingRight"].replace(
+          ~~getComputedStyle(itemName, false)['paddingRight'].replace(
             /\s+|px/gi,
-            ""
-          );
+            ''
+          )
 
-        let songNameWidth = songName.clientWidth;
-        let aliasNameWidth = aliasName.clientWidth;
-        let iconWidth = iconCon.clientWidth;
+        let songNameWidth = songName.clientWidth
+        let aliasNameWidth = aliasName.clientWidth
+        let iconWidth = iconCon.clientWidth
         if (itemNameWidth - songNameWidth <= iconWidth) {
           // songanme添加textOverflow
-          songName.classList.add("textOverflow");
+          songName.classList.add('textOverflow')
         }
         if (itemNameWidth - songNameWidth - iconWidth <= aliasNameWidth) {
           // alias添加textOverflow
-          aliasName.classList.add("textOverflow");
+          aliasName.classList.add('textOverflow')
         }
-      });
+      })
     },
     // ? 取消喜欢音乐
     async cancelLikeMusic() {
@@ -207,16 +195,13 @@ export default {
         await fetchLikeMusicAPI({
           id: this.songItem.id,
           like: false,
-        });
-        this.isLike = false;
-        this.$delete(this.likeListIdsMap, this.songItem.id);
-        this.$store.commit(
-          "songModule/SET_LIKE_MUSIC_MAP",
-          this.likeListIdsMap
-        );
-        this.$gMessage.show(`<span>取消喜欢成功</span>`, "complate", "40px");
+        })
+        this.isLike = false
+        this.$delete(this.likeListIdsMap, this.songItem.id)
+        this.$store.commit('songModule/SET_LIKE_MUSIC_MAP', this.likeListIdsMap)
+        this.$gMessage.show(`<span>取消喜欢成功</span>`, 'complate', '40px')
       } catch (error) {
-        this.$gMessage.show("你TM不是VIP你不知道吗？？？");
+        this.$gMessage.show('你TM不是VIP你不知道吗？？？')
       }
     },
     // ? 添加我喜欢的音乐
@@ -225,54 +210,44 @@ export default {
         await fetchLikeMusicAPI({
           id: this.songItem.id,
           like: true,
-        });
-        this.isLike = true;
-        this.$set(this.likeListIdsMap, this.songItem.id, true);
+        })
+        this.isLike = true
+        this.$set(this.likeListIdsMap, this.songItem.id, true)
         this.$gMessage.show(
           `<span>已添加到我喜欢的音乐</span>`,
-          "complate",
-          "40px"
-        );
-        this.$store.commit(
-          "songModule/SET_LIKE_MUSIC_MAP",
-          this.likeListIdsMap
-        );
+          'complate',
+          '40px'
+        )
+        this.$store.commit('songModule/SET_LIKE_MUSIC_MAP', this.likeListIdsMap)
       } catch (error) {
-        console.log(error);
-        this.$gMessage.show("你TM不是VIP你不知道吗？？？");
+        console.log(error)
+        this.$gMessage.show('你TM不是VIP你不知道吗？？？')
       }
     },
     // ? 喜欢音乐
     async handleLikeMusic() {
       // * 在我喜欢的音乐，喜欢/不喜欢会把歌曲移除列表
       let myListSonglistId = this.$store.getters.asideMenu.myPlayList[0]
-        .childrens[0].id;
+        .childrens[0].id
       if (this.$route.meta.isCreated) {
         let routeId = this.$route.path.slice(
-          this.$route.path.lastIndexOf("/") + 1
-        );
+          this.$route.path.lastIndexOf('/') + 1
+        )
         if (routeId == myListSonglistId) {
           // * 在我喜欢的音乐界面
-          this.$emit("openDeleteSongDialog");
-          return;
+          this.$emit('openDeleteSongDialog')
+          return
         }
       }
       // 普通歌单界面
       if (this.isLike) {
-        this.cancelLikeMusic();
+        this.cancelLikeMusic()
       } else {
-        this.doLikeMusic();
+        this.doLikeMusic()
       }
     },
-    // ? 双击跳转到音乐详情
-    handleDbClick() {
-      this.$router.replace({
-        name: "SongMain",
-        params: { id: this.songItem.id },
-      });
-    },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>
