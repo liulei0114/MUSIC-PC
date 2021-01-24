@@ -76,69 +76,68 @@
 import {
   fetchArtistDetailAPI,
   fetchSubArtistListAPI,
-} from "@/network/api/musicApi";
-import ShareBtn from "../../../songListWrap/ShareBtn.vue";
-import AlbumItemDetail from "./AlbumItemDetail.vue";
-import ArtistDesc from "./ArtistDesc.vue";
-import SimilarityArtist from "./SimilarityArtist.vue";
+} from '@/network/api/musicApi'
+import ShareBtn from '../../../songListWrap/ShareBtn.vue'
+import AlbumItemDetail from './AlbumItemDetail.vue'
+import ArtistDesc from './ArtistDesc.vue'
+import SimilarityArtist from './SimilarityArtist.vue'
 export default {
   data() {
     return {
-      tnsName: "",
+      tnsName: '',
       aliasName: [],
-      artistId: "",
+      artistId: '',
       artistDetail: {
-        name: "",
+        name: '',
         albumSize: 0,
         musicSize: 0,
         mvSize: 0,
-        cover: "",
-        alias: "",
-        trans: "",
+        cover: '',
+        alias: '',
+        trans: '',
         isSub: false,
         isUserPage: true,
       },
       typeIndex: 1,
       musicTop50: [],
-      loading: "on",
-    };
+      loading: 'on',
+    }
   },
   created() {
     this.artistId = this.$route.path.slice(
-      this.$route.path.lastIndexOf("/") + 1
-    );
-    this._initArtistDeatil();
+      this.$route.path.lastIndexOf('/') + 1
+    )
+    this._initArtistDeatil()
   },
   mounted() {
     setTimeout(() => {
-      this.artistDetail.trans = this.$refs.albumItemDetail.artist.trans;
-      this.artistDetail.alias = this.$refs.albumItemDetail.artist.alias;
-      this.loading = "off";
-
-    }, 500);
+      this.artistDetail.trans = this.$refs.albumItemDetail.artist.trans
+      this.artistDetail.alias = this.$refs.albumItemDetail.artist.alias
+      this.loading = 'off'
+    }, 500)
   },
   methods: {
     async _initArtistDeatil() {
-      let result = await fetchArtistDetailAPI({ id: this.artistId });
-      let artist = result.data.artist;
-      this.artistDetail.name = artist.name;
-      this.artistDetail.albumSize = artist.albumSize;
-      this.artistDetail.musicSize = artist.musicSize;
-      this.artistDetail.mvSize = artist.mvSize;
-      this.artistDetail.cover = this.tansIdentityIconUrl(artist.cover);
-      this.artistDetail.isUserPage = result.data.user ? true : false;
+      let result = await fetchArtistDetailAPI({ id: this.artistId })
+      let artist = result.data.artist
+      this.artistDetail.name = artist.name
+      this.artistDetail.albumSize = artist.albumSize
+      this.artistDetail.musicSize = artist.musicSize
+      this.artistDetail.mvSize = artist.mvSize
+      this.artistDetail.cover = this.tansIdentityIconUrl(artist.cover)
+      this.artistDetail.isUserPage = result.data.user ? true : false
 
-      let subList = await fetchSubArtistListAPI();
+      let subList = await fetchSubArtistListAPI()
       this.artistDetail.isSub = subList.data.some((e, i) => {
-        return e.id == this.artistId;
-      });
+        return e.id == this.artistId
+      })
     },
     tansIdentityIconUrl(imageUrl) {
-      imageUrl = imageUrl.replace(new RegExp("p[1-5]{1}"), "p3");
-      return imageUrl;
+      imageUrl = imageUrl.replace(new RegExp('p[1-5]{1}'), 'p3')
+      return imageUrl
     },
     toggleType(type) {
-      this.typeIndex = type;
+      this.typeIndex = type
     },
   },
   components: {
@@ -147,7 +146,7 @@ export default {
     ArtistDesc,
     SimilarityArtist,
   },
-};
+}
 </script>
 
 <style lang="less" scoped>

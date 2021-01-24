@@ -40,12 +40,12 @@
 </template>
 
 <script>
-import { MenuItem } from "element-ui";
+import { MenuItem } from 'element-ui'
 export default {
   data() {
     return {
       playCountShow: true,
-    };
+    }
   },
   props: {
     musicItem: {
@@ -54,11 +54,11 @@ export default {
     },
     width: {
       type: String,
-      default: "140",
+      default: '140',
     },
     height: {
       type: String,
-      default: "140",
+      default: '140',
     },
     isRadius: {
       type: Boolean,
@@ -92,61 +92,61 @@ export default {
       type: Object,
       default() {
         return {
-          width: "30px",
-          height: "30px",
-          "font-size": "18px",
-          "line-height": "30px",
-        };
+          width: '30px',
+          height: '30px',
+          'font-size': '18px',
+          'line-height': '30px',
+        }
       },
     },
   },
   computed: {
     getImgUrl() {
-      return `${this.musicItem.picUrl}?param=${this.width}y${this.height}`;
+      return `${this.musicItem.picUrl}?param=${this.width}y${this.height}`
     },
   },
   methods: {
     setWHB() {
       let temp = {
-        width: this.width + "px",
-        height: this.height + "px",
-      };
-      if (this.isRadius) {
-        temp["border-radius"] = "5px";
+        width: this.width + 'px',
+        height: this.height + 'px',
       }
-      return temp;
+      if (this.isRadius) {
+        temp['border-radius'] = '5px'
+      }
+      return temp
     },
     setPosition() {
       let temp = {
         ...this.playSize,
-      };
-      if (this.isCenterPlay) {
-        temp.left = "50%";
-        temp.top = "50%";
-        temp.transform = "translate(-50%,-50%)";
-      } else {
-        temp.right = "10px";
-        temp.bottom = "10px";
       }
-      return temp;
+      if (this.isCenterPlay) {
+        temp.left = '50%'
+        temp.top = '50%'
+        temp.transform = 'translate(-50%,-50%)'
+      } else {
+        temp.right = '10px'
+        temp.bottom = '10px'
+      }
+      return temp
     },
     handelMouseEnter() {
       // 隐藏条件 没有copywriter
       if (this.isCopyWriter) {
-        this.playCountShow = false;
+        this.playCountShow = false
       }
       if (this.isScale) {
-        this.$refs.picImg.classList.add("blowUp");
+        this.$refs.picImg.classList.add('blowUp')
       }
     },
     handleMouserLeave() {
-      this.playCountShow = true;
+      this.playCountShow = true
       if (this.isScale) {
-        this.$refs.picImg.classList.remove("blowUp");
+        this.$refs.picImg.classList.remove('blowUp')
       }
     },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>

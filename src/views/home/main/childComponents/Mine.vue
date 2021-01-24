@@ -74,19 +74,19 @@
 </template>
 
 <script>
-import { loadingMixin } from "@/mixin/loadingMixin";
+import { loadingMixin } from '@/mixin/loadingMixin'
 export default {
   mixins: [loadingMixin],
   data() {
     return {
       loadingInstance: null,
       loadingOptions: {
-        target: "#MusicMain",
-        text: "拼命加载中",
-        background: "rgba(0, 0, 0, 0.7)",
-        spinner: "el-icon-loading",
+        target: '#MusicMain',
+        text: '拼命加载中',
+        background: 'rgba(0, 0, 0, 0.7)',
+        spinner: 'el-icon-loading',
       },
-    };
+    }
   },
   props: {
     value: Boolean,
@@ -95,55 +95,55 @@ export default {
     eventCount() {
       return this.$store.getters.userProfile
         ? this.$store.getters.userProfile.eventCount
-        : 0;
+        : 0
     },
     follows() {
       return this.$store.getters.userProfile
         ? this.$store.getters.userProfile.follows
-        : 0;
+        : 0
     },
     followeds() {
       return this.$store.getters.userProfile
         ? this.$store.getters.userProfile.followeds
-        : 0;
+        : 0
     },
   },
   mounted() {
-    this.addAppClickEventListener();
+    this.addAppClickEventListener()
   },
   destroyed() {
-    this.removeAppClickEventListener();
+    this.removeAppClickEventListener()
   },
   methods: {
     // ? 处理退出登录
     handelLogOut() {
-      this.$store.dispatch("loginModule/LoginOut").then((result) => {
-        this.$emit("input", !this.value);
-        this.$router.push("/");
-      });
+      this.$store.dispatch('loginModule/LoginOut').then((result) => {
+        this.$emit('input', !this.value)
+        this.$router.push('/')
+      })
     },
     // ? 添加监听
     addAppClickEventListener() {
       // 组件初始化添加事件监听
       document
-        .getElementById("app")
-        .addEventListener("click", this.handleClickEvent);
+        .getElementById('app')
+        .addEventListener('click', this.handleClickEvent)
     },
     // ? 移除监听
     removeAppClickEventListener() {
       document
-        .getElementById("app")
-        .removeEventListener("click", this.handleClickEvent);
+        .getElementById('app')
+        .removeEventListener('click', this.handleClickEvent)
     },
     // ? 监听处理函数
     handleClickEvent(e) {
-      let refClick = document.getElementById("Mine").contains(e.target); // 包含自身
+      let refClick = document.getElementById('Mine').contains(e.target) // 包含自身
       if (!refClick) {
-        this.$emit("input", !this.value);
+        this.$emit('input', !this.value)
       }
     },
   },
-};
+}
 </script>
 
 <style lang="less">

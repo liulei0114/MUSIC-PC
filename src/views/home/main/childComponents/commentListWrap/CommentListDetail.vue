@@ -95,21 +95,21 @@
 </template>
 
 <script>
-import { fetchCommentAPI, doCommentAPI } from "@/network/api/musicApi";
-import { CommentDetail } from "@/common/pojo";
-import CommentListItem from "./CommentListItem.vue";
+import { fetchCommentAPI, doCommentAPI } from '@/network/api/musicApi'
+import { CommentDetail } from '@/common/pojo'
+import CommentListItem from './CommentListItem.vue'
 export default {
   data() {
     let textareaValid = (rule, value, callback) => {
-      value = value.trim();
+      value = value.trim()
       if (!value) {
-        return callback(new Error("请输入内容"));
+        return callback(new Error('请输入内容'))
       }
       if (value.length > rule.max) {
-        return callback(new Error("内容不能超过" + rule.max + "字符"));
+        return callback(new Error('内容不能超过' + rule.max + '字符'))
       }
-      callback();
-    };
+      callback()
+    }
 
     return {
       pageInfo: {
@@ -117,237 +117,237 @@ export default {
         offset: 0,
         currentPage: 1,
       },
-      songListId: "",
+      songListId: '',
       emojiJson: [
         {
-          codes: "1F600",
-          char: "😀",
-          name: "grinning face",
+          codes: '1F600',
+          char: '😀',
+          name: 'grinning face',
         },
         {
-          codes: "1F603",
-          char: "😃",
-          name: "grinning face with big eyes",
+          codes: '1F603',
+          char: '😃',
+          name: 'grinning face with big eyes',
         },
         {
-          codes: "1F604",
-          char: "😄",
-          name: "grinning face with smiling eyes",
+          codes: '1F604',
+          char: '😄',
+          name: 'grinning face with smiling eyes',
         },
         {
-          codes: "1F601",
-          char: "😁",
-          name: "beaming face with smiling eyes",
+          codes: '1F601',
+          char: '😁',
+          name: 'beaming face with smiling eyes',
         },
         {
-          codes: "1F606",
-          char: "😆",
-          name: "grinning squinting face",
+          codes: '1F606',
+          char: '😆',
+          name: 'grinning squinting face',
         },
         {
-          codes: "1F605",
-          char: "😅",
-          name: "grinning face with sweat",
+          codes: '1F605',
+          char: '😅',
+          name: 'grinning face with sweat',
         },
         {
-          codes: "1F923",
-          char: "🤣",
-          name: "rolling on the floor laughing",
+          codes: '1F923',
+          char: '🤣',
+          name: 'rolling on the floor laughing',
         },
         {
-          codes: "1F602",
-          char: "😂",
-          name: "face with tears of joy",
+          codes: '1F602',
+          char: '😂',
+          name: 'face with tears of joy',
         },
         {
-          codes: "1F642",
-          char: "🙂",
-          name: "slightly smiling face",
+          codes: '1F642',
+          char: '🙂',
+          name: 'slightly smiling face',
         },
         {
-          codes: "1F643",
-          char: "🙃",
-          name: "upside-down face",
+          codes: '1F643',
+          char: '🙃',
+          name: 'upside-down face',
         },
         {
-          codes: "1F609",
-          char: "😉",
-          name: "winking face",
+          codes: '1F609',
+          char: '😉',
+          name: 'winking face',
         },
         {
-          codes: "1F60A",
-          char: "😊",
-          name: "smiling face with smiling eyes",
+          codes: '1F60A',
+          char: '😊',
+          name: 'smiling face with smiling eyes',
         },
         {
-          codes: "1F607",
-          char: "😇",
-          name: "smiling face with halo",
+          codes: '1F607',
+          char: '😇',
+          name: 'smiling face with halo',
         },
         {
-          codes: "1F970",
-          char: "🥰",
-          name: "smiling face with hearts",
+          codes: '1F970',
+          char: '🥰',
+          name: 'smiling face with hearts',
         },
         {
-          codes: "1F60D",
-          char: "😍",
-          name: "smiling face with heart-eyes",
+          codes: '1F60D',
+          char: '😍',
+          name: 'smiling face with heart-eyes',
         },
         {
-          codes: "1F929",
-          char: "🤩",
-          name: "star-struck",
+          codes: '1F929',
+          char: '🤩',
+          name: 'star-struck',
         },
         {
-          codes: "1F618",
-          char: "😘",
-          name: "face blowing a kiss",
+          codes: '1F618',
+          char: '😘',
+          name: 'face blowing a kiss',
         },
         {
-          codes: "1F617",
-          char: "😗",
-          name: "kissing face",
+          codes: '1F617',
+          char: '😗',
+          name: 'kissing face',
         },
         {
-          codes: "1F61A",
-          char: "😚",
-          name: "kissing face with closed eyes",
+          codes: '1F61A',
+          char: '😚',
+          name: 'kissing face with closed eyes',
         },
         {
-          codes: "1F619",
-          char: "😙",
-          name: "kissing face with smiling eyes",
+          codes: '1F619',
+          char: '😙',
+          name: 'kissing face with smiling eyes',
         },
         {
-          codes: "1F44B",
-          char: "👋",
-          name: "waving hand",
+          codes: '1F44B',
+          char: '👋',
+          name: 'waving hand',
         },
         {
-          codes: "1F91A",
-          char: "🤚",
-          name: "raised back of hand",
+          codes: '1F91A',
+          char: '🤚',
+          name: 'raised back of hand',
         },
         {
-          codes: "1F590",
-          char: "🖐",
-          name: "hand with fingers splayed",
+          codes: '1F590',
+          char: '🖐',
+          name: 'hand with fingers splayed',
         },
         {
-          codes: "270B",
-          char: "✋",
-          name: "raised hand",
+          codes: '270B',
+          char: '✋',
+          name: 'raised hand',
         },
         {
-          codes: "1F596",
-          char: "🖖",
-          name: "vulcan salute",
+          codes: '1F596',
+          char: '🖖',
+          name: 'vulcan salute',
         },
         {
-          codes: "1F44C",
-          char: "👌",
-          name: "OK hand",
+          codes: '1F44C',
+          char: '👌',
+          name: 'OK hand',
         },
         {
-          codes: "1F90F",
-          char: "🤏",
-          name: "pinching hand",
+          codes: '1F90F',
+          char: '🤏',
+          name: 'pinching hand',
         },
         {
-          codes: "270C",
-          char: "✌",
-          name: "victory hand",
+          codes: '270C',
+          char: '✌',
+          name: 'victory hand',
         },
         {
-          codes: "1F91E",
-          char: "🤞",
-          name: "crossed fingers",
+          codes: '1F91E',
+          char: '🤞',
+          name: 'crossed fingers',
         },
         {
-          codes: "1F91F",
-          char: "🤟",
-          name: "love-you gesture",
+          codes: '1F91F',
+          char: '🤟',
+          name: 'love-you gesture',
         },
         {
-          codes: "1F918",
-          char: "🤘",
-          name: "sign of the horns",
+          codes: '1F918',
+          char: '🤘',
+          name: 'sign of the horns',
         },
         {
-          codes: "1F919",
-          char: "🤙",
-          name: "call me hand",
+          codes: '1F919',
+          char: '🤙',
+          name: 'call me hand',
         },
         {
-          codes: "1F448",
-          char: "👈",
-          name: "backhand index pointing left",
+          codes: '1F448',
+          char: '👈',
+          name: 'backhand index pointing left',
         },
         {
-          codes: "1F449",
-          char: "👉",
-          name: "backhand index pointing right",
+          codes: '1F449',
+          char: '👉',
+          name: 'backhand index pointing right',
         },
         {
-          codes: "1F446",
-          char: "👆",
-          name: "backhand index pointing up",
+          codes: '1F446',
+          char: '👆',
+          name: 'backhand index pointing up',
         },
         {
-          codes: "1F595",
-          char: "🖕",
-          name: "middle finger",
+          codes: '1F595',
+          char: '🖕',
+          name: 'middle finger',
         },
         {
-          codes: "1F447",
-          char: "👇",
-          name: "backhand index pointing down",
+          codes: '1F447',
+          char: '👇',
+          name: 'backhand index pointing down',
         },
         {
-          codes: "261D FE0F",
-          char: "☝️",
-          name: "index pointing up",
+          codes: '261D FE0F',
+          char: '☝️',
+          name: 'index pointing up',
         },
         {
-          codes: "1F44D",
-          char: "👍",
-          name: "thumbs up",
+          codes: '1F44D',
+          char: '👍',
+          name: 'thumbs up',
         },
         {
-          codes: "1F44E",
-          char: "👎",
-          name: "thumbs down",
+          codes: '1F44E',
+          char: '👎',
+          name: 'thumbs down',
         },
         {
-          codes: "270A",
-          char: "✊",
-          name: "raised fist",
+          codes: '270A',
+          char: '✊',
+          name: 'raised fist',
         },
         {
-          codes: "1F44A",
-          char: "👊",
-          name: "oncoming fist",
+          codes: '1F44A',
+          char: '👊',
+          name: 'oncoming fist',
         },
         {
-          codes: "1F91B",
-          char: "🤛",
-          name: "left-facing fist",
+          codes: '1F91B',
+          char: '🤛',
+          name: 'left-facing fist',
         },
         {
-          codes: "1F91C",
-          char: "🤜",
-          name: "right-facing fist",
+          codes: '1F91C',
+          char: '🤜',
+          name: 'right-facing fist',
         },
       ],
       ruleForm: {
-        textarea: "",
+        textarea: '',
       },
       rules: {
         textarea: [
           {
             validator: textareaValid,
-            trigger: "focus",
+            trigger: 'focus',
             max: 140,
           },
         ],
@@ -355,155 +355,155 @@ export default {
       visible: false,
       commentListDetail: {},
       replayData: {},
-      replayNickName: "",
+      replayNickName: '',
       dialogTableVisible: false,
-      deleteCommentId: "",
-      loading: "on",
-    };
+      deleteCommentId: '',
+      loading: 'on',
+    }
   },
   props: {
     commentType: {
       type: String,
-      default: "",
+      default: '',
     },
   },
   computed: {
     emojiItemStyle() {
       return {
-        width: "30px",
-        height: "30px",
-        "font-size": "20px",
-        display: "inline-block",
-        cursor: "pointer",
-        "text-align": "center",
-        border: "1px solid #fff",
-        "margin-bottom": "5px",
-      };
+        width: '30px',
+        height: '30px',
+        'font-size': '20px',
+        display: 'inline-block',
+        cursor: 'pointer',
+        'text-align': 'center',
+        border: '1px solid #fff',
+        'margin-bottom': '5px',
+      }
     },
     _commentType() {
       switch (this.commentType) {
-        case "music":
-          return 0;
-        case "mv":
-          return 1;
-        case "playlist":
-          return 2;
-        case "album":
-          return 3;
-        case "dj":
-          return 4;
+        case 'music':
+          return 0
+        case 'mv':
+          return 1
+        case 'playlist':
+          return 2
+        case 'album':
+          return 3
+        case 'dj':
+          return 4
       }
     },
   },
   watch: {
-    "commentListDetail.comments"() {
+    'commentListDetail.comments'() {
       this.$nextTick(() => {
-        this.loading = "off";
-      });
+        this.loading = 'off'
+      })
     },
   },
   created() {
     this.songListId = this.$route.path.slice(
-      this.$route.path.lastIndexOf("/") + 1
-    );
-    this._initSongComment();
+      this.$route.path.lastIndexOf('/') + 1
+    )
+    this._initSongComment()
   },
   methods: {
     // ? 初始化评论数据
     async _initSongComment() {
       this.loading = 'on'
-      let params = Object.assign({ id: this.songListId }, this.pageInfo);
-      params.timestamp = new Date().valueOf();
-      let result = await fetchCommentAPI(this.commentType, params);
-      this.commentListDetail = new CommentDetail(result);
-      this.scrollParentStart("#AnchorPoint");
-      this.$emit("updateCommentCount", this.commentListDetail.total);
+      let params = Object.assign({ id: this.songListId }, this.pageInfo)
+      params.timestamp = new Date().valueOf()
+      let result = await fetchCommentAPI(this.commentType, params)
+      this.commentListDetail = new CommentDetail(result)
+      this.scrollParentStart('#AnchorPoint')
+      this.$emit('updateCommentCount', this.commentListDetail.total)
     },
     handleMouseEnter(index) {
-      let emoji = document.getElementsByClassName("emoji_list")[0].children[
+      let emoji = document.getElementsByClassName('emoji_list')[0].children[
         index
-      ];
-      emoji.style.border = "1px solid #3d91ec";
+      ]
+      emoji.style.border = '1px solid #3d91ec'
     },
     handleMouseLeave(index) {
-      let emoji = document.getElementsByClassName("emoji_list")[0].children[
+      let emoji = document.getElementsByClassName('emoji_list')[0].children[
         index
-      ];
-      emoji.style.border = "1px solid #fff";
+      ]
+      emoji.style.border = '1px solid #fff'
     },
     handleEmojiClick(char) {
-      this.ruleForm.textarea += char;
+      this.ruleForm.textarea += char
     },
     handelSubComment() {
-      this.$refs["ruleForm"].validate((valid, object) => {
+      this.$refs['ruleForm'].validate((valid, object) => {
         if (valid) {
-          this.doComment();
+          this.doComment()
         } else {
-          this.$gMessage.show(object.textarea[0].message);
-          return false;
+          this.$gMessage.show(object.textarea[0].message)
+          return false
         }
-      });
+      })
     },
     scrollParentStart(name) {
       document.querySelector(name).scrollIntoView({
-        block: "start",
-        behavior: "auto", // ! 奇怪，翻页不能使用smooth ，不能滚动。收藏者却可以
-      });
+        block: 'start',
+        behavior: 'auto', // ! 奇怪，翻页不能使用smooth ，不能滚动。收藏者却可以
+      })
     },
     handelChangeCurrentPage(curPage) {
-      this.pageInfo.currentPage = curPage;
-      this.pageInfo.offset = (curPage - 1) * this.pageInfo.limit;
-      this._initSongComment();
+      this.pageInfo.currentPage = curPage
+      this.pageInfo.offset = (curPage - 1) * this.pageInfo.limit
+      this._initSongComment()
     },
     doReplay(data) {
-      this.replayNiceName = `回复${data.user.nickname}: `;
-      this.ruleForm.textarea = this.replayNiceName;
-      this.replayData = data;
+      this.replayNiceName = `回复${data.user.nickname}: `
+      this.ruleForm.textarea = this.replayNiceName
+      this.replayData = data
     },
     async doComment() {
-      let params = new URLSearchParams();
+      let params = new URLSearchParams()
       if (this.ruleForm.textarea.startsWith(this.replayNiceName)) {
         // 回复
         let content = this.ruleForm.textarea
           .slice(this.replayNiceName.length)
-          .trim();
-        if (content === "") {
+          .trim()
+        if (content === '') {
           this.$gMessage.show(
             `<span>写点东西吧，内容不能为空哦！</span>`,
-            "msg-err"
-          );
-          return false;
+            'msg-err'
+          )
+          return false
         }
-        params.append("t", 2);
-        params.append("content", content);
-        params.append("commentId", this.replayData.commentId);
+        params.append('t', 2)
+        params.append('content', content)
+        params.append('commentId', this.replayData.commentId)
       } else {
-        params.append("t", 1);
-        params.append("content", this.ruleForm.textarea);
+        params.append('t', 1)
+        params.append('content', this.ruleForm.textarea)
       }
-      params.append("id", this.songListId);
-      params.append("type", this._commentType);
-      let result = await doCommentAPI(params);
-      this._initSongComment();
-      this.ruleForm.textarea = "";
+      params.append('id', this.songListId)
+      params.append('type', this._commentType)
+      let result = await doCommentAPI(params)
+      this._initSongComment()
+      this.ruleForm.textarea = ''
     },
     openDeleteCommentDialog(commentId) {
-      this.dialogTableVisible = true;
-      this.deleteCommentId = commentId;
+      this.dialogTableVisible = true
+      this.deleteCommentId = commentId
     },
     async deleteComment() {
-      let params = new URLSearchParams();
-      params.append("t", 0);
-      params.append("type", this._commentType);
-      params.append("id", this.songListId);
-      params.append("commentId", this.deleteCommentId);
-      this.dialogTableVisible = false;
-      let result = await doCommentAPI(params); // ! 有个bug，这个借口返回慢的话，页面没有遮罩层
-      this._initSongComment();
+      let params = new URLSearchParams()
+      params.append('t', 0)
+      params.append('type', this._commentType)
+      params.append('id', this.songListId)
+      params.append('commentId', this.deleteCommentId)
+      this.dialogTableVisible = false
+      let result = await doCommentAPI(params) // ! 有个bug，这个借口返回慢的话，页面没有遮罩层
+      this._initSongComment()
     },
   },
   components: { CommentListItem },
-};
+}
 </script>
 
 <style lang="less" scoped>

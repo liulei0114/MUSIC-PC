@@ -236,7 +236,7 @@ export default {
       }
     },
     // ? 播放歌曲
-    async handlePlaySong(item,i) {
+    async handlePlaySong(item, i) {
       try {
         await fetchCheckMusicAPI({ id: item.id })
       } catch (error) {

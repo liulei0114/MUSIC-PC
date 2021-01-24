@@ -12,11 +12,11 @@
 <script>
 export default {
   data() {
-    return {};
+    return {}
   },
   computed: {
     isLeft() {
-      return this.direction === "left" ? true : false;
+      return this.direction === 'left' ? true : false
     },
   },
   props: {
@@ -24,20 +24,20 @@ export default {
       type: String,
     },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>
 #HeadDirectNav {
-  .nav_contain{
+  .nav_contain {
     width: 25px;
     height: 25px;
     border-radius: 50%;
-    background-color: rgba(0, 0, 0, .1);
+    background-color: rgba(0, 0, 0, 0.1);
     text-align: center;
     line-height: 25px;
     font-size: 12px;
-    &:hover{
+    &:hover {
       cursor: pointer;
     }
   }

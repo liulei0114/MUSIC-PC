@@ -60,9 +60,9 @@
 </template>
 
 <script>
-import { fetchArtistListAPI } from "@/network/api/musicApi";
-import { RankArtists } from "@/common/pojo.js";
-import MusicIntroduceModule from "../personalization/childComponents/MusicIntroduceModule.vue";
+import { fetchArtistListAPI } from '@/network/api/musicApi'
+import { RankArtists } from '@/common/pojo.js'
+import MusicIntroduceModule from '../personalization/childComponents/MusicIntroduceModule.vue'
 export default {
   components: { MusicIntroduceModule },
   data() {
@@ -76,152 +76,152 @@ export default {
         initial: -1,
       },
       artistTypeList: [
-        { type: -1, name: "全部" },
-        { type: 1, name: "男歌手" },
-        { type: 2, name: "女歌手" },
-        { type: 3, name: "乐队" },
+        { type: -1, name: '全部' },
+        { type: 1, name: '男歌手' },
+        { type: 2, name: '女歌手' },
+        { type: 3, name: '乐队' },
       ],
       areaList: [
-        { type: -1, name: "全部" },
-        { type: 7, name: "华语" },
-        { type: 96, name: "欧美" },
-        { type: 8, name: "日本" },
-        { type: 16, name: "韩国" },
-        { type: 0, name: "其他" },
+        { type: -1, name: '全部' },
+        { type: 7, name: '华语' },
+        { type: 96, name: '欧美' },
+        { type: 8, name: '日本' },
+        { type: 16, name: '韩国' },
+        { type: 0, name: '其他' },
       ],
       initialList: [
         -1,
-        "a",
-        "b",
-        "c",
-        "d",
-        "e",
-        "f",
-        "g",
-        "h",
-        "i",
-        "j",
-        "k",
-        "l",
-        "m",
-        "n",
-        "o",
-        "p",
-        "q",
-        "r",
-        "s",
-        "t",
-        "u",
-        "v",
-        "w",
-        "x",
-        "y",
-        "z",
+        'a',
+        'b',
+        'c',
+        'd',
+        'e',
+        'f',
+        'g',
+        'h',
+        'i',
+        'j',
+        'k',
+        'l',
+        'm',
+        'n',
+        'o',
+        'p',
+        'q',
+        'r',
+        's',
+        't',
+        'u',
+        'v',
+        'w',
+        'x',
+        'y',
+        'z',
         0,
       ],
       artistList: [],
       contentOffsetHeight: null,
       initLock: false,
-      loading: "on",
-    };
+      loading: 'on',
+    }
   },
   computed: {
     watachSearchKey() {
-      return JSON.stringify(this.searchKey);
+      return JSON.stringify(this.searchKey)
     },
   },
   watch: {
     watachSearchKey: {
       deep: true,
       handler(newVal, oldval) {
-        this.curPage = 1;
-        this._initArtistList();
+        this.curPage = 1
+        this._initArtistList()
       },
     },
     artistList(val) {
       if (this.artistList.length === 0) {
-        return;
+        return
       }
       this.$nextTick(() => {
         let contain = document
-          .querySelector("#FindMusicWrap")
-          .querySelector(".happy-scroll-container");
-        let content = contain.children[0];
-        this.contentOffsetHeight = content.offsetHeight;
-        this.initLock = false;
-        this.loading = "off";
-      });
+          .querySelector('#FindMusicWrap')
+          .querySelector('.happy-scroll-container')
+        let content = contain.children[0]
+        this.contentOffsetHeight = content.offsetHeight
+        this.initLock = false
+        this.loading = 'off'
+      })
     },
   },
   created() {
-    this._initArtistList();
+    this._initArtistList()
   },
   mounted() {
     let contain = document
-      .querySelector("#FindMusicWrap")
-      .querySelector(".happy-scroll-container");
-    contain.addEventListener("scroll", () => {
-      this.handleScroll(contain);
-    });
+      .querySelector('#FindMusicWrap')
+      .querySelector('.happy-scroll-container')
+    contain.addEventListener('scroll', () => {
+      this.handleScroll(contain)
+    })
   },
 
   methods: {
     async _initArtistList(offset = 0) {
-      this.loading = "on";
+      this.loading = 'on'
       if (this.more) {
-        let params = this._.cloneDeep(this.searchKey);
-        params.offset = offset;
+        let params = this._.cloneDeep(this.searchKey)
+        params.offset = offset
         if (offset === 0) {
-          this.artistList = [];
+          this.artistList = []
         }
-        let result = await fetchArtistListAPI(params);
-        this.more = result.more;
+        let result = await fetchArtistListAPI(params)
+        this.more = result.more
         result.artists.forEach((e, i) => {
-          this.artistList.push(new RankArtists(e));
-        });
+          this.artistList.push(new RankArtists(e))
+        })
       }
     },
     handelSexChange(type) {
-      this.loading = "on";
-      this.searchKey.type = type;
+      this.loading = 'on'
+      this.searchKey.type = type
     },
     handelAreaChange(type) {
-      this.loading = "on";
-      this.searchKey.area = type;
+      this.loading = 'on'
+      this.searchKey.area = type
     },
     handelInitialChange(type) {
-      this.loading = "on";
-      this.searchKey.initial = type;
+      this.loading = 'on'
+      this.searchKey.initial = type
     },
     handleScroll(contain) {
-      let scrollTop = contain.scrollTop;
+      let scrollTop = contain.scrollTop
       if (this.contentOffsetHeight - scrollTop <= 540 * 2) {
         if (!this.initLock) {
-          this.curPage++;
-          this.initLock = true;
-          this._initArtistList((this.curPage - 1) * this.searchKey.limit);
+          this.curPage++
+          this.initLock = true
+          this._initArtistList((this.curPage - 1) * this.searchKey.limit)
         }
       }
     },
     handleArtistDetail(item) {
-      let id = item.id;
+      let id = item.id
       this.$router.push({
-        name: "PersonalizedArtist",
+        name: 'PersonalizedArtist',
         params: { id },
-      });
+      })
     },
   },
   filters: {
     filterInitial(value) {
       if (value === -1) {
-        return "热门";
+        return '热门'
       } else if (value === 0) {
-        return "#";
+        return '#'
       }
-      return value.toUpperCase();
+      return value.toUpperCase()
     },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>

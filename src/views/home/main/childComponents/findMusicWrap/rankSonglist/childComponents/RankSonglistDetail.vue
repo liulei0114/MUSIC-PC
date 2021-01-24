@@ -10,7 +10,12 @@
       <div class="update_time">{{rankSonglistItem.updateTime}}</div>
     </div>
     <div class="right">
-      <div v-for="(item,index) in rankSonglistItem.list" :key="item.id" class="item_con" @click="handleDetail(item)">
+      <div
+        v-for="(item,index) in rankSonglistItem.list"
+        :key="item.id"
+        class="item_con"
+        @click="handleDetail(item)"
+      >
         <span class="normalIndex" :class="{index:index+1<=3?true:false}">{{index + 1}}</span>
         <span class="name">{{item.name}}</span>
         <div class="ar_con" v-if="item.ar">
@@ -48,20 +53,22 @@ export default {
         this.$router.push('/find/music/artist')
       } else {
         this.$router.push({
-          name: "PersonalizedSongList",
+          name: 'PersonalizedSongList',
           params: { id: this.rankSonglistItem.id },
-        });
+        })
       }
     },
-    handleDetail(item){
+    handleDetail(item) {
       if (this.isSonger) {
-        this.$router.push({name:'PersonalizedArtist',params:{id:item.id}})
+        this.$router.push({
+          name: 'PersonalizedArtist',
+          params: { id: item.id },
+        })
       } else {
-        
       }
-    }
+    },
   },
-};
+}
 </script>
 <style lang="less" scoped>
 .RankSonglistDetail {
@@ -104,7 +111,7 @@ export default {
       position: absolute;
       left: 50%;
       top: 70%;
-      transform: translate(-50%,-50%);
+      transform: translate(-50%, -50%);
       color: #fff;
       font-size: 12px;
     }

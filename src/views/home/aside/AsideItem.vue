@@ -18,7 +18,7 @@
 <script>
 export default {
   data() {
-    return {};
+    return {}
   },
   props: {
     itemMenu: {
@@ -28,18 +28,18 @@ export default {
   },
   computed: {
     checkClass() {
-      let temp = {};
+      let temp = {}
       let flag =
-        this.$route.path.indexOf(this.itemMenu.path) !== -1 ? true : false;
-      if (this.itemMenu.type !== "head") {
-        flag ? (temp.check = true) : (temp.check = false);
+        this.$route.path.indexOf(this.itemMenu.path) !== -1 ? true : false
+      if (this.itemMenu.type !== 'head') {
+        flag ? (temp.check = true) : (temp.check = false)
       } else {
-        temp.head = true;
+        temp.head = true
       }
-      return temp;
+      return temp
     },
   },
-};
+}
 </script>
 
 <style lang="less">

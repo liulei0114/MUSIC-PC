@@ -96,17 +96,17 @@
 import {
   fetchAlbumDetailAPI,
   fetchAlbumDynamicAPI,
-} from "@/network/api/musicApi";
-import { AlbumDetail } from "@/common/pojo.js";
-import PlayAllBtn from "../../../songListWrap/PlayAllBtn.vue";
-import ShareBtn from "../../../songListWrap/ShareBtn.vue";
-import { number2wan } from "@/util/NumberTransfrom";
-import SongListDetail from "../../../songListWrap/SongListDetail.vue";
-import CommentListDetail from "../../../commentListWrap/CommentListDetail.vue";
+} from '@/network/api/musicApi'
+import { AlbumDetail } from '@/common/pojo.js'
+import PlayAllBtn from '../../../songListWrap/PlayAllBtn.vue'
+import ShareBtn from '../../../songListWrap/ShareBtn.vue'
+import { number2wan } from '@/util/NumberTransfrom'
+import SongListDetail from '../../../songListWrap/SongListDetail.vue'
+import CommentListDetail from '../../../commentListWrap/CommentListDetail.vue'
 export default {
   data() {
     return {
-      albumId: "",
+      albumId: '',
       albumDetail: {},
       albumDyamic: {
         shareCount: 0,
@@ -115,58 +115,58 @@ export default {
         isSub: false,
       },
       typeIndex: 1,
-    };
+    }
   },
   computed: {
     _subscribedCount() {
-      let prefix = this.albumDyamic.isSub ? "已收藏" : "收藏";
-      return `${prefix}(${number2wan(this.albumDyamic.subCount)})`;
+      let prefix = this.albumDyamic.isSub ? '已收藏' : '收藏'
+      return `${prefix}(${number2wan(this.albumDyamic.subCount)})`
     },
     _shareCount() {
-      return `${number2wan(this.albumDyamic.shareCount)}`;
+      return `${number2wan(this.albumDyamic.shareCount)}`
     },
     _albumName() {
-      if (Object.keys(this.albumDetail).length === 0) return;
-      return this.albumDetail.name;
+      if (Object.keys(this.albumDetail).length === 0) return
+      return this.albumDetail.name
     },
     _description() {
       // 描述有换行符，和折叠效果，取第一行显示
-      let regexp = new RegExp("\n");
-      let descList = this.albumDetail.description.split(regexp);
-      let str = "";
+      let regexp = new RegExp('\n')
+      let descList = this.albumDetail.description.split(regexp)
+      let str = ''
       descList.forEach((e, i) => {
-        str += `<p>${e}</p>`;
-      });
-      return str;
+        str += `<p>${e}</p>`
+      })
+      return str
     },
   },
   watch: {
-    "$route.params.id": {
+    '$route.params.id': {
       immediate: true,
       handler(albumId) {
-        this.albumId = albumId;
-        this._initAlbumDetail();
+        this.albumId = albumId
+        this._initAlbumDetail()
       },
     },
   },
   methods: {
     async _initAlbumDetail() {
-      let result = await fetchAlbumDetailAPI({ id: this.albumId });
-      this.albumDetail = new AlbumDetail(result.album, result.songs);
-      this._initAlbumDynamic();
+      let result = await fetchAlbumDetailAPI({ id: this.albumId })
+      this.albumDetail = new AlbumDetail(result.album, result.songs)
+      this._initAlbumDynamic()
     },
     async _initAlbumDynamic() {
-      let result = await fetchAlbumDynamicAPI({ id: this.albumId });
-      this.albumDyamic.shareCount = result.shareCount;
-      this.albumDyamic.subCount = result.subCount;
-      this.albumDyamic.commentCount = result.commentCount;
-      this.albumDyamic.isSub = result.isSub;
+      let result = await fetchAlbumDynamicAPI({ id: this.albumId })
+      this.albumDyamic.shareCount = result.shareCount
+      this.albumDyamic.subCount = result.subCount
+      this.albumDyamic.commentCount = result.commentCount
+      this.albumDyamic.isSub = result.isSub
     },
     toggleType(type) {
-      this.typeIndex = type;
+      this.typeIndex = type
     },
     updateCommentCount(newCommentCount) {
-      this.albumDyamic.commentCount = newCommentCount;
+      this.albumDyamic.commentCount = newCommentCount
     },
   },
   components: {
@@ -175,7 +175,7 @@ export default {
     SongListDetail,
     CommentListDetail,
   },
-};
+}
 </script>
 
 <style lang="less" scoped>
@@ -221,7 +221,7 @@ export default {
           right: -25px;
           top: 3px;
           background-repeat: no-repeat;
-          background-image: url("~assets/big_aside.png");
+          background-image: url('~assets/big_aside.png');
         }
       }
 

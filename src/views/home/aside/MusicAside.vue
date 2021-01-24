@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import AsideItem from "./AsideItem.vue";
+import AsideItem from './AsideItem.vue'
 
 export default {
   data() {
@@ -24,80 +24,80 @@ export default {
       conHeight: 0,
       asideDom: null,
       checkMenuIndex: 0,
-      activedMenuId: "",
-    };
+      activedMenuId: '',
+    }
   },
   mounted() {
-    this.asideDom = document.getElementById("MusicAside");
-    this.scrollBarDom = this.asideDom.querySelector(".happy-scroll-bar");
+    this.asideDom = document.getElementById('MusicAside')
+    this.scrollBarDom = this.asideDom.querySelector('.happy-scroll-bar')
     // 隐藏掉滚动条
-    this.hiddenScrollBar();
-    this.addMouseEnterBarShowEventListener();
-    this.addMouseLeaveBarHiddenEventListener();
+    this.hiddenScrollBar()
+    this.addMouseEnterBarShowEventListener()
+    this.addMouseLeaveBarHiddenEventListener()
   },
 
   watch: {
-    "$store.getters.asideMenu": {
+    '$store.getters.asideMenu': {
       immediate: true,
       handler() {
         this.$nextTick(() => {
           this.conHeight = this.asideDom.querySelector(
-            ".happy-scroll-content"
-          ).offsetHeight;
-        });
+            '.happy-scroll-content'
+          ).offsetHeight
+        })
       },
     },
   },
   computed: {
     showAsideMenu() {
-      let storeAsideMenu = this.$store.getters.asideMenu;
+      let storeAsideMenu = this.$store.getters.asideMenu
       let _asideMenu = [
         ...storeAsideMenu.base,
         storeAsideMenu.myMusic[0],
         storeAsideMenu.myPlayList[0],
         storeAsideMenu.myOrderList[0],
-      ];
-      let showmenu = [];
+      ]
+      let showmenu = []
       _asideMenu.forEach((e, i) => {
         if (e.show) {
-          let { childrens, ...temp } = e;
-          showmenu.push(temp);
+          let { childrens, ...temp } = e
+          showmenu.push(temp)
           childrens.forEach((v, i) => {
             if (v.show) {
-              showmenu.push(v);
+              showmenu.push(v)
             }
-          });
+          })
         }
-      });
+      })
 
-      return showmenu;
+      return showmenu
     },
   },
   methods: {
     handelAsideItemClick(item) {
-      this.$router.push(item.path);
+      this.$router.push(item.path)
     },
     addMouseEnterBarShowEventListener() {
       this.asideDom.onmouseenter = () => {
         // 移入时判断容器高度是否超出盒子高度，没超出不显示滚动条
         if (this.conHeight >= 540) {
-          this.scrollBarDom.style.opacity = 1;
+          this.scrollBarDom.style.opacity = 1
         } else {
-          this.scrollBarDom.style.opacity = 0;
+          this.scrollBarDom.style.opacity = 0
         }
-      };
+      }
     },
     addMouseLeaveBarHiddenEventListener() {
       this.asideDom.onmouseleave = (e) => {
-        this.hiddenScrollBar();
-      };
+        this.hiddenScrollBar()
+      }
     },
     hiddenScrollBar() {
-      this.asideDom.querySelector(".happy-scroll-bar").style.opacity = 0;
+      this.asideDom.querySelector('.happy-scroll-bar').style.opacity = 0
     },
   },
   components: { AsideItem },
-};
+}
 </script>
 
 <style lang="less" scoped>

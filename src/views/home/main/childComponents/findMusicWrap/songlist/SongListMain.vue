@@ -1,5 +1,5 @@
 <template>
-  <div class="SongListWrap" v-mask-loading={loading:loading}>
+  <div class="SongListWrap" v-mask-loading="{loading:loading}">
     <song-list-head :subName="curTag"></song-list-head>
     <div class="hot_tag_con">
       <div class="curTag" @click.stop="isAllSubShow = !isAllSubShow">
@@ -73,18 +73,18 @@ import {
   fetchHotSonglistSubAPI,
   fetchHqSonglistSubAPI,
   fetchTopSonglistAPI,
-} from "@/network/api/musicApi";
+} from '@/network/api/musicApi'
 import {
   SonglistCategory,
   SonglistSub,
   HotSonglistSub,
   HqSonglistSub,
   HqSonglist,
-} from "@/common/pojo";
-import { loadingMixin } from "@/mixin/loadingMixin";
-import SongListHead from "./childComponents/SongListHead.vue";
-import AllSongListSub from "./childComponents/AllSongListSub.vue";
-import MusicIntroduceModule from "../personalization/childComponents/MusicIntroduceModule.vue";
+} from '@/common/pojo'
+import { loadingMixin } from '@/mixin/loadingMixin'
+import SongListHead from './childComponents/SongListHead.vue'
+import AllSongListSub from './childComponents/AllSongListSub.vue'
+import MusicIntroduceModule from '../personalization/childComponents/MusicIntroduceModule.vue'
 export default {
   mixins: [loadingMixin],
   data() {
@@ -93,7 +93,7 @@ export default {
       songlistHotSub: [],
       songlistHqSub: [],
       topSonglist: [],
-      curTag: "电子",
+      curTag: '电子',
       isAllSubShow: false,
       pageInfo: {
         limit: 100,
@@ -101,126 +101,126 @@ export default {
         currentPage: 1,
         total: 0,
       },
-      loading:'on'
-    };
+      loading: 'on',
+    }
   },
   props: {},
   computed: {},
   created() {
-    this._initSonglistCategory();
-    this._initHotSonglistSub();
-    this._initHqSonglistSub();
-    this._initTopSonglist();
+    this._initSonglistCategory()
+    this._initHotSonglistSub()
+    this._initHqSonglistSub()
+    this._initTopSonglist()
   },
   watch: {
     isAllSubShow(flag) {
       flag
         ? this.addAppClickEventListener()
-        : this.removeAppClickEventListener();
+        : this.removeAppClickEventListener()
     },
-    topSonglist(newValue){
-      this.$nextTick(()=>{
+    topSonglist(newValue) {
+      this.$nextTick(() => {
         this.loading = 'off'
       })
-    }
+    },
   },
   destroyed() {
-    this.removeAppClickEventListener();
+    this.removeAppClickEventListener()
   },
   methods: {
     async _initSonglistCategory() {
-      let result = await fetchPlaylistCategoryAPI();
-      this.transform2SonglistCategory(result.categories, result.sub);
+      let result = await fetchPlaylistCategoryAPI()
+      this.transform2SonglistCategory(result.categories, result.sub)
     },
     async _initHotSonglistSub() {
-      let result = await fetchHotSonglistSubAPI();
+      let result = await fetchHotSonglistSubAPI()
       result.tags.forEach((e, i) => {
-        this.songlistHotSub.push(new HotSonglistSub(e));
-      });
+        this.songlistHotSub.push(new HotSonglistSub(e))
+      })
     },
     async _initHqSonglistSub() {
-      let result = await fetchHqSonglistSubAPI();
+      let result = await fetchHqSonglistSubAPI()
       result.tags.forEach((e, i) => {
-        this.songlistHqSub.push(new HqSonglistSub(e));
-      });
+        this.songlistHqSub.push(new HqSonglistSub(e))
+      })
     },
     async _initTopSonglist() {
-      let param = new URLSearchParams();
-      param.append("limit", this.pageInfo.limit);
-      param.append("cat", this.curTag);
-      param.append("offset", this.pageInfo.offset);
-      let result = await fetchTopSonglistAPI(param);
-      this.pageInfo.total = result.total;
-      this.topSonglist.length = 0;
+      let param = new URLSearchParams()
+      param.append('limit', this.pageInfo.limit)
+      param.append('cat', this.curTag)
+      param.append('offset', this.pageInfo.offset)
+      let result = await fetchTopSonglistAPI(param)
+      this.pageInfo.total = result.total
+      this.topSonglist.length = 0
       result.playlists.forEach((e, i) => {
-        this.topSonglist.push(new HqSonglist(e));
-      });
+        this.topSonglist.push(new HqSonglist(e))
+      })
     },
     transform2SonglistCategory(categories, subList) {
       for (let key in categories) {
-        let category = new SonglistCategory(key, categories[key]);
-        this.songlistCategory.push(category);
+        let category = new SonglistCategory(key, categories[key])
+        this.songlistCategory.push(category)
       }
       subList.forEach((e, i) => {
-        let sub = new SonglistSub(e);
-        let type = sub.category;
-        this.songlistCategory[type].subs.push(sub);
-      });
+        let sub = new SonglistSub(e)
+        let type = sub.category
+        this.songlistCategory[type].subs.push(sub)
+      })
     },
     // ? 选择标签
     handleChangeTag(name) {
       this.loading = 'on'
-      this.curTag = name;
-      this.isAllSubShow = false;
+      this.curTag = name
+      this.isAllSubShow = false
       // * 渲染页面数据
-      this.pageInfo.currentPage = 1;
-      this.pageInfo.offset = 0;
-      this._initTopSonglist();
+      this.pageInfo.currentPage = 1
+      this.pageInfo.offset = 0
+      this._initTopSonglist()
     },
     // ? 添加监听
     addAppClickEventListener() {
       // 组件初始化添加事件监听
       document
-        .getElementById("MusicMain")
-        .addEventListener("click", this.handleClickEvent);
+        .getElementById('MusicMain')
+        .addEventListener('click', this.handleClickEvent)
     },
     // ? 移除监听
     removeAppClickEventListener() {
       document
-        .getElementById("MusicMain")
-        .removeEventListener("click", this.handleClickEvent);
+        .getElementById('MusicMain')
+        .removeEventListener('click', this.handleClickEvent)
     },
     // ? 监听处理函数
     handleClickEvent(e) {
       let refClick = document
-        .getElementsByClassName("AllSongListSub")[0]
-        .contains(e.target); // 包含自身
+        .getElementsByClassName('AllSongListSub')[0]
+        .contains(e.target) // 包含自身
 
       if (!refClick) {
-        this.isAllSubShow = false;
+        this.isAllSubShow = false
       }
     },
     // ? 跳转歌单详情
     handlePersonalizedSongList(id) {
-      this.$router.push({ name: "PersonalizedSongList", params: { id } });
+      this.$router.push({ name: 'PersonalizedSongList', params: { id } })
     },
     handelChangeCurrentPage(curPage) {
       this.loading = 'on'
-      this.pageInfo.currentPage = curPage;
-      this.pageInfo.offset = (curPage - 1) * this.pageInfo.limit;
-     
-      this._initTopSonglist();
-      this.scrollParentStart("#FindMusicPoint");
+      this.pageInfo.currentPage = curPage
+      this.pageInfo.offset = (curPage - 1) * this.pageInfo.limit
+
+      this._initTopSonglist()
+      this.scrollParentStart('#FindMusicPoint')
     },
     scrollParentStart(name) {
       document.querySelector(name).scrollIntoView({
-        block: "start",
-        behavior: "smooth",
-      });
+        block: 'start',
+        behavior: 'smooth',
+      })
     },
   },
   components: { SongListHead, AllSongListSub, MusicIntroduceModule },
-};
+}
 </script>
 
 <style lang="less" scoped>

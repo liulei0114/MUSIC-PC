@@ -30,18 +30,18 @@ export default {
   },
   computed: {
     _albumUrl() {
-      return this.albumInfo.picUrl + "?param=140y140";
+      return this.albumInfo.picUrl + '?param=140y140'
     },
   },
   methods: {
     handleAlbumDetail() {
       this.$router.push({
-        name: "PersonalizedAlbum",
+        name: 'PersonalizedAlbum',
         params: { id: this.albumInfo.id },
-      });
+      })
     },
   },
-};
+}
 </script>
 
 
@@ -80,7 +80,7 @@ export default {
       right: -20px;
       top: 3px;
       background-repeat: no-repeat;
-      background-image: url("~assets/aside.png");
+      background-image: url('~assets/aside.png');
     }
     img {
       border-radius: 5px;

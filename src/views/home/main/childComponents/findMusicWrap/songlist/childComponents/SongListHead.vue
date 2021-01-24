@@ -20,55 +20,55 @@
 </template>
 
 <script>
-import { fetchHqSonglistAPI } from "@/network/api/musicApi";
-import { HqSonglist } from "@/common/pojo";
+import { fetchHqSonglistAPI } from '@/network/api/musicApi'
+import { HqSonglist } from '@/common/pojo'
 export default {
   data() {
     return {
       hqSongList: [],
       hqSongListDetail: {},
-    };
+    }
   },
   props: {
     subName: {
       type: String,
-      default: "",
+      default: '',
     },
   },
   computed: {
     getCoverImgUrl() {
-      if (!this.hqSongListDetail) return;
-      return this.hqSongListDetail.picUrl + "?param?140y140";
+      if (!this.hqSongListDetail) return
+      return this.hqSongListDetail.picUrl + '?param?140y140'
     },
     coverBg() {
-      if (!this.hqSongListDetail) return;
+      if (!this.hqSongListDetail) return
       return {
         background: `url(${this.hqSongListDetail.picUrl}) center center no-repeat`,
-      };
+      }
     },
   },
-  watch:{
-    subName(newValue){
+  watch: {
+    subName(newValue) {
       this._initHqSongList()
-    }
+    },
   },
   created() {
-    this._initHqSongList();
+    this._initHqSongList()
   },
   methods: {
     async _initHqSongList() {
-      let params = new URLSearchParams();
-      params.append("limit", 1);
-      params.append("cat", this.subName);
-      let result = await fetchHqSonglistAPI(params);
+      let params = new URLSearchParams()
+      params.append('limit', 1)
+      params.append('cat', this.subName)
+      let result = await fetchHqSonglistAPI(params)
       this.hqSongList.length = 0
       result.playlists.forEach((e, i) => {
-        this.hqSongList.push(new HqSonglist(e));
-      });
-      this.hqSongListDetail = this.hqSongList[0];
+        this.hqSongList.push(new HqSonglist(e))
+      })
+      this.hqSongListDetail = this.hqSongList[0]
     },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>
@@ -88,7 +88,7 @@ export default {
     height: 170px;
     z-index: 1;
     background-size: contain;
-    filter: blur(30px)  saturate(3);
+    filter: blur(30px) saturate(3);
     background-size: 200%;
   }
   .left {

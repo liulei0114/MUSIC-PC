@@ -10,40 +10,40 @@
 </template>
 
 <script>
-import { fetchArtistDescAPI } from "@/network/api/musicApi";
+import { fetchArtistDescAPI } from '@/network/api/musicApi'
 export default {
   data() {
     return {
       descList: [],
-    };
+    }
   },
   props: {
     artistId: {
       type: String,
-      default: "",
+      default: '',
     },
   },
   created() {
-    this._initArtistDesc();
+    this._initArtistDesc()
   },
   methods: {
     async _initArtistDesc() {
-      let result = await fetchArtistDescAPI({ id: this.artistId });
+      let result = await fetchArtistDescAPI({ id: this.artistId })
       result.introduction.forEach((e, i) => {
-        this.descList.push(e);
-      });
+        this.descList.push(e)
+      })
     },
     getArtistDesc(descTxt) {
-      let regexp = new RegExp("\n");
-      let descList = descTxt.split(regexp);
-      let p = "";
+      let regexp = new RegExp('\n')
+      let descList = descTxt.split(regexp)
+      let p = ''
       descList.forEach((e, i) => {
-        p += `<p class="indent">${e}</p>`;
-      });
-      return p;
+        p += `<p class="indent">${e}</p>`
+      })
+      return p
     },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>

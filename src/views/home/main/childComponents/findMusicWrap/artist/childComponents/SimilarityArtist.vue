@@ -13,41 +13,41 @@
 </template>
 
 <script>
-import { fetchSimArtistAPI } from "@/network/api/musicApi";
-import { RankArtists } from "@/common/pojo.js";
-import MusicIntroduceModule from "../../personalization/childComponents/MusicIntroduceModule.vue";
+import { fetchSimArtistAPI } from '@/network/api/musicApi'
+import { RankArtists } from '@/common/pojo.js'
+import MusicIntroduceModule from '../../personalization/childComponents/MusicIntroduceModule.vue'
 export default {
   components: { MusicIntroduceModule },
   data() {
     return {
       simArtistList: [],
-    };
+    }
   },
   props: {
     artistId: {
       type: String,
-      default: "",
+      default: '',
     },
   },
   created() {
-    this._initSimArtist();
+    this._initSimArtist()
   },
   methods: {
     async _initSimArtist() {
-      let result = await fetchSimArtistAPI({ id: this.artistId });
+      let result = await fetchSimArtistAPI({ id: this.artistId })
       result.artists.forEach((e, i) => {
-        this.simArtistList.push(new RankArtists(e));
-      });
+        this.simArtistList.push(new RankArtists(e))
+      })
     },
     handleArtistDetail(item) {
-      let id = item.id;
+      let id = item.id
       this.$router.push({
-        name: "PersonalizedArtist",
+        name: 'PersonalizedArtist',
         params: { id },
-      });
+      })
     },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>

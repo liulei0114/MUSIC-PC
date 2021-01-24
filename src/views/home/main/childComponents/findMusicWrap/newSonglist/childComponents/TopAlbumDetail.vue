@@ -20,7 +20,7 @@
 </template>
 
 <script>
-import AlbumInfo from "./AlbumInfo.vue";
+import AlbumInfo from './AlbumInfo.vue'
 export default {
   components: { AlbumInfo },
   data() {
@@ -31,53 +31,53 @@ export default {
       scrollIndex: 0,
       scrollFlag: true,
       start: 0,
-    };
+    }
   },
   props: {
     albumRecommendMap: {
       type: Object,
       default() {
-        return {};
+        return {}
       },
     },
   },
   watch: {
     albumRecommendMap(newValue) {
       if (Object.keys(newValue).length === 0) {
-        this.initLock = false;
-        this.albumHeights = [];
-        this.scrollIndex = 0;
-        this.scrollFlag = true;
-        this.start = 0;
+        this.initLock = false
+        this.albumHeights = []
+        this.scrollIndex = 0
+        this.scrollFlag = true
+        this.start = 0
       }
       this.$nextTick(() => {
         let contain = document
-          .querySelector("#FindMusicWrap")
-          .querySelector(".happy-scroll-container");
-        let content = contain.children[0];
-        this.contentOffsetHeight = content.offsetHeight;
-        this.initLock = false;
-        this.getAlbumHeightList();
-      });
+          .querySelector('#FindMusicWrap')
+          .querySelector('.happy-scroll-container')
+        let content = contain.children[0]
+        this.contentOffsetHeight = content.offsetHeight
+        this.initLock = false
+        this.getAlbumHeightList()
+      })
     },
   },
   mounted() {
     let contain = document
-      .querySelector("#FindMusicWrap")
-      .querySelector(".happy-scroll-container");
-    contain.addEventListener("scroll", () => {
-      this.handleScroll(contain);
-    });
+      .querySelector('#FindMusicWrap')
+      .querySelector('.happy-scroll-container')
+    contain.addEventListener('scroll', () => {
+      this.handleScroll(contain)
+    })
   },
   methods: {
     handleScroll(contain) {
-      let scrollTop = contain.scrollTop - 125;
+      let scrollTop = contain.scrollTop - 125
       if (this.contentOffsetHeight - scrollTop <= 485 * 2) {
         if (!this.initLock) {
           // 加锁
-          this.initLock = true;
+          this.initLock = true
           // 通知父组件，加载上一月份
-          this.$emit("initPreMonth");
+          this.$emit('initPreMonth')
         }
       }
       // 判断滚动区域
@@ -87,51 +87,51 @@ export default {
             scrollTop >= this.start &&
             scrollTop <= this.start + this.albumHeights[this.scrollIndex]
           ) {
-            this.scrollFlag = false;
-            this.start = this.start + this.albumHeights[this.scrollIndex];
+            this.scrollFlag = false
+            this.start = this.start + this.albumHeights[this.scrollIndex]
           }
         } else {
           if (scrollTop > this.start) {
-            this.scrollFlag = true;
-            this.scrollIndex++;
+            this.scrollFlag = true
+            this.scrollIndex++
           } else {
             // 没有滚出当前进入下一个
             if (scrollTop < this.start - this.albumHeights[this.scrollIndex]) {
-              this.start = this.start - this.albumHeights[this.scrollIndex];
-              this.scrollIndex--;
+              this.start = this.start - this.albumHeights[this.scrollIndex]
+              this.scrollIndex--
             }
           }
         }
       }
     },
     getAlbumHeightList() {
-      this.albumHeights = [];
-      let topCon = document.querySelector(".TopAlbumDetail").children;
+      this.albumHeights = []
+      let topCon = document.querySelector('.TopAlbumDetail').children
       Array.from(topCon).forEach((e, i) => {
-        this.albumHeights.push(e.offsetHeight);
-      });
+        this.albumHeights.push(e.offsetHeight)
+      })
     },
   },
   filters: {
     filterMonth(value) {
-      if (value === "本周新碟") {
-        return value;
+      if (value === '本周新碟') {
+        return value
       }
-      let month = value.split("-")[0];
+      let month = value.split('-')[0]
       if (month <= 9) {
-        return "0" + month;
+        return '0' + month
       } else {
-        return month;
+        return month
       }
     },
     filterYear(value) {
-      if (value === "本周新碟") {
-        return "";
+      if (value === '本周新碟') {
+        return ''
       }
-      return value.split("-")[1];
+      return value.split('-')[1]
     },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>

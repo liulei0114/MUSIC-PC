@@ -57,29 +57,29 @@
 </template>
 
 <script>
-import Mine from "../home/main/childComponents/Mine.vue";
-import DirectionNav from "./childComponents/DirectionNav.vue";
+import Mine from '../home/main/childComponents/Mine.vue'
+import DirectionNav from './childComponents/DirectionNav.vue'
 const modifHeadUrl =
-  "https://p3.music.126.net/VnZiScyynLG7atLIZ2YPkw==/18686200114669622.jpg";
+  'https://p3.music.126.net/VnZiScyynLG7atLIZ2YPkw==/18686200114669622.jpg'
 
 export default {
   data() {
     return {
-      keyword: "",
+      keyword: '',
       userProfile: this.$store.state.userProfile,
       mineShow: false,
-    };
+    }
   },
   computed: {
     headUrl() {
       return this._.isEmpty(this.$store.getters.userProfile)
         ? modifHeadUrl
-        : this.$store.getters.userProfile.avatarUrl;
+        : this.$store.getters.userProfile.avatarUrl
     },
     nickName() {
       return this._.isEmpty(this.$store.getters.userProfile)
-        ? ""
-        : this.$store.getters.userProfile.nickname;
+        ? ''
+        : this.$store.getters.userProfile.nickname
     },
   },
 
@@ -87,32 +87,31 @@ export default {
     // ? 打开登录窗口dialog
     openLoginDialog() {
       if (!this.$store.getters.loginDialogStatus) {
-        this.$store.commit("loginModule/SET_LOGIN_DIALOG_STATUS", true);
+        this.$store.commit('loginModule/SET_LOGIN_DIALOG_STATUS', true)
       }
     },
     // ? 关闭登录窗口dialog
     closeWindow() {
-      window.electron.ipcRenderer.send("window-close");
+      window.electron.ipcRenderer.send('window-close')
     },
     // ? 从local中拿用户信息
     getLocalStorage() {
-      return JSON.parse(localStorage.getItem("profile"));
+      return JSON.parse(localStorage.getItem('profile'))
     },
     // ? 下拉
     mineDown() {
-      if (this.nickName !== "" && !this.mineShow) {
-        this.mineShow = true;
+      if (this.nickName !== '' && !this.mineShow) {
+        this.mineShow = true
       } else {
-        this.mineShow = false;
+        this.mineShow = false
       }
     },
-
   },
   components: {
     DirectionNav,
     Mine,
   },
-};
+}
 </script>
 
 <style lang="less" scoped>
@@ -135,7 +134,7 @@ export default {
       align-items: center;
       margin-right: 80px;
       -webkit-app-region: no-drag;
-      &:hover{
+      &:hover {
         cursor: pointer;
       }
       img {
@@ -149,7 +148,7 @@ export default {
       span {
         width: 118px;
         height: 22px;
-        background: no-repeat url("~assets/topbar.png") -40px -25px;
+        background: no-repeat url('~assets/topbar.png') -40px -25px;
         margin-left: 10px;
       }
     }

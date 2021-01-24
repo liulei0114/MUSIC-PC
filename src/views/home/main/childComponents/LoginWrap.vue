@@ -71,95 +71,95 @@
 </template>
 
 <script>
-import CountryCodeWrap from "./CountryCodeWrap.vue";
-import { checkPhoneExitApi, loginPhoneApi } from "@/network/api/musicApi.js";
-import { loadingMixin } from "@/mixin/loadingMixin";
-const timeout = 60;
+import CountryCodeWrap from './CountryCodeWrap.vue'
+import { checkPhoneExitApi, loginPhoneApi } from '@/network/api/musicApi.js'
+import { loadingMixin } from '@/mixin/loadingMixin'
+const timeout = 60
 
 export default {
   mixins: [loadingMixin],
   data() {
     return {
-      countryCode: "86",
+      countryCode: '86',
       isCountryShow: false,
       time: timeout,
       isShowVercodeBtn: true,
-      telphone: "17862725207",
-      password: "ll19960114",
-      errMsg: "",
-    };
+      telphone: '17862725207',
+      password: 'll19960114',
+      errMsg: '',
+    }
   },
   methods: {
     // ? 下拉框点击
     handleCountryCheck(code) {
-      this.countryCode = code;
+      this.countryCode = code
       // ? 关掉下拉框
-      this.isCountryShow = false;
+      this.isCountryShow = false
     },
     // ? 关闭登录框
     handleCloseLoginWrap() {
-      this.$store.commit("loginModule/SET_LOGIN_DIALOG_STATUS", false);
+      this.$store.commit('loginModule/SET_LOGIN_DIALOG_STATUS', false)
     },
     // ? 发送验证码
     handelSendVercode() {
-      this.isShowVercodeBtn = false;
+      this.isShowVercodeBtn = false
       let interval = setInterval(() => {
         if (this.time <= 0) {
-          this.isShowVercodeBtn = true;
-          this.time = timeout;
-          clearInterval(interval);
+          this.isShowVercodeBtn = true
+          this.time = timeout
+          clearInterval(interval)
         } else {
-          this.time--;
+          this.time--
         }
-      }, 1000);
+      }, 1000)
     },
     // ? 处理登录请求
     async handleLogin() {
-      if (this.telphone === "") {
-        this.errMsg = "输入正确手机号";
-        return;
+      if (this.telphone === '') {
+        this.errMsg = '输入正确手机号'
+        return
       }
-      if (this.password === "") {
-        this.errMsg = "请输入密码";
-        return;
+      if (this.password === '') {
+        this.errMsg = '请输入密码'
+        return
       }
-      let params = new URLSearchParams();
-      params.append("phone", this.telphone);
-      params.append("countrycode", this.countryCode);
+      let params = new URLSearchParams()
+      params.append('phone', this.telphone)
+      params.append('countrycode', this.countryCode)
 
-      this.initLoading();
+      this.initLoading()
       // * 手机号是否注册
-      let phoneExitResult = await checkPhoneExitApi(params);
+      let phoneExitResult = await checkPhoneExitApi(params)
       if (phoneExitResult.exist == -1) {
-        this.errMsg = "手机号未注册";
-        this.endLoading();
-        return;
+        this.errMsg = '手机号未注册'
+        this.endLoading()
+        return
       }
       // * 手机登录
-      params.append("md5_password", this.$md5(this.password));
-      params.append("timestamp", new Date().getTime());
+      params.append('md5_password', this.$md5(this.password))
+      params.append('timestamp', new Date().getTime())
       try {
-        await this.$store.dispatch("loginModule/LoginByPhone", params);
-        this.handleCloseLoginWrap();
+        await this.$store.dispatch('loginModule/LoginByPhone', params)
+        this.handleCloseLoginWrap()
       } catch (error) {
-        console.log(error.msg);
+        console.log(error.msg)
         if (error.code === 502) {
-          this.errMsg = `手机号码或${error.message}`;
+          this.errMsg = `手机号码或${error.message}`
         } else if (error.code === 509) {
-          this.errMsg = "密码错误超过限制";
+          this.errMsg = '密码错误超过限制'
         } else {
-          this.$gMessage.show(error.message);
+          this.$gMessage.show(error.message)
         }
       }
-      this.endLoading();
+      this.endLoading()
     },
     // ? 聚焦
     blur() {
-      this.errMsg = "";
+      this.errMsg = ''
     },
   },
   components: { CountryCodeWrap },
-};
+}
 </script>
 
 <style lang="less" scoped>

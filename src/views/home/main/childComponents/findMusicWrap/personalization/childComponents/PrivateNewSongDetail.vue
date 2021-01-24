@@ -50,15 +50,15 @@ export default {
   },
   computed: {
     getUrl() {
-      return `${this.newSong.picUrl}?param=45y45`;
+      return `${this.newSong.picUrl}?param=45y45`
     },
     _newSongAr() {
       this.newSong.arList.map((e, i) => {
-        return e.name;
-      });
+        return e.name
+      })
     },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>

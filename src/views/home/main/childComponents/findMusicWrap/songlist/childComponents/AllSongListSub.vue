@@ -27,7 +27,7 @@
 <script>
 export default {
   data() {
-    return {};
+    return {}
   },
   props: {
     songlistCategory: {
@@ -36,18 +36,18 @@ export default {
     },
     curTag: {
       type: String,
-      default: "",
+      default: '',
     },
   },
   methods: {
     checkSub(name) {
-      this.$emit("handleChangeTag", name);
+      this.$emit('handleChangeTag', name)
     },
     subImg(type) {
-      return require(`@/assets/sub-${type}.png`);
+      return require(`@/assets/sub-${type}.png`)
     },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>

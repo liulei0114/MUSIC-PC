@@ -32,10 +32,10 @@ export default {
   },
   computed: {
     headUrl() {
-      return `${this.subscrbersItem.avatarUrl}?param=90y90`;
+      return `${this.subscrbersItem.avatarUrl}?param=90y90`
     },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>

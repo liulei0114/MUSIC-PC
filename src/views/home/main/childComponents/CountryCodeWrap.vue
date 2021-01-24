@@ -17,22 +17,22 @@
 </template>
 
 <script>
-import { fetchCountryListApi } from "@/network/api/musicApi.js";
+import { fetchCountryListApi } from '@/network/api/musicApi.js'
 export default {
   data() {
     return {
       countryList: [],
       checkIndex: 0,
-    };
+    }
   },
   props: {
     width: {
       type: String,
-      default: "260px",
+      default: '260px',
     },
     height: {
       type: String,
-      default: "220px",
+      default: '220px',
     },
   },
   computed: {
@@ -41,30 +41,30 @@ export default {
   created() {
     fetchCountryListApi()
       .then((result) => {
-        let countryList = result.data;
-        let newCountryList = [];
+        let countryList = result.data
+        let newCountryList = []
         countryList.forEach((e, i) => {
-          newCountryList.push(...e.countryList);
-        });
-        this.$store.commit("countryModule/SET_COUNTRY_LIST", newCountryList);
-        this.countryList = newCountryList;
+          newCountryList.push(...e.countryList)
+        })
+        this.$store.commit('countryModule/SET_COUNTRY_LIST', newCountryList)
+        this.countryList = newCountryList
       })
       .catch((err) => {
-        console.log(err);
-      });
+        console.log(err)
+      })
   },
   methods: {
     flagIcon(locale) {
-      locale = locale.toLowerCase();
-      return `flag-icon-${locale}`;
+      locale = locale.toLowerCase()
+      return `flag-icon-${locale}`
     },
     handleCountryCheck(code, index) {
-      this.$emit("handleCountryCheck", code);
+      this.$emit('handleCountryCheck', code)
       // 添加选项背景色
-      this.checkIndex = index;
-    }
+      this.checkIndex = index
+    },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>

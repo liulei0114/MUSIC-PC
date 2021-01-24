@@ -44,14 +44,14 @@
 </template>
 
 <script>
-import { doCommentLikedAPI } from "@/network/api/musicApi";
-import { mapGetters } from "vuex";
+import { doCommentLikedAPI } from '@/network/api/musicApi'
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
       isDelete: false,
-      songListId: "",
-    };
+      songListId: '',
+    }
   },
   props: {
     commentItem: {
@@ -60,95 +60,95 @@ export default {
     },
     commentType: {
       type: String,
-      default: "",
+      default: '',
     },
   },
   computed: {
     getUserUrl() {
-      return `${this.commentItem.user.avatarUrl}?param=35y35`;
+      return `${this.commentItem.user.avatarUrl}?param=35y35`
     },
-    ...mapGetters({ userProfile: "userProfile" }),
+    ...mapGetters({ userProfile: 'userProfile' }),
     _songCreatorVipUrl() {
-      return this.commentItem.user.identityIconUrl + "?param=12y12";
+      return this.commentItem.user.identityIconUrl + '?param=12y12'
     },
     _commentType() {
       switch (this.commentType) {
-        case "music":
-          return 0;
-        case "mv":
-          return 1;
-        case "playlist":
-          return 2;
-        case "album":
-          return 3;
-        case "dj":
-          return 4;
+        case 'music':
+          return 0
+        case 'mv':
+          return 1
+        case 'playlist':
+          return 2
+        case 'album':
+          return 3
+        case 'dj':
+          return 4
       }
     },
   },
   created() {
     this.songListId = this.$route.path.slice(
-      this.$route.path.lastIndexOf("/") + 1
-    );
+      this.$route.path.lastIndexOf('/') + 1
+    )
   },
   methods: {
     handleTime(time) {
-      let today = this.$moment().startOf("day");
-      let yesterday = this.$moment().subtract(1, "days").startOf("day");
-      if (this.$moment(time).isSame(today, "d")) {
+      let today = this.$moment().startOf('day')
+      let yesterday = this.$moment().subtract(1, 'days').startOf('day')
+      if (this.$moment(time).isSame(today, 'd')) {
         // 小于一个小时，显示多少分钟之前，超过，显示时间
-        let diffMiun = this.$moment().diff(this.$moment(time), "minutes");
+        let diffMiun = this.$moment().diff(this.$moment(time), 'minutes')
         if (diffMiun === 0) {
-          return "刚刚";
+          return '刚刚'
         }
         if (diffMiun < 60) {
-          return diffMiun + "分钟前";
+          return diffMiun + '分钟前'
         }
-        return this.$moment(time).format("HH:mm");
+        return this.$moment(time).format('HH:mm')
       }
-      if (this.$moment(time).isSame(yesterday, "d")) {
-        return `昨天 ${this.$moment(time).format("HH:mm:ss")}`;
+      if (this.$moment(time).isSame(yesterday, 'd')) {
+        return `昨天 ${this.$moment(time).format('HH:mm:ss')}`
       }
-      return this.$moment(time).format("YYYY-MM-DD HH:mm:ss");
+      return this.$moment(time).format('YYYY-MM-DD HH:mm:ss')
     },
     doZan(commentId, liked, commentItem) {
-      let params = new URLSearchParams();
-      params.append("id", this.songListId);
-      params.append("cid", commentId);
-      params.append("type", this._commentType);
-      params.append("t", ~~!liked);
+      let params = new URLSearchParams()
+      params.append('id', this.songListId)
+      params.append('cid', commentId)
+      params.append('type', this._commentType)
+      params.append('t', ~~!liked)
       doCommentLikedAPI(params).then((result) => {
         // 点赞成功
-        commentItem.liked = !liked;
-        liked ? commentItem.likedCount-- : commentItem.likedCount++;
-      });
+        commentItem.liked = !liked
+        liked ? commentItem.likedCount-- : commentItem.likedCount++
+      })
     },
     doReply() {
-      this.$emit("doReplay", {
+      this.$emit('doReplay', {
         user: this.commentItem.user,
         commentId: this.commentItem.commentId,
-      });
-      this.scrollParentStart("#AnchorPoint");
+      })
+      this.scrollParentStart('#AnchorPoint')
     },
     scrollParentStart(name) {
       document.querySelector(name).scrollIntoView({
-        block: "start",
-        behavior: "smooth",
-      });
+        block: 'start',
+        behavior: 'smooth',
+      })
     },
     commentMouseEnter() {
       if (this.commentItem.user.userId === this.userProfile.userId) {
-        this.isDelete = true;
+        this.isDelete = true
       }
     },
     commentMouseLeave() {
-      this.isDelete = false;
+      this.isDelete = false
     },
     deleteComment() {
-      this.$emit("openDeleteCommentDialog", this.commentItem.commentId);
+      this.$emit('openDeleteCommentDialog', this.commentItem.commentId)
     },
   },
-};
+}
 </script>
 
 <style lang="less" scoped>

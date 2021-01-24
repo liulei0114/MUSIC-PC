@@ -1,5 +1,5 @@
 <template>
-  <div class="RankSonglistMain" v-mask-loading={loading:loading}>
+  <div class="RankSonglistMain" v-mask-loading="{loading:loading}">
     <article class="official">
       <h2>官方榜</h2>
       <div class="con">
@@ -35,103 +35,103 @@ import {
   fetchRankSonglistAPI,
   fetchSongListDetailApi,
   fetchRankArtistAPI,
-} from "@/network/api/musicApi";
-import { RankSonglist, RankArtists } from "@/common/pojo";
-import { loadingMixin } from "@/mixin/loadingMixin";
-import MusicIntroduceModule from "../personalization/childComponents/MusicIntroduceModule.vue";
-import RankSonglistDetail from "./childComponents/RankSonglistDetail.vue";
+} from '@/network/api/musicApi'
+import { RankSonglist, RankArtists } from '@/common/pojo'
+import { loadingMixin } from '@/mixin/loadingMixin'
+import MusicIntroduceModule from '../personalization/childComponents/MusicIntroduceModule.vue'
+import RankSonglistDetail from './childComponents/RankSonglistDetail.vue'
 export default {
   mixins: [loadingMixin],
   data() {
     return {
       rankSonglist: [],
       singer: {
-        picUrl: "",
-        trackUpdateTime: "",
+        picUrl: '',
+        trackUpdateTime: '',
         list: [],
       },
       playSize: {
-        width: "40px",
-        height: "40px",
-        "font-size": "20px",
-        "line-height": "40px",
+        width: '40px',
+        height: '40px',
+        'font-size': '20px',
+        'line-height': '40px',
       },
-      loading:'on'
-    };
+      loading: 'on',
+    }
   },
   created() {
-    this._initRankType();
+    this._initRankType()
   },
-  watch:{
-    rankSonglist(){
-      this.$nextTick(()=>{
+  watch: {
+    rankSonglist() {
+      this.$nextTick(() => {
         this.loading = 'off'
       })
-    }
+    },
   },
   methods: {
     async _initRankType() {
-      let result = await fetchRankSonglistAPI();
+      let result = await fetchRankSonglistAPI()
       result.list.forEach((e, i) => {
-        e.updateTime = this.$moment(e.updateTime).format("MM月DD日更新");
-        this.rankSonglist.push(new RankSonglist(e));
-      });
+        e.updateTime = this.$moment(e.updateTime).format('MM月DD日更新')
+        this.rankSonglist.push(new RankSonglist(e))
+      })
 
       // 前四个排行榜请求歌曲列表数据
       this.rankSonglist = this.rankSonglist.map((e, i) => {
         if (i <= 3) {
           this._initRankSonglist(e.id).then((result) => {
-            e.list = result;
-          });
+            e.list = result
+          })
         }
-        return e;
-      });
+        return e
+      })
       //歌手排行榜
       this.singer.picUrl = this.tansIdentityIconUrl(
         result.artistToplist.coverUrl
-      );
-      this.singer.updateTime = result.artistToplist.upateFrequency;
-      this._initRankArtistslist(1);
+      )
+      this.singer.updateTime = result.artistToplist.upateFrequency
+      this._initRankArtistslist(1)
     },
     // ? 歌单中歌曲列表
     async _initRankSonglist(id) {
-      let params = new URLSearchParams();
-      params.append("id", id);
-      let songListDetailData = await fetchSongListDetailApi(params);
-      let topTrackList = songListDetailData.playlist.tracks.slice(0, 5);
-      let trackItemList = [];
+      let params = new URLSearchParams()
+      params.append('id', id)
+      let songListDetailData = await fetchSongListDetailApi(params)
+      let topTrackList = songListDetailData.playlist.tracks.slice(0, 5)
+      let trackItemList = []
       topTrackList.forEach((e, i) => {
         let item = {
           id: e.id,
           name: e.name,
           ar: e.ar,
-        };
-        trackItemList.push(item);
-      });
-      return trackItemList;
+        }
+        trackItemList.push(item)
+      })
+      return trackItemList
     },
     // ? 获取歌手列表
     async _initRankArtistslist(type) {
-      let params = new URLSearchParams();
-      params.append("type", type);
-      let result = await fetchRankArtistAPI(params);
+      let params = new URLSearchParams()
+      params.append('type', type)
+      let result = await fetchRankArtistAPI(params)
       result.list.artists.forEach((e, i) => {
         if (i < 5) {
-          this.singer.list.push(new RankArtists(e));
+          this.singer.list.push(new RankArtists(e))
         }
-      });
+      })
     },
     // ? 跳转歌单详情
     handlePersonalizedSongList(id) {
-      this.$router.push({ name: "PersonalizedSongList", params: { id } });
+      this.$router.push({ name: 'PersonalizedSongList', params: { id } })
     },
     tansIdentityIconUrl(picUrl) {
-      picUrl = picUrl.replace(new RegExp("p[1-5]{1}"), "p3");
-      return picUrl;
+      picUrl = picUrl.replace(new RegExp('p[1-5]{1}'), 'p3')
+      return picUrl
     },
   },
   components: { MusicIntroduceModule, RankSonglistDetail },
-};
+}
 </script>
 
 <style lang="less" scoped>
