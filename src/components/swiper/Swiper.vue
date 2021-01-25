@@ -172,7 +172,6 @@ export default {
         let currentClickClassName = this.sliderDomList[i].className.split(
           " "
         )[1];
-        console.log(currentClickClassName);
         if (currentClickClassName === "next") {
           this.next();
         } else {

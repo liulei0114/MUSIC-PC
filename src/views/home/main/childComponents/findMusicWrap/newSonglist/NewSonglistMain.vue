@@ -58,7 +58,7 @@
         :songItem="item"
         height="80px"
         :isShowALpic="true"
-        @dblclick.native="handlePlaySong(item,index)"
+        @dblclick.native="handlePlaySong(item)"
       ></song-list-item>
     </article>
     <article v-else-if="categroyIndex === 1" class="flexL">
@@ -77,6 +77,7 @@ import {
 import { Single, Album } from '@/common/pojo.js'
 import SongListItem from '../../songListWrap/SongListItem.vue'
 import TopAlbumDetail from './childComponents/TopAlbumDetail.vue'
+import { mapGetters } from 'vuex'
 export default {
   data() {
     return {
@@ -100,9 +101,14 @@ export default {
         curPage: 1,
       },
       loading: 'on',
+      flag: false,
+      playList: [],
     }
   },
   computed: {
+    ...mapGetters({
+      curPlaySongId: 'curPlaySongId',
+    }),
     albumAreaType() {
       switch (this.areaCheckIndex) {
         case 0:
@@ -236,7 +242,7 @@ export default {
       }
     },
     // ? 播放歌曲
-    async handlePlaySong(item, i) {
+    async handlePlaySong(item) {
       try {
         await fetchCheckMusicAPI({ id: item.id })
       } catch (error) {
@@ -245,8 +251,24 @@ export default {
           this.$gMessage.show(error.message)
         } else {
           // 把当前歌曲所在列表加入到播放列表中
-          this.$store.commit('songModule/SET_PLAY_MUSIC_LIST', this.topSongList)
-          this.$store.commit('songModule/SET_CUR_PLAY_SONG_INDEX', i)
+          if (!this.flag) {
+            // 防止每次双击都commit
+            // 过滤没有版权和vip歌曲
+            let canPlayList = this.topSongList.filter((e) => {
+              if (!e.noCopyrightRcmd) {
+                return e
+              }
+            })
+            this.playList = canPlayList
+            this.$store.commit('songModule/SET_PLAY_MUSIC_LIST', canPlayList)
+            this.flag = true
+          }
+          if (this.curPlaySongId !== item.id) {
+            let index = this.playList.findIndex((e) => {
+              return e.id === item.id
+            })
+            this.$store.commit('songModule/SET_CUR_PLAY_SONG_INDEX', index)
+          }
         }
       }
     },

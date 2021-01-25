@@ -25,7 +25,7 @@
 
           <div class="name textOverflow flexLeft">
             <span :class="{noCopyright:songItem.noCopyrightRcmd}">{{songItem.name}}</span>
-            <span class="other" :class="getTextOverFlow(index +1)">{{getAlias(songItem)}}</span>
+            <span class="other" :class="getTextOverFlow(index)">{{getAlias(songItem)}}</span>
             <div class="icon_con flexLeft">
               <i v-if="songItem.isSq" :class="{noCopyright:songItem.noCopyrightRcmd}">
                 <svg-icon icon-class="song_sq"></svg-icon>
@@ -88,18 +88,16 @@ export default {
       this.$nextTick(() => {
         let itemName = document
           .getElementsByClassName('PlayItem')
-          [index - 1].querySelector('.name')
+          [index].querySelector('.name')
         let songName = itemName.children[0]
         let aliasName = itemName.children[1]
         let iconCon = itemName.children[2]
-
         let itemNameWidth =
           itemName.clientWidth -
           ~~getComputedStyle(itemName, false)['paddingRight'].replace(
             /\s+|px/gi,
             ''
           )
-
         let songNameWidth = songName.clientWidth
         let aliasNameWidth = aliasName.clientWidth
         let iconWidth = iconCon.clientWidth
@@ -175,7 +173,6 @@ export default {
         overflow: hidden;
         text-overflow: ellipsis;
       }
-
       .status {
         color: #ec4141;
         margin: 0 7px;

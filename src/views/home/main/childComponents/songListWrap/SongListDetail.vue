@@ -25,7 +25,7 @@
         :likeListIdsMap="likeListIdsMap"
         :isShowPop="isShowPop"
         @openDeleteSongDialog="openDeleteSongDialog(index)"
-        @dblclick.native="handlePlaySong(item,index)"
+        @dblclick.native="handlePlaySong(item)"
       ></song-list-item>
     </div>
     <el-dialog
@@ -64,6 +64,8 @@ export default {
       dialogTableVisible: false,
       deleteSongIndex: '',
       loading: 'on',
+      flag: false,
+      playList: [],
     }
   },
   props: {
@@ -91,6 +93,7 @@ export default {
       userProfile: 'userProfile',
       likeListIdsMap: 'likeMusicList',
       playListDrawerStatus: 'playListDrawerStatus',
+      curPlaySongId: 'curPlaySongId',
     }),
     getSongList() {
       if (this.songIds.length === 0) {
@@ -197,7 +200,7 @@ export default {
       }
     },
     // ? 播放歌曲
-    async handlePlaySong(item, i) {
+    async handlePlaySong(item) {
       try {
         await fetchCheckMusicAPI({ id: item.id })
       } catch (error) {
@@ -206,11 +209,24 @@ export default {
           this.$gMessage.show(error.message)
         } else {
           // 把当前歌曲所在列表加入到播放列表中
-          this.$store.commit(
-            'songModule/SET_PLAY_MUSIC_LIST',
-            this.songListTracks
-          )
-          this.$store.commit('songModule/SET_CUR_PLAY_SONG_INDEX', i)
+          if (!this.flag) {
+            // 防止每次双击都commit
+            // 过滤没有版权和vip歌曲
+            let canPlayList = this.songListTracks.filter((e) => {
+              if (!e.noCopyrightRcmd) {
+                return e
+              }
+            })
+            this.playList = canPlayList
+            this.$store.commit('songModule/SET_PLAY_MUSIC_LIST', this.playList)
+            this.flag = true
+          }
+          if (this.curPlaySongId !== item.id) {
+            let index = this.playList.findIndex((e) => {
+              return e.id === item.id
+            })
+            this.$store.commit('songModule/SET_CUR_PLAY_SONG_INDEX', index)
+          }
         }
       }
     },

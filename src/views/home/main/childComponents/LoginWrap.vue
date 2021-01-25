@@ -142,7 +142,6 @@ export default {
         await this.$store.dispatch('loginModule/LoginByPhone', params)
         this.handleCloseLoginWrap()
       } catch (error) {
-        console.log(error.msg)
         if (error.code === 502) {
           this.errMsg = `手机号码或${error.message}`
         } else if (error.code === 509) {

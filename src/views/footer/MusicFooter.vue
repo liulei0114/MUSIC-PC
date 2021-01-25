@@ -23,7 +23,13 @@
       </div>
     </div>
     <div class="play_progress">
-      <audio-player :audio-list="audioList" />
+      <audio-player
+        ref="MyAudioPlayer"
+        :audio-list="audioList"
+        @play-prev="handlePlayPrev()"
+        @play-next="handlePlayNext()"
+        @ended="handlePlayEnd()"
+      />
     </div>
     <div class="play_history">
       <div class="bar"></div>
@@ -44,20 +50,35 @@ export default {
   data() {
     return {
       songInfo: {},
+      nextSongInfo: {},
       audioList: [],
       isLike: false,
       playIndex: 0,
+      precentInitNextSong: 0.5,
+      initFlag: true,
     }
   },
-  created() {
-    // 从播放列表中拿取第一个作为播放，列表可能为空
-    this.songInfo = this.playMusicList[0] ? this.playMusicList[0] : null
-  },
+  created() {},
   watch: {
-    playMusicList(playList) {
-      this.songInfo = playList[this.curPlaySongIndex]
-      this._initSongDetail(this.songInfo.id)
-      this._initSongUrl(this.songInfo.id)
+    playMusicList: {
+      immediate: true,
+      handler(playList) {
+        if (playList.length === 0) {
+          this.songInfo = null
+          return
+        }
+        // 加载点击的歌曲
+        this.audioList = []
+        this._initSongDetail(playList[this.curPlaySongIndex].id)
+        let songids = playList.map((e) => {
+          return e.id
+        })
+        this._initSongUrl(songids.join(','))
+      },
+    },
+    curPlaySongIndex(newIndex) {
+      this.$refs.MyAudioPlayer.currentPlayIndex = newIndex
+      this._initSongDetail(this.playMusicList[newIndex].id)
     },
   },
   mounted() {
@@ -71,6 +92,7 @@ export default {
       playListDrawerStatus: 'playListDrawerStatus',
       playMusicList: 'playMusicList',
       curPlaySongIndex: 'curPlaySongIndex',
+      curPlaySongId: 'curPlaySongId',
     }),
     _songImg() {
       if (Object.keys(this.songInfo).length === 0) return
@@ -91,18 +113,26 @@ export default {
       }
       return 'headnolike'
     },
+    initNextSongTime() {
+      return ~~((this.songInfo.dt / 1000) * this.precentInitNextSong)
+    },
   },
   methods: {
     async _initSongDetail(id) {
       let result = await fetchSongDetailApi({ ids: id })
-      result.songs.forEach((k, i) => {
-        this.songInfo = new Track(k, result.privileges[i])
-      })
+      this.songInfo = new Track(result.songs[0], result.privileges[0])
     },
     async _initSongUrl(id) {
       let result = await fetchSongUrlAPI({ id: id })
+      let temp = {}
       result.data.forEach((e, i) => {
-        this.audioList.push(e.url)
+        // 接口返回顺序不是传入ids的顺序
+        temp[e.id] = this.tansMediaUrl(e.url)
+      })
+      this.playMusicList.forEach((e, i) => {
+        if (temp[e.id] === null) {
+        }
+        this.audioList.push(temp[e.id])
       })
     },
     tansIdentityIconUrl(picUrl) {
@@ -156,13 +186,39 @@ export default {
         )
         this.$store.commit('songModule/SET_LIKE_MUSIC_MAP', this.likeListIdsMap)
       } catch (error) {
-        console.log(error)
         this.$gMessage.show('你TM不是VIP你不知道吗？？？')
       }
     },
     // 打开关闭历史播放记录
     handleOpenPlayListDrawer() {
       this.$bus.$emit('handleHistoryDrawer', !this.playListDrawerStatus)
+    },
+    handlePlayEnd() {
+      // 播放完，播放下一首
+      this.$store.commit(
+        'songModule/SET_CUR_PLAY_SONG_INDEX',
+        this.curPlaySongIndex + 1
+      )
+    },
+    handlePlayPrev() {
+      this.$store.commit(
+        'songModule/SET_CUR_PLAY_SONG_INDEX',
+        this.curPlaySongIndex - 1
+      )
+    },
+    handlePlayNext() {
+      this.$store.commit(
+        'songModule/SET_CUR_PLAY_SONG_INDEX',
+        this.curPlaySongIndex + 1
+      )
+    },
+    tansMediaUrl(url) {
+      if (url !== null) {
+        url = url.replace(new RegExp('m[1-7]{1}'), 'm8')
+      } else {
+        url = 'no-found'
+      }
+      return url
     },
   },
 }

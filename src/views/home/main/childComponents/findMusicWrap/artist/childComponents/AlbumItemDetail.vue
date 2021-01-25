@@ -31,7 +31,7 @@
             :likeListIdsMap="likeListIdsMap"
             :isAr="true"
             v-show="isShowItem(album,i)"
-            @dblclick.native="handlePlaySong(item,i)"
+            @dblclick.native="handlePlaySong(item)"
           ></song-list-item>
           <div class="look_all" v-show="isShwoAllBtn(album)">
             <span @click="lookAll(album)">
@@ -73,6 +73,8 @@ export default {
       artist: {},
       contentOffsetHeight: null,
       initLock: false,
+      flag: false,
+      playList: [],
     }
   },
   props: {
@@ -101,6 +103,7 @@ export default {
     ...mapGetters({
       userProfile: 'userProfile',
       likeListIdsMap: 'likeMusicList',
+       curPlaySongId: 'curPlaySongId',
     }),
     allAlbum() {
       if (Object.keys(this.albumTop50).length === 0) return
@@ -234,7 +237,7 @@ export default {
       return result
     },
     // ? 播放歌曲
-    async handlePlaySong(item, i) {
+    async handlePlaySong(item) {
       try {
         await fetchCheckMusicAPI({ id: item.id })
       } catch (error) {
@@ -243,11 +246,24 @@ export default {
           this.$gMessage.show(error.message)
         } else {
           // 把当前歌曲所在列表加入到播放列表中
-          this.$store.commit(
-            'songModule/SET_PLAY_MUSIC_LIST',
-            this.album.songlist
-          )
-          this.$store.commit('songModule/SET_CUR_PLAY_SONG_INDEX', i)
+          if (!this.flag) {
+            // 防止每次双击都commit
+            // 过滤没有版权和vip歌曲
+            let canPlayList = this.album.songlist.filter((e) => {
+              if (!e.noCopyrightRcmd) {
+                return e
+              }
+            })
+            this.playList = canPlayList
+            this.$store.commit('songModule/SET_PLAY_MUSIC_LIST', canPlayList)
+            this.flag = true
+          }
+          if (this.curPlaySongId !== item.id) {
+            let index = this.playList.findIndex((e) => {
+              return e.id === item.id
+            })
+            this.$store.commit('songModule/SET_CUR_PLAY_SONG_INDEX', index)
+          }
         }
       }
     },
