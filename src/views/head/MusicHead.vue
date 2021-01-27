@@ -6,7 +6,7 @@
         <span></span>
       </div>
       <div class="direc_wrap">
-        <direction-nav direction="left" @click.native="$router.go(-1)"></direction-nav>
+        <direction-nav direction="left" @click.native="handleGoBack()"></direction-nav>
         <direction-nav direction="right"></direction-nav>
       </div>
       <div class="search_wrap">
@@ -104,6 +104,15 @@ export default {
         this.mineShow = true
       } else {
         this.mineShow = false
+      }
+    },
+    handleGoBack() {
+      // 判断歌曲页是否打开
+      if (this.$store.getters.songMainStatus) {
+        // 关闭
+        this.$store.commit('songModule/SET_SONG_MAIN_STATUS', false)
+      } else {
+        this.$router.go(-1)
       }
     },
   },

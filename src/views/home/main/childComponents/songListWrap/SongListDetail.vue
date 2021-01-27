@@ -16,7 +16,7 @@
         <span>首开VIP仅5元</span>
       </div>
     </div>
-    <div v-if="getSongList">
+    <div>
       <song-list-item
         v-for="(item,index) in songListTracks"
         :key="item.id"
@@ -72,7 +72,7 @@ export default {
     songIds: {
       type: Array,
       default() {
-        return []
+        return null
       },
     },
     keywords: {
@@ -95,13 +95,6 @@ export default {
       playListDrawerStatus: 'playListDrawerStatus',
       curPlaySongId: 'curPlaySongId',
     }),
-    getSongList() {
-      if (this.songIds.length === 0) {
-        return false
-      }
-      this._initSongDetail()
-      return true
-    },
     _PopMarginLeft() {
       if (this.isShowPop) {
         return { right: '70px' }
@@ -129,11 +122,26 @@ export default {
         this.loading = 'off'
       })
     },
+    songIds: {
+      immediate: true,
+      handler(value, oldValue) {
+        if (this.songIds === null) {
+          return
+        } else if (value.length === 0) {
+          this.$nextTick(() => {
+            this.loading = 'off'
+          })
+          return
+        }
+        this._initSongDetail()
+      },
+    },
   },
   created() {
     // 创建关键词防抖函数
     this._debounceKeywords = this._.debounce(this.seachMusicInSongList, 1000)
   },
+  mounted() {},
   methods: {
     openDeleteSongDialog(index) {
       this.dialogTableVisible = true

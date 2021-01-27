@@ -2,7 +2,7 @@
   <div id="MusicFooter" class="flexL">
     <div class="play_song flexL">
       <div v-if="songInfo !== null" class="paly_song_con flexL">
-        <img :src="_songImg" alt width="50px" height="50px" />
+        <img :src="_songImg" alt width="50px" height="50px" @click="handleToPlay()" />
         <article>
           <div class="textOverflowElli">
             <span style="margin-right:5px">{{songInfo.name}}</span>
@@ -58,7 +58,6 @@ export default {
       initFlag: true,
     }
   },
-  created() {},
   watch: {
     playMusicList: {
       immediate: true,
@@ -93,6 +92,7 @@ export default {
       playMusicList: 'playMusicList',
       curPlaySongIndex: 'curPlaySongIndex',
       curPlaySongId: 'curPlaySongId',
+      songMainStatus: 'songMainStatus',
     }),
     _songImg() {
       if (Object.keys(this.songInfo).length === 0) return
@@ -220,6 +220,18 @@ export default {
       }
       return url
     },
+    handleToPlay() {
+      if (!this.songMainStatus) {
+        this.$router.push({
+          name: 'SongMain',
+          params: { id: this.songInfo.id },
+        })
+      }
+      this.$store.commit(
+        'songModule/SET_SONG_MAIN_STATUS',
+        !this.songMainStatus
+      )
+    },
   },
 }
 </script>
@@ -237,6 +249,7 @@ export default {
       align-items: flex-start;
       img {
         border-radius: 5px;
+        cursor: pointer;
       }
       article {
         width: 175px;

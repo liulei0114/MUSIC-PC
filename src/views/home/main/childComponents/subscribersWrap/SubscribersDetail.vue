@@ -33,7 +33,7 @@ export default {
         offset: 0,
         currentPage: 1,
       },
-      subscribersList: [],
+      subscribersList: null,
       subscribersListTotal: 0,
       songListId: '',
       loading: 'on',
@@ -46,7 +46,7 @@ export default {
     this._initSubscribersInfo()
   },
   watch: {
-    subscribersList() {
+    subscribersList(value, oldValue) {
       this.$nextTick(() => {
         this.loading = 'off'
       })
@@ -61,10 +61,11 @@ export default {
       params.append('offset', this.pageInfo.offset)
       let reuslt = await playListSubscribersInfoAPI(params)
       this.subscribersListTotal = reuslt.total
-      this.subscribersList.length = 0
+      let temp = []
       reuslt.subscribers.forEach((e, i) => {
-        this.subscribersList.push(new Subscribers(e))
+        temp.push(new Subscribers(e))
       })
+      this.subscribersList = temp
       this.scrollParentStart('#AnchorPoint')
     },
     handelChangeCurrentPage(curPage) {

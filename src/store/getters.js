@@ -10,6 +10,7 @@ const getters = {
   playMusicList(state) { return state.songModule.playMusicList },
   playListDrawerStatus(state) { return state.songModule.playListDrawerStatus },
   curPlaySongIndex(state) { return state.songModule.curPlaySongIndex },
-  curPlaySongId(state) { return state.songModule.curPlaySongId }
+  curPlaySongId(state) { return state.songModule.curPlaySongId },
+  songMainStatus(state) { return state.songModule.songMainStatus }
 }
 export default getters

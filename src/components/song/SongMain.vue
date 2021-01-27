@@ -1,5 +1,5 @@
 <template>
-  <div id="SongMain">
+  <div id="SongMain" ref="SongMain" v-show="this.songMainStatus">
     <happy-scroll color="#e0e0e0" size="8" :resize="true" :hide-horizontal="true">
       <div class="con">
         <header class="song_info_wrap">
@@ -20,7 +20,7 @@
               </span>
             </div>
             <div class="detail flexL">
-              <div>
+              <div class="textOverflowElli">
                 <span>专辑：</span>
                 <router-link :to="{name:'PersonalizedAlbum',params:{'id':_alId}}">{{_alName}}</router-link>
               </div>
@@ -47,59 +47,75 @@
 </template>
 
 <script>
-import { fetchSongDetailApi, fetchSongLyricAPI } from "@/network/api/musicApi";
-import { Track } from "@/common/pojo.js";
-import LyricWrap from "./childComponents/LyricWrap.vue";
+import { fetchSongDetailApi, fetchSongLyricAPI } from '@/network/api/musicApi'
+import { Track } from '@/common/pojo.js'
+import LyricWrap from './childComponents/LyricWrap.vue'
+import { mapGetters } from 'vuex'
 export default {
   components: { LyricWrap },
   data() {
     return {
-      songId: this.$route.params.id,
+      songId: '',
+      oldSongId: '',
       songInfo: {},
       lyric: [],
       albumHeights: [],
       scrollIndex: 0,
       scrollFlag: true,
       start: 0,
-    };
+    }
   },
-  created() {
-    this._initSongDetail();
+  created() {},
+  watch: {
+    songMainStatus(status) {
+      if (!status) {
+        this.$router.go(-1)
+      }
+    },
   },
   computed: {
+    ...mapGetters({ songMainStatus: 'songMainStatus' }),
     _songImg() {
-      if (Object.keys(this.songInfo).length === 0) return;
+      if (Object.keys(this.songInfo).length === 0) return
       return (
-        this.tansIdentityIconUrl(this.songInfo.al.picUrl) + "?param=210y210"
-      );
+        this.tansIdentityIconUrl(this.songInfo.al.picUrl) + '?param=210y210'
+      )
     },
     _alId() {
-      if (Object.keys(this.songInfo).length === 0) return;
-      return this.songInfo.al.id;
+      if (Object.keys(this.songInfo).length === 0) return
+      return this.songInfo.al.id
     },
     _alName() {
-      if (Object.keys(this.songInfo).length === 0) return;
-      return this.songInfo.al.name;
+      if (Object.keys(this.songInfo).length === 0) return
+      return this.songInfo.al.name
     },
   },
   methods: {
     async _initSongDetail() {
-      let result = await fetchSongDetailApi({ ids: this.songId });
+      let result = await fetchSongDetailApi({ ids: this.songId })
       result.songs.forEach((k, i) => {
-        this.songInfo = new Track(k, result.privileges[i]);
-      });
-      let word = await fetchSongLyricAPI({ id: this.songId });
+        this.songInfo = new Track(k, result.privileges[i])
+      })
+      let word = await fetchSongLyricAPI({ id: this.songId })
 
-      let regexp = new RegExp("\n");
-      this.lyric.push(...word.lrc.lyric.split(regexp));
+      let regexp = new RegExp('\n')
+      this.lyric.push(...word.lrc.lyric.split(regexp))
     },
     tansIdentityIconUrl(picUrl) {
-      picUrl = picUrl.replace(new RegExp("p[1-5]{1}"), "p3");
-      return picUrl;
+      picUrl = picUrl.replace(new RegExp('p[1-5]{1}'), 'p3')
+      return picUrl
     },
-    
   },
-};
+  activated() {
+    this.songId = this.$route.params.id
+    if (this.oldSongId !== this.songId) {
+      this._initSongDetail()
+    }
+  },
+  deactivated() {
+    this.oldSongId = this.songId
+  },
+}
 </script>
 
 <style lang="less" scoped>
@@ -107,6 +123,8 @@ export default {
   width: 100%;
   height: 100%;
   background-color: #fff;
+  display: inline-block;
+
   .flexC {
     display: flex;
     justify-content: flex-start;
@@ -138,14 +156,14 @@ export default {
           height: 67px;
           top: 0;
           left: 35%;
-          background: no-repeat url("~assets/needle.png");
+          background: no-repeat url('~assets/needle.png');
         }
         .plate_img {
           width: 326px;
           height: 326px;
           text-align: center;
           line-height: 326px;
-          background: no-repeat url("~assets/center.png") 0 0;
+          background: no-repeat url('~assets/center.png') 0 0;
           img {
             border-radius: 50%;
           }

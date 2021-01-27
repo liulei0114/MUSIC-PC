@@ -13,7 +13,8 @@ const songModule = {
     playMusicList: [],
     playListDrawerStatus: false,
     curPlaySongIndex: 0,
-    curPlaySongId: ''
+    curPlaySongId: '',
+    songMainStatus: false
   },
   mutations: {
     SET_SONG_LIST_DETAIL(state, data) {
@@ -36,6 +37,9 @@ const songModule = {
     },
     SET_CUR_PLAY_SONG_ID(state, data) {
       state.curPlaySongId = data
+    },
+    SET_SONG_MAIN_STATUS(state,data){
+      state.songMainStatus = data
     }
   },
   actions: {
