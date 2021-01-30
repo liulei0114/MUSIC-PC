@@ -4,9 +4,15 @@
       <div class="con">
         <header class="song_info_wrap">
           <div class="song_img_left flexC">
-            <div class="plate_needle"></div>
+            <div class="plate_needle" :class="{play_plate_needle:_playStatus}"></div>
             <div class="plate_img">
-              <img :src="_songImg" alt width="210px" height="210px" />
+              <img
+                class="play_plate_img"
+                :src="_songImg"
+                :style="{'animation-play-state':_playStatus?'running':'paused'}"
+                width="210px"
+                height="210px"
+              />
             </div>
           </div>
           <div class="song_word_right">
@@ -35,8 +41,11 @@
                 <span>来源：</span>
               </div>
             </div>
-            <div class="song_word_wrap">
+            <div class="song_word_wrap" v-show="lyric">
               <lyric-wrap :lyric="lyric"></lyric-wrap>
+            </div>
+            <div class="song_word_wrap" v-show="!lyric">
+              <span class="no_lyric">纯音乐，请欣赏</span>
             </div>
           </div>
         </header>
@@ -59,10 +68,6 @@ export default {
       oldSongId: '',
       songInfo: {},
       lyric: [],
-      albumHeights: [],
-      scrollIndex: 0,
-      scrollFlag: true,
-      start: 0,
     }
   },
   created() {},
@@ -72,9 +77,26 @@ export default {
         this.$router.go(-1)
       }
     },
+    curPlaySongIndex(index) {
+      if (this.songMainStatus) {
+        this.$router.replace({
+          name: 'SongMain',
+          params: { id: this.playMusicList[index].id },
+        })
+        this.songId = this.$route.params.id
+        if (this.oldSongId !== this.songId) {
+          this._initSongDetail()
+        }
+      }
+    },
   },
   computed: {
-    ...mapGetters({ songMainStatus: 'songMainStatus' }),
+    ...mapGetters({
+      songMainStatus: 'songMainStatus',
+      songPlayStatus: 'songPlayStatus',
+      curPlaySongIndex: 'curPlaySongIndex',
+      playMusicList: 'playMusicList',
+    }),
     _songImg() {
       if (Object.keys(this.songInfo).length === 0) return
       return (
@@ -89,6 +111,9 @@ export default {
       if (Object.keys(this.songInfo).length === 0) return
       return this.songInfo.al.name
     },
+    _playStatus() {
+      return this.songPlayStatus
+    },
   },
   methods: {
     async _initSongDetail() {
@@ -97,9 +122,15 @@ export default {
         this.songInfo = new Track(k, result.privileges[i])
       })
       let word = await fetchSongLyricAPI({ id: this.songId })
+      this.lyric = []
 
-      let regexp = new RegExp('\n')
-      this.lyric.push(...word.lrc.lyric.split(regexp))
+      if (word.nolyric) {
+        // 纯音乐，没有歌词
+        this.lyric = null
+      } else {
+        let regexp = new RegExp('\n')
+        this.lyric.push(...word.lrc.lyric.split(regexp))
+      }
     },
     tansIdentityIconUrl(picUrl) {
       picUrl = picUrl.replace(new RegExp('p[1-5]{1}'), 'p3')
@@ -114,6 +145,7 @@ export default {
   },
   deactivated() {
     this.oldSongId = this.songId
+    this.$store.commit('songModule/SET_SONG_PLAY_STATUS', false)
   },
 }
 </script>
@@ -154,9 +186,14 @@ export default {
           position: absolute;
           width: 250px;
           height: 67px;
-          top: 0;
+          top: 0px;
           left: 35%;
           background: no-repeat url('~assets/needle.png');
+          transition: transform 0.8s ease-in;
+          transform-origin: 45px -10px;
+          &.play_plate_needle {
+            transform: rotate(30deg);
+          }
         }
         .plate_img {
           width: 326px;
@@ -166,6 +203,11 @@ export default {
           background: no-repeat url('~assets/center.png') 0 0;
           img {
             border-radius: 50%;
+            animation-play-state: 'running';
+            animation-delay: 1.2s;
+            &.play_plate_img {
+              animation: rotate 5s linear infinite;
+            }
           }
         }
       }
@@ -201,7 +243,14 @@ export default {
         }
         .song_word_wrap {
           margin-top: 20px;
-          height: 90%;
+          height: 80%;
+          position: relative;
+          .no_lyric {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+          }
         }
       }
     }

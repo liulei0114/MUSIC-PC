@@ -26,9 +26,13 @@
       <audio-player
         ref="MyAudioPlayer"
         :audio-list="audioList"
+        :isLoop="true"
         @play-prev="handlePlayPrev()"
         @play-next="handlePlayNext()"
         @ended="handlePlayEnd()"
+        @playing="handlePlaying()"
+        @pause="handlePause()"
+        @play="handlePlay()"
       />
     </div>
     <div class="play_history">
@@ -76,7 +80,11 @@ export default {
       },
     },
     curPlaySongIndex(newIndex) {
+      this.$refs.MyAudioPlayer.pause()
       this.$refs.MyAudioPlayer.currentPlayIndex = newIndex
+      setTimeout(() => {
+        this.$refs.MyAudioPlayer.play()
+      })
       this._initSongDetail(this.playMusicList[newIndex].id)
     },
   },
@@ -91,7 +99,6 @@ export default {
       playListDrawerStatus: 'playListDrawerStatus',
       playMusicList: 'playMusicList',
       curPlaySongIndex: 'curPlaySongIndex',
-      curPlaySongId: 'curPlaySongId',
       songMainStatus: 'songMainStatus',
     }),
     _songImg() {
@@ -193,24 +200,22 @@ export default {
     handleOpenPlayListDrawer() {
       this.$bus.$emit('handleHistoryDrawer', !this.playListDrawerStatus)
     },
-    handlePlayEnd() {
-      // 播放完，播放下一首
-      this.$store.commit(
-        'songModule/SET_CUR_PLAY_SONG_INDEX',
-        this.curPlaySongIndex + 1
-      )
-    },
+    handlePlayEnd() {},
     handlePlayPrev() {
-      this.$store.commit(
-        'songModule/SET_CUR_PLAY_SONG_INDEX',
-        this.curPlaySongIndex - 1
-      )
+      let index = this.curPlaySongIndex
+      if (this.curPlaySongIndex === 0) {
+        // 第一个，播放列表最后一个
+        index = this.playMusicList.length
+      }
+      this.$store.commit('songModule/SET_CUR_PLAY_SONG_INDEX', index - 1)
     },
     handlePlayNext() {
-      this.$store.commit(
-        'songModule/SET_CUR_PLAY_SONG_INDEX',
-        this.curPlaySongIndex + 1
-      )
+      let index = this.curPlaySongIndex
+      if (this.curPlaySongIndex + 1 === this.playMusicList.length) {
+        // 播放到最后一个，从头播放
+        index = -1
+      }
+      this.$store.commit('songModule/SET_CUR_PLAY_SONG_INDEX', index + 1)
     },
     tansMediaUrl(url) {
       if (url !== null) {
@@ -231,6 +236,19 @@ export default {
         'songModule/SET_SONG_MAIN_STATUS',
         !this.songMainStatus
       )
+    },
+    handlePlaying() {
+      // 没过1s触发一次
+      this.$bus.$emit(
+        'playing',
+        Math.floor(this.$refs.MyAudioPlayer.currentTime)
+      )
+    },
+    handlePause() {
+      this.$store.commit('songModule/SET_SONG_PLAY_STATUS', false)
+    },
+    handlePlay() {
+      this.$store.commit('songModule/SET_SONG_PLAY_STATUS', true)
     },
   },
 }

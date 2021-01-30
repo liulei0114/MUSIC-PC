@@ -14,7 +14,8 @@ const songModule = {
     playListDrawerStatus: false,
     curPlaySongIndex: 0,
     curPlaySongId: '',
-    songMainStatus: false
+    songMainStatus: false,
+    songPlayStatus: false
   },
   mutations: {
     SET_SONG_LIST_DETAIL(state, data) {
@@ -38,8 +39,11 @@ const songModule = {
     SET_CUR_PLAY_SONG_ID(state, data) {
       state.curPlaySongId = data
     },
-    SET_SONG_MAIN_STATUS(state,data){
+    SET_SONG_MAIN_STATUS(state, data) {
       state.songMainStatus = data
+    },
+    SET_SONG_PLAY_STATUS(state, data) {
+      state.songPlayStatus = data
     }
   },
   actions: {
