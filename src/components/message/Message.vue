@@ -33,6 +33,8 @@ export default {
     },
 
   },
+  created(){
+  },
   methods: {
     show(message, iconName,fontSize='16px') {
       this.isShow = true;
