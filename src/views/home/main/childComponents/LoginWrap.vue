@@ -84,8 +84,8 @@ export default {
       isCountryShow: false,
       time: timeout,
       isShowVercodeBtn: true,
-      telphone: '17862725207',
-      password: 'll19960114',
+      telphone: '',
+      password: '',
       errMsg: '',
     }
   },
@@ -171,7 +171,7 @@ export default {
   transform: translate(-50%, -50%);
   border-radius: 2px;
   box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
-  z-index: 100 !important;
+  z-index: 2002 !important;
   background-color: #fff;
   .head_img {
     width: 100%;
