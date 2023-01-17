@@ -29,4 +29,4 @@ github [Configuration Reference](https://github.com/Binaryify/NeteaseCloudMusicA
 ![7](https://user-images.githubusercontent.com/29829316/109665745-73f41e80-7ba9-11eb-8d52-6a73c24b85de.png)
 ![8](https://user-images.githubusercontent.com/29829316/109665751-75254b80-7ba9-11eb-93f2-46303df6ca23.png)
 ![10](https://user-images.githubusercontent.com/29829316/109665767-7b1b2c80-7ba9-11eb-9a88-2260fec0ceb1.png)
-[新建文件夹.zip](https://github.com/liulei0114/MUSIC-PC/files/10432341/default.zip)
+
