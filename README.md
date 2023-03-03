@@ -1,8 +1,4 @@
-# vue-cli3
-https://nsp-interactivemediacommon-aicreator-drcn-test.obs.cn-north-4.myhuaweicloud.cn/mgmt/media/other/%E6%96%87%E6%9C%AC.zip?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=RTDMF0RKYKVNCC81TBR5%2F20230303%2Fcn-north-4%2Fs3%2Faws4_request&X-Amz-Date=20230303T094544Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=bc820c6717edefd6174229778a620f7d49b2fa889ce54544f597a2083f65c3c8
-
-https://nsp-interactivemediacommon-aicreator-drcn-test.obs.cn-north-4.myhuaweicloud.cn/mgmt/media/other/%E7%A4%BA%E4%BE%8B.zip?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=RTDMF0RKYKVNCC81TBR5%2F20230303%2Fcn-north-4%2Fs3%2Faws4_request&X-Amz-Date=20230303T100311Z&X-Amz-Expires=604800&X-Amz-SignedHeaders=host&X-Amz-Signature=1af21de8cf65d7239e1b6381f6ff2dc3ccb6cfa14f566877c86903c9b3aa83a0
-
+# vue-cli
 
 ## 安装依赖
 ```
